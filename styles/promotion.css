@@ -63,8 +63,8 @@
 
 .product-types {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .product-type {
@@ -121,9 +121,25 @@
 }
 
 /* 반응형 디자인 */
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
+    .promotion-content {
+        margin-top: 80px;
+    }
+
+    .promotion-hero {
+        height: 300px;
+    }
+
+    .promotion-hero h1 {
+        font-size: 2em;
+    }
+
+    .promotion-details h2 {
+        font-size: 1.5em;
+    }
+
     .product-type {
-        width: 100%;
+        width: 45%;
     }
 
     .participation-methods {
@@ -135,6 +151,53 @@
         margin-bottom: 20px;
     }
 }
+
+@media screen and (max-width: 480px) {
+    .promotion-hero {
+        height: 200px;
+    }
+
+    .promotion-hero h1 {
+        font-size: 1.5em;
+    }
+
+    .promotion-details h2 {
+        font-size: 1.2em;
+    }
+
+    .product-type {
+        width: 100%;
+    }
+}
+
+/* 이미지 반응형 처리 */
+.product-type img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* 레이아웃 조정 */
+.product-types {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.product-type {
+    margin-bottom: 20px;
+}
+
+/* 글자 크기 조정 */
+@media screen and (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    h1, h2, h3 {
+        line-height: 1.2;
+    }
+}
+
 .promotion-hero2{
     margin-top: 20px;
 }
