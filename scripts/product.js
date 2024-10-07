@@ -5,17 +5,17 @@ window.products = [];
 // 제품 데이터 로드
 window.loadProductData = async function() {
     if (window.products && window.products.length > 0) {
-        return; // 이미 로드된 경우 다시 로드하지 않음
+        return;
     }
     try {
-        const response = await fetch('/betc/data/products/index.json');
+        const response = await fetch('data/products/index.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const productList = await response.json();
         window.products = await Promise.all(productList.map(async (productId) => {
             try {
-                const productResponse = await fetch(`/betc/data/products/${productId}.json`);
+                const productResponse = await fetch(`data/products/${productId}.json`);
                 if (!productResponse.ok) {
                     console.warn(`제품 ${productId} 로드 실패: ${productResponse.status}`);
                     return null;
@@ -27,13 +27,12 @@ window.loadProductData = async function() {
             }
         }));
         window.products = window.products.filter(product => product !== null);
-        console.log('로드된 제품:', window.products); // 디버깅을 위해 추가
+        console.log('로드된 제품:', window.products);
     } catch (error) {
         console.error('제품 데이터를 불러오는 데 실패했습니다:', error);
-        window.products = []; // 기본 빈 배열 설정
+        window.products = [];
     }
 }
-
 window.loadMainProducts = function(category = 'all') {
     var productList = document.getElementById('mainProductList');
     if (!productList) return;
