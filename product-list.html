@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>제품 목록 - 뷰티 코스메틱 쇼핑몰</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script>
+        window.dataLayer = window.dataLayer || [];
+    </script>
+</head>
+<body>
+    <div include-html="components/header.html"></div>
+    <main class="main-content">
+        <h2 id="categoryTitle">전체 제품</h2>
+        <div class="category-list">
+            <!-- 카테고리 목록 -->
+        </div>
+        <div class="sort-container">
+            <select id="sortSelect">
+                <option value="lowprice">낮은 가격순</option>
+                <option value="highprice">높은 가격순</option>
+            </select>
+        </div>
+        <div class="products" id="productList">
+            <!-- 제품 목록이 여기에 동적으로 로드됩니다 -->
+        </div>
+    </main>
+    <div include-html="components/footer.html"></div>
+
+    <script src="scripts/include.js"></script>
+    <script src="scripts/user.js"></script>
+    <script src="scripts/product.js"></script>
+    <script>
+        includeHTML(async function() {
+            await window.loadProductData();
+            window.checkAuthStatus();
+            window.addEventListeners();
+            window.initializeProductList();
+            window.addCategoryListeners();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script>
+        window.dataLayer = window.dataLayer || [];
+    </script>
+</head>
+<body>
+    <div include-html="components/header.html"></div>
+    <main class="mypage-container, main-content">
+        <h2>주문/배송 조회</h2>
+        <div class="order-status">
+            <div class="status-item">
+                <span class="status-number" id="orderCompleteCount">0</span>
+                <span class="status-label">주문완료</span>
+            </div>
+            <div class="status-item">
+                <span class="status-number">0</span>
+                <span class="status-label">상품준비중</span>
+            </div>
+            <div class="status-item">
+                <span class="status-number">0</span>
+                <span class="status-label">배송중</span>
+            </div>
+            <div class="status-item">
+                <span class="status-number">0</span>
+                <span class="status-label">배송완료</span>
+            </div>
+            <div class="status-item">
+                <span class="status-number">0</span>
+                <span class="status-label">구매확정</span>
+            </div>
+        </div>
+        <div class="total-amount">
+            <p>총 구매 금액: <span id="totalAmount">₩0</span></p>
+        </div>
+        <div id="orderHistory">
+            <h3>구매 내역</h3>
+            <ul id="purchaseList"></ul>
+        </div>
+    </main>
+    <div include-html="components/footer.html"></div>
+
+<!-- 스크립트 로드 -->
+<script src="scripts/include.js"></script>
+<script src="scripts/user.js"></script>
+<script src="scripts/product.js"></script>
+<script src="scripts/cart.js"></script>
+<script src="scripts/review.js"></script>
+<script>
+    includeHTML(function() {
+        checkAuthStatus();
+        loadPurchaseHistory();
+        addEventListeners();
+    });
+</script>
+
+</body>
+</html>

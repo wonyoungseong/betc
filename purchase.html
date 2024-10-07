@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>구매 완료</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script>
+        window.dataLayer = window.dataLayer || [];
+    </script>
+</head>
+<body>
+    <div include-html="components/header.html"></div>
+    <main class="main-content"> 
+        <h2>구매가 완료되었습니다!</h2>
+        <p>감사합니다. 주문이 정상적으로 처리되었습니다.</p>
+        <p><a href="index.html" class="main-link">메인 페이지로 이동하기</a></p>
+    </main>
+    <div include-html="components/footer.html"></div>
+
+<!-- 스크립트 로드 -->
+<script src="scripts/include.js"></script>
+<script src="scripts/user.js"></script>
+<script src="scripts/product.js"></script>
+<script src="scripts/cart.js"></script>
+<script src="scripts/review.js"></script>
+<script>
+    includeHTML(function() {
+        checkAuthStatus();
+        loadProductDetail();
+    });
+</script>
+
+</body>
+</html>

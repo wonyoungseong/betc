@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>검색 결과 - 뷰티 코스메틱 쇼핑몰</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script>
+        window.dataLayer = window.dataLayer || [];
+    </script>
+</head>
+<body>
+    <div include-html="components/header.html"></div>
+    <main class="main-content">
+        <h2>검색 결과</h2>
+        <div class="products" id="searchResults">
+            <!-- 검색 결과가 여기에 표시됩니다. -->
+        </div>
+    </main>
+    <div include-html="components/footer.html"></div>
+
+    <!-- 스크립트 로드 -->
+    <script src="scripts/include.js"></script>
+    <script src="scripts/user.js"></script>
+    <script src="scripts/product.js"></script>
+    <script src="scripts/main.js"></script>
+    <script>
+        includeHTML(async function() {
+            await window.loadProductData();
+            window.checkAuthStatus();
+            window.addEventListeners();
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('query');
+            if (query) {
+                document.getElementById('searchInput').value = query;
+                performSearch(query);
+            }
+        });
+
+        function performSearch(query) {
+            const searchResults = document.getElementById('searchResults');
+            searchResults.innerHTML = '검색 중...';
+
+            setTimeout(() => {
+                const results = window.products.filter(product => 
+                    product.name.toLowerCase().includes(query.toLowerCase()) ||
+                    product.description.toLowerCase().includes(query.toLowerCase())
+                );
+
+                if (results.length > 0) {
+                    searchResults.innerHTML = results.map(product => `
+                        <div class="product-item" onclick="window.viewProduct(${product.id})">
+                            <img src="${product.image}" alt="${product.name}">
+                            <h3>${product.name}</h3>
+                            <p>${product.price.toLocaleString()}원</p>
+                        </div>
+                    `).join('');
+                } else {
+                    searchResults.innerHTML = '검색 결과가 없습니다.';
+                }
+            }, 500);
+        }
+    </script>
+</body>
+</html>

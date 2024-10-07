@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>결제하기</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script>
+        window.dataLayer = window.dataLayer || [];
+    </script>
+</head>
+<body>
+    <div include-html="components/header.html"></div>
+    <main class="checkout-page, main-content">
+        <h2 class="checkout-title">결제하기</h2>
+        <div class="checkout-container">
+            <div class="order-summary">
+                <h3>주문자 정보</h3>
+                <div id="orderSummary">
+                    <!-- 여기에 주문 요약 정보가 동적으로 추가됩니다 -->
+                </div>
+            </div>
+            <div class="shipping-info">
+                <h3>배송지 정보</h3>
+                <form id="checkoutForm" onsubmit="completePurchase(event)">
+                    <div class="form-group">
+                        <label for="name">이름</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">주소</label>
+                        <input type="text" id="address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">휴대폰 번호</label>
+                        <input type="tel" id="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">이메일</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">배송 메시지</label>
+                        <textarea id="message"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="payment-info">
+                <h3>결제 수단</h3>
+                <!-- 여기에 결제 수단 선택 옵션을 추가할 수 있습니다 -->
+            </div>
+            <div class="order-total">
+                <h3>최종 결제 금액</h3>
+                <div id="totalPrice"></div>
+            </div>
+            <button type="submit" form="checkoutForm" class="checkout-button">67,200원 결제하기</button>
+        </div>
+    </main>
+    <div include-html="components/footer.html"></div>
+
+    <script src="scripts/include.js"></script>
+    <script src="scripts/user.js"></script>
+    <script src="scripts/product.js"></script>
+    <script src="scripts/cart.js"></script>
+    <script src="scripts/review.js"></script>
+    <script>
+        includeHTML(function() {
+            checkAuthStatus();
+            loadOrderSummary();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뷰티 코스메틱 쇼핑몰</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script>
+        window.dataLayer = window.dataLayer || [];
+    </script>
+</head>
+<body>
+    <div include-html="components/header.html"></div>
+    <main class="main-content">
+        <section class="hero" style="background-image: url('images/promotions/lipstick/promotion-hero1.jpg');">
+            <div class="hero-content">
+                <h1><br>립스틱 25% 할인!</h1>
+                <p>가장 사랑받는 립스틱을<br>지금 바로 뷰티 코스메틱에서 <br>더욱 특별한 가격에 만나보세요!</p>
+                <a href="promotion-detail.html" class="cta-button">자세히 보기</a>
+            </div>
+        </section>
+        
+        <section class="featured-products">
+            <h2>추천 제품</h2>
+            <div id="mainProductList" class="product-list">
+                <!-- 추천 제품이 여기에 동적으로 로드됩니다 (최대 4개) -->
+            </div>
+        </section>
+        
+        <section class="beauty-lab" style="background-image: url('images/campaign/sustainability/campaign.jpg');">
+            <div class="beauty-lab-content">
+                <h2></h2>
+                <p>다양한 피부 고민을 위한 맞춤형 솔루션을 제공하는<br>뷰티 앤 라이프 랩을 만나보세요.</p>
+                <a href="campaign-detail.html" class="cta-button">자세히 보기</a>
+            </div>
+        </section>
+    </main>
+    <div include-html="components/footer.html"></div>
+
+    <script src="scripts/include.js"></script>
+    <script src="scripts/user.js"></script>
+    <script src="scripts/product.js"></script>
+    <script src="scripts/cart.js"></script>
+    <script>
+        includeHTML(async function() {
+            await window.loadProductData();
+            window.checkAuthStatus();
+            window.addEventListeners();
+            window.loadMainProducts();
+            window.initializeCategoryNav();
+        });
+    </script>
+</body>
+</html>

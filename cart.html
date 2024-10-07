@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>장바구니</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script>
+        window.dataLayer = window.dataLayer || [];
+    </script>
+</head>
+<body>
+    <div include-html="components/header.html"></div>
+    <main class="cart-page, main-content">
+        <h2 class="cart-title">장바구니</h2>
+        <div id="cartItems" class="cart-items">
+            <!-- 장바구니 아이템이 여기에 로드됩니다. -->
+        </div>
+        <div class="cart-summary">
+            <p>최종 결제액: <span id="totalPrice">0원</span></p>
+        </div>
+        <button onclick="beginCheckout()" class="checkout-button">0원 주문하기</button>
+    </main>
+    <div include-html="components/footer.html"></div>
+    <script src="scripts/product.js"></script>
+    <script src="scripts/include.js"></script>
+    <script src="scripts/user.js"></script>
+    <script src="scripts/product.js"></script>
+    <script src="scripts/cart.js"></script>
+    <script>
+        includeHTML(function() {
+            window.checkAuthStatus();
+            window.addEventListeners();
+            loadCartItems();
+        });
+    </script>
+</body>
+</html>

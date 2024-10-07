@@ -1,0 +1,140 @@
+/* 프로모션 페이지 전체 스타일 */
+.promotion-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #333;
+    margin-top: 120px;
+}
+
+/* 프로모션 히어로 섹션 */
+.promotion-hero {
+    position: relative;
+    height: 500px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.promotion-hero-content {
+    text-align: center;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.promotion-hero h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+/* 프로모션 상세 정보 */
+.promotion-details {
+    padding: 40px 20px;
+    background-color: #f9f9f9;
+}
+
+.promotion-details h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #1e8b3e;
+}
+
+.promotion-info {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.promotion-info h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #1e8b3e;
+}
+
+/* 상품 갤러리 */
+.product-gallery {
+    padding: 40px 20px;
+}
+
+.product-types {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.product-type {
+    width: 30%;
+    margin-bottom: 30px;
+    text-align: center;
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit; /* 부모 요소의 색상 상속 */
+    display: block; /* 블록 레벨 요소로 변경 */
+}
+
+.product-type:hover {
+    text-decoration: none; /* 호버 시에도 밑줄 제거 */
+}
+
+.product-type h3 {
+    margin-top: 10px;
+    font-size: 1.2em;
+    color: #333; /* 원하는 색상으로 변경 */
+}
+
+.product-type p {
+    color: #666; /* 원하는 색상으로 변경 */
+}
+
+.product-type img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+/* 참여 방법 */
+.how-to-participate {
+    background-color: #f0f8f1;
+    padding: 40px 20px;
+}
+
+.participation-methods {
+    display: flex;
+    justify-content: space-between;
+}
+
+.online, .offline {
+    width: 48%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 유의사항 및 고객센터 정보 */
+.terms-and-conditions, .customer-support {
+    padding: 40px 20px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .product-type {
+        width: 100%;
+    }
+
+    .participation-methods {
+        flex-direction: column;
+    }
+
+    .online, .offline {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+.promotion-hero2{
+    margin-top: 20px;
+}

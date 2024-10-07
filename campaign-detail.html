@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>지속 가능한 아름다움의 추구 - 뷰티 코스메틱</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/campaign.css">
+</head>
+<body>
+    <div include-html="components/header.html"></div>
+    
+    <main class="campaign-content">
+        <section class="campaign-hero" style="background-image: url('images/campaign/sustainability/campaign.jpg');">
+            <div class="campaign-hero-content">
+                <h1>지속 가능한 아름다움의 추구</h1>
+                <p>환경과 조화를 이루는 아름다움을 위한 우리의 약속</p>
+            </div>
+        </section>
+
+        <section class="campaign-intro">
+            <h2>우리의 철학</h2>
+            <p>우리는 아름다움이 일시적인 트렌드가 아닌, 지구와 조화를 이루는 지속 가능한 가치여야 한다고 믿습니다. 피부의 건강과 아름다움을 책임지면서도 환경 보호와 사회적 책임을 다하는 것이 우리의 철학입니다.</p>
+        </section>
+
+        <section class="campaign-efforts">
+            <h2>환경을 위한 노력</h2>
+            <div class="effort-grid">
+                <div class="effort-item">
+                    <img src="images/campaign/sustainability/eco_campaign-1.jpg" alt="친환경 원료">
+                    <h3>친환경 원료 사용</h3>
+                    <p>자연에서 얻은 친환경 원료를 사용하여 제품을 개발하고 있습니다.</p>
+                </div>
+                <div class="effort-item">
+                    <img src="images/campaign/sustainability/eco_campaign-4.jpg" alt="클린 뷰티">
+                    <h3>클린 뷰티 실현</h3>
+                    <p>유해 화학 성분을 배제하고, 투명한 성분 공개를 통해 소비자에게 신뢰를 제공합니다.</p>
+                </div>
+                <div class="effort-item">
+                    <img src="images/campaign/sustainability/eco_campaign-5.jpg" alt="에코 패키징">
+                    <h3>에코 패키징 도입</h3>
+                    <p>재활용이 가능한 소재로 패키징을 제작하며, 플라스틱 사용을 최소화합니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="campaign-social">
+            <h2>사회를 위한 노력</h2>
+            <div class="social-grid">
+                <div class="social-item">
+                    <img src="images/campaign/sustainability/social_campaign-1.jpg" alt="공정 무역">
+                    <h3>공정 무역과 윤리적 소싱</h3>
+                    <p>원료를 공정하게 거래하고 생산자들의 권익을 보호합니다.</p>
+                </div>
+                <div class="social-item">
+                    <img src="images/campaign/sustainabilitysocial_campaign-2" alt="사회 공헌">
+                    <h3>사회 공헌 활동</h3>
+                    <p>피부 질환으로 고통받는 이웃들을 위해 제품 기부와 지원 프로그램을 운영합니다.</p>
+                </div>
+                <div class="social-item">
+                    <img src="images/campaign/sustainability/social_campaign-3.jpg" alt="지속 가능성 교육">
+                    <h3>지속 가능성 교육</h3>
+                    <p>임직원과 소비자를 대상으로 환경 보호와 지속 가능성의 중요성에 대한 교육을 실시합니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="campaign-together">
+            <h2>고객과 함께하는 지속 가능성</h2>
+            <p>지속 가능한 아름다움은 우리 혼자만의 힘으로는 이룰 수 없습니다. 고객 여러분의 작은 실천이 큰 변화를 만들어냅니다.</p>
+            <ul>
+                <li>친환경 제품 선택</li>
+                <li>재활용 참여</li>
+                <li>지속 가능성 확산</li>
+            </ul>
+        </section>
+
+        <section class="campaign-promise">
+            <h2>미래를 위한 약속</h2>
+            <ul>
+                <li>지속적인 연구 개발</li>
+                <li>투명한 정보 공개</li>
+                <li>협력과 파트너십</li>
+            </ul>
+        </section>
+
+        <section class="campaign-closing">
+            <h2>함께 만들어가는 아름다운 미래</h2>
+            <p>지속 가능한 아름다움은 선택이 아닌 필수입니다. 우리는 지구와 사회, 그리고 고객의 미래를 위해 지속 가능성을 핵심 가치로 삼고 있습니다. 앞으로도 환경 보호와 사회적 책임을 다하며, 여러분과 함께 지속 가능한 아름다움의 여정을 이어가겠습니다.</p>
+            <button id="subscribeBtn" class="cta-button">이메일 구독하기</button>
+        </section>
+
+        <!-- 이메일 구독 모달 -->
+        <div id="subscribeModal" class="modal">
+            <div class="modal-content">
+                <h3>캠페인 소식 구독하기</h3>
+                <p>이메일 주소를 입력하시면 새로운 캠페인 정보를 받아보실 수 있습니다.</p>
+                <input type="email" id="emailInput" placeholder="123@naver.com(실제로 발송 안됩니다.)">
+                <button id="submitEmail" class="cta-button">구독하기</button>
+                <p id="subscriptionMessage" style="display: none;">매일 새로운 캠페인 정보를 받으세요!</p>
+            </div>
+        </div>
+    </main>
+
+    <div include-html="components/footer.html"></div>
+
+    <script src="scripts/include.js"></script>
+    <script src="scripts/subscribe.js"></script>
+    <script>
+        includeHTML();
+    </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>제품 상세 - 뷰티 코스메틱 쇼핑몰</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script>
+        window.dataLayer = window.dataLayer || [];
+    </script>
+</head>
+<body>
+    <div include-html="components/header.html"></div>
+    <main class="main-content product-detail-container">
+        <div class="product-detail" id="productDetail">
+            <div class="product-image-gallery">
+                <div class="main-image">
+                    <img id="mainProductImage" src="" alt="Product Image">
+                </div>
+                <div class="thumbnail-images" id="thumbnailContainer">
+                    <!-- 썸네일 이미지들이 동적으로 생성됩니다 -->
+                </div>
+            </div>
+            <div class="product-info">
+                <!-- 제품 정보가 여기에 동적으로 로드됩니다 -->
+            </div>
+        </div>
+        <section class="product-description">
+            <div class="product-features">
+                <h3>제품 특징</h3>
+                <ul id="productFeatures"></ul>
+            </div>
+            <div class="product-ingredients">
+                <h3>주요 성분</h3>
+                <ul id="productIngredients"></ul>
+            </div>
+            <div class="product-usage">
+                <h3>사용 방법</h3>
+                <p id="productUsage"></p>
+            </div>
+            <div class="product-details">
+                <h3>상품 정보</h3>
+                <table id="productInfoTable"></table>
+            </div>
+        </section>
+        <section class="reviews">
+            <h3>상품평</h3>
+            <div class="review-summary">
+                <div class="review-average">
+                    <span id="averageRating">0.0</span>
+                    <div class="star-rating" id="averageStarRating"></div>
+                </div>
+                <div class="review-count">
+                    <span id="reviewCount">0</span>
+                    <span>건</span>
+                </div>
+            </div>
+            <div id="reviewList">
+                <!-- 리뷰 목록이 여기에 표시됩니다. -->
+            </div>
+            <div class="review-input">
+                <select id="ratingInput">
+                    <option value="5">5점</option>
+                    <option value="4">4점</option>
+                    <option value="3">3점</option>
+                    <option value="2">2점</option>
+                    <option value="1">1점</option>
+                </select>
+                <textarea id="reviewInput" placeholder="리뷰를 작성하세요." onkeydown="handleReviewKeydown(event)"></textarea>
+                <button onclick="submitReview()">리뷰 작성</button>
+            </div>
+        </section>
+    </main>
+    <div include-html="components/footer.html"></div>
+
+    <script src="scripts/include.js"></script>
+    <script src="scripts/user.js"></script>
+    <script src="scripts/product.js"></script>
+    <script src="scripts/cart.js"></script>
+    <script src="scripts/review.js"></script>
+    <script>
+        includeHTML(async function() {
+            await window.loadProductData();
+            window.checkAuthStatus();
+            window.addEventListeners();
+            window.loadProductDetail();
+        });
+
+        function handleReviewKeydown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                submitReview();
+            }
+        }
+    </script>
+</body>
+</html>
