@@ -42,7 +42,8 @@
     <script src="scripts/product.js"></script>
     <script src="scripts/cart.js"></script>
     <script>
-        includeHTML(async function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            await includeHTML();
             await window.loadProductData();
             window.checkAuthStatus();
             window.addEventListeners();
