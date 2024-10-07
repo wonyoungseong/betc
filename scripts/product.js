@@ -8,14 +8,14 @@ window.loadProductData = async function() {
         return; // 이미 로드된 경우 다시 로드하지 않음
     }
     try {
-        const response = await fetch('/data/products/index.json');
+        const response = await fetch('/betc/data/products/index.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const productList = await response.json();
         window.products = await Promise.all(productList.map(async (productId) => {
             try {
-                const productResponse = await fetch(`/data/products/${productId}.json`);
+                const productResponse = await fetch(`/betc/data/products/${productId}.json`);
                 if (!productResponse.ok) {
                     console.warn(`제품 ${productId} 로드 실패: ${productResponse.status}`);
                     return null;
