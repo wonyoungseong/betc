@@ -158,3 +158,147 @@
     color: green;
     font-weight: bold;
 }
+
+/* 반응형 디자인 */
+@media screen and (max-width: 768px) {
+    .campaign-hero {
+        height: 50vh;
+    }
+
+    .campaign-hero h1 {
+        font-size: 2rem;
+    }
+
+    .campaign-section h2 {
+        font-size: 1.8rem;
+    }
+
+    .campaign-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    .campaign-item img {
+        height: 200px;
+    }
+
+    .campaign-item h3 {
+        font-size: 1.2rem;
+    }
+
+    .eco-friendly-stats h3 {
+        font-size: 1.5rem;
+    }
+
+    .cta-button {
+        font-size: 1rem;
+        padding: 0.8rem 1.5rem;
+    }
+
+    .image-gallery {
+        flex-direction: column;
+    }
+
+    .image-gallery img {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .campaign-hero h1 {
+        font-size: 1.5rem;
+    }
+
+    .campaign-section h2 {
+        font-size: 1.5rem;
+    }
+
+    .campaign-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .eco-friendly-stats h3 {
+        font-size: 1.2rem;
+    }
+
+    .campaign-item img {
+        height: auto;
+        max-height: 250px;
+    }
+}
+
+/* 모달 반응형 처리 */
+@media screen and (max-width: 768px) {
+    .modal-content {
+        width: 90%;
+        margin: 10% auto;
+    }
+}
+
+/* 이미지 기본 스타일 */
+.campaign-hero,
+.effort-item img,
+.social-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.campaign-hero {
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+}
+
+.effort-item,
+.social-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.effort-item img,
+.social-item img {
+    max-height: 300px;
+    width: 100%;
+}
+
+/* 반응형 디자인 */
+@media screen and (max-width: 768px) {
+    .campaign-hero {
+        height: 50vh;
+    }
+
+    .effort-grid,
+    .social-grid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .effort-item,
+    .social-item {
+        width: 100%;
+        max-width: 400px;
+        margin-bottom: 2rem;
+    }
+
+    .effort-item img,
+    .social-item img {
+        max-height: 200px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .campaign-hero {
+        height: 30vh;
+    }
+
+    .effort-item img,
+    .social-item img {
+        max-height: 150px;
+    }
+}
+
+/* 기존의 반응형 코드도 유지합니다 */
