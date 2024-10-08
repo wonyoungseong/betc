@@ -370,7 +370,7 @@ button:hover {
 
 @media screen and (max-width: 480px) {
     .product-item {
-        width: calc(50% - 10px); /* 2개의 아이템이 한 줄에 들어갈 수 있도록 조정 */
+        width: calc(33.33% - 10px); /* 2개의 아이템이 한 줄에 들어갈 수 있도록 조정 */
     }
 }
 
