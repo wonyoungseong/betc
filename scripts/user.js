@@ -234,12 +234,26 @@ function closeModals() {
 document.addEventListener('DOMContentLoaded', function() {
     const hamburgerMenu = document.getElementById('hamburgerMenu');
     const mainNav = document.getElementById('mainNav');
+    const searchBar = document.getElementById('searchBar');
+
+    function adjustLayout() {
+        if (window.innerWidth <= 480) {
+            searchBar.style.display = 'block';
+            hamburgerMenu.style.display = 'block';
+        } else {
+            searchBar.style.display = 'flex';
+            hamburgerMenu.style.display = 'none';
+        }
+    }
 
     if (hamburgerMenu) {
         hamburgerMenu.addEventListener('click', function() {
             mainNav.classList.toggle('active');
         });
     }
+
+    window.addEventListener('resize', adjustLayout);
+    adjustLayout();
 
     document.getElementById('loginLink').addEventListener('click', showLoginModal);
     document.getElementById('signupLink').addEventListener('click', showSignupModal);
