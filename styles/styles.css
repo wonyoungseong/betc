@@ -357,7 +357,7 @@ button:hover {
 /* 반응형 디자인 */
 @media screen and (max-width: 1200px) {
     .product-item {
-        width: calc(33.33% - 13.33px); /* 3개의 아이템이 한 줄에 들어갈 수 있도록 조정 */
+        width: calc(80% - 13.33px); /* 3개의 아이템이 한 줄에 들어갈 수 있도록 조정 */
     }
 }
 
