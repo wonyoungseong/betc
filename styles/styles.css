@@ -239,9 +239,11 @@ main {
 }
 
 .product-item img {
-    max-width: 100%;
+    /* max-width: 100%; */
     height: auto;
     border-radius: 4px;
+    max-width: 100%; /* 최대 너비 설정 */
+    min-width: 150px; /* 최소 너비 설정 */
 }
 
 .product-item h3 {
@@ -410,7 +412,8 @@ button:hover {
 .product-item img {
     width: 100%;
     height: auto;
-    max-width: 200px;
+    max-width: 200px; /* 최대 너비 설정 */
+    min-width: 150px; /* 최소 너비 설정 */
     display: block;
     margin: 0 auto;
 }
