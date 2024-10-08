@@ -232,6 +232,15 @@ function closeModals() {
 
 // 이벤트 리스너 추가
 document.addEventListener('DOMContentLoaded', function() {
+    const hamburgerMenu = document.getElementById('hamburgerMenu');
+    const mainNav = document.getElementById('mainNav');
+
+    if (hamburgerMenu) {
+        hamburgerMenu.addEventListener('click', function() {
+            mainNav.classList.toggle('active');
+        });
+    }
+
     document.getElementById('loginLink').addEventListener('click', showLoginModal);
     document.getElementById('signupLink').addEventListener('click', showSignupModal);
     document.getElementById('closeLoginModal').addEventListener('click', closeModals);
