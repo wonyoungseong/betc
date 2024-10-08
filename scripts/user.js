@@ -31,6 +31,7 @@ window.showLoginModal = function() {
 window.showSignupModal = function() {
     var signupModal = document.getElementById('signupModal');
     signupModal.style.display = 'block';
+    document.getElementById('signupUsername').focus(); // 모달이 열릴 때 포커스 설정
 }
 
 window.closeLoginModal = function() {
