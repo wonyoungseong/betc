@@ -33,7 +33,7 @@
     <div class="modal-content">
         <span class="close" id="closeLoginModal">&times;</span>
         <h2>로그인</h2>
-        <input type="text" id="loginUsername" placeholder="사용자 이름">
+        <input type="text" id="loginUsername" placeholder="사용자 이름" onkeypress="if(event.key === 'Enter') document.getElementById('loginSubmit').click()">
         <button id="loginSubmit">로그인</button>
     </div>
 </div>

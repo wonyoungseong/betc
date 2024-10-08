@@ -198,6 +198,14 @@ window.addEventListeners = function() {
     }
 }
 
+// 로그인 모달 엔터 키 이벤트 추가
+document.getElementById('loginUsername').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        window.login();
+    }
+});
+
 function updateOrderCompleteCount() {
     const purchaseList = document.getElementById('purchaseList');
     const orderCompleteCount = document.getElementById('orderCompleteCount');
