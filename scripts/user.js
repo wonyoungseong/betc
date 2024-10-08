@@ -240,9 +240,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (window.innerWidth <= 480) {
             searchBar.style.display = 'block';
             hamburgerMenu.style.display = 'block';
+            searchBar.style.position = 'absolute';
+            searchBar.style.top = mainNav.offsetHeight + 'px';
+            searchBar.style.width = '100%';
         } else {
             searchBar.style.display = 'flex';
             hamburgerMenu.style.display = 'none';
+            searchBar.style.position = 'static';
+            searchBar.style.width = 'auto';
         }
     }
 

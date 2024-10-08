@@ -223,6 +223,11 @@ main {
     justify-content: flex-start; /* 왼쪽부터 채우도록 변경 */
 }
 
+div#productList {
+    justify-content: center;
+    align-items: center;
+}
+
 .product-item {
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -371,6 +376,51 @@ button:hover {
 }
 
 @media screen and (max-width: 480px) {
+    .logo a {
+        font-size: 18px; /* 로고 글자 크기 줄이기 */
+    }
+
+    .hamburger-menu {
+        display: block;
+        background-color: #4a4a7d; /* 기존 색상 유지 */
+    }
+    nav {
+        display: none;
+    }
+
+    nav.active {
+        display: block;
+        position: absolute;
+        top: 80px;
+        left: 0;
+        background-color: #4a4a7d;
+        width: 100%;
+        z-index: 1001;
+    }
+
+    nav ul {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    nav ul li {
+        width: 100%;
+        text-align: left;
+        padding: 10px 20px;
+    }
+
+    .search-bar {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .search-bar input {
+        width: 100%;
+    }
+
+    .search-bar button {
+        width: 100%;
+    }   
     .product-item {
         width: calc(33.33% - 10px); /* 2개의 아이템이 한 줄에 들어갈 수 있도록 조정 */
     }
@@ -1237,40 +1287,4 @@ footer {
     cursor: pointer;
     color: white;
     margin-left: 20px;
-}
-
-@media screen and (max-width: 480px) {
-    .hamburger-menu {
-        display: block;
-    }
-
-    nav {
-        display: none;
-    }
-
-    nav.active {
-        display: block;
-        position: absolute;
-        top: 80px;
-        left: 0;
-        background-color: #4a4a7d;
-        width: 100%;
-        z-index: 1001;
-    }
-
-    nav ul {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    nav ul li {
-        width: 100%;
-        text-align: left;
-        padding: 10px 20px;
-    }
-
-    .search-bar {
-        width: 100%;
-        margin-top: 10px;
-    }
 }
