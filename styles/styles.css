@@ -283,6 +283,8 @@ main {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
+    justify-content: center;
+    align-items: center;
 }
 
 /* 버튼 스타일 */
