@@ -25,6 +25,7 @@ window.checkAuthStatus = function() {
 window.showLoginModal = function() {
     var loginModal = document.getElementById('loginModal');
     loginModal.style.display = 'block';
+    document.getElementById('loginUsername').focus(); // 모달이 열릴 때 포커스 설정
 }
 
 window.showSignupModal = function() {
@@ -202,7 +203,7 @@ window.addEventListeners = function() {
 document.getElementById('loginUsername').addEventListener('keypress', function(event) {
     if (event.key === 'Enter') {
         event.preventDefault();
-        window.login();
+        document.getElementById('loginSubmit').click(); // 엔터 키로 로그인 버튼 클릭
     }
 });
 

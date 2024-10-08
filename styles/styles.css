@@ -361,13 +361,14 @@ button:hover {
 
 @media screen and (max-width: 768px) {
     .product-item {
-        width: calc(50% - 10px); /* 2개의 아이템이 한 줄에 들어갈 수 있도록 조정 */
+        grid-template-columns: repeat(3, 1fr); /* 3개씩 노출 */
+
     }
 }
 
 @media screen and (max-width: 480px) {
     .product-item {
-        width: 100%; /* 모바일에서는 1개의 아이템만 한 줄에 표시 */
+        width: calc(50% - 10px); /* 2개의 아이템이 한 줄에 들어갈 수 있도록 조정 */
     }
 }
 
@@ -409,7 +410,7 @@ button:hover {
 .product-item img {
     width: 100%;
     height: auto;
-    max-width: 300px;
+    max-width: 200px;
     display: block;
     margin: 0 auto;
 }
