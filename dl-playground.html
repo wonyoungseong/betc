@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Tag Manager DataLayer Playground</title>
+    <link rel="stylesheet" href="styles/dl-playground.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Google Tag Manager DataLayer Playground</h1>
+        <div id="challengeInfo"></div>
+        <textarea id="codeInput" placeholder="여기에 코드를 입력하세요..."></textarea>
+        <button onclick="checkDataLayerPush()">제출</button>
+        <button onclick="showSolution()">힌트(정답공개)</button>
+        <div id="result"></div>
+        <div id="difference"></div>
+        <div id="navigator">
+            <ul>
+                <li><a href="#" onclick="navigateToStage(1)">Stage 1</a></li>
+                <li><a href="#" onclick="navigateToStage(2)">Stage 2</a></li>
+                <li><a href="#" onclick="navigateToStage(3)">Stage 3</a></li>
+                <li><a href="#" onclick="navigateToStage(4)">Stage 4</a></li>
+            </ul>
+        </div>
+        <div id="stage-content"></div>
+    </div>
+    <script src="scripts/dl-playground.js"></script>
+</body>
+</html>
