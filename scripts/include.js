@@ -1,10 +1,41 @@
+function insertGtmScript() {
+    // GTM 스크립트가 이미 삽입되었는지 확인 (중복 삽입 방지)
+    if (document.getElementById('gtm-script')) {
+        return;
+    }
+
+    // dataLayer 초기화 (이미 초기화되지 않은 경우)
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+    });
+
+    // GTM 스크립트 태그 생성
+    var gtmScript = document.createElement('script');
+    gtmScript.id = 'gtm-script'; // 중복 방지용 ID
+    gtmScript.async = true;
+    gtmScript.src = 'https://data.betc.co.kr/gtm.js?id=GTM-56QPGJLB'; // 제공된 GTM ID 사용
+
+    // head에 스크립트 추가
+    document.head.appendChild(gtmScript);
+}
+
 function includeHTML(callback) {
+    // GTM 스크립트 삽입 함수를 먼저 호출
+    insertGtmScript();
+
     var elements = document.querySelectorAll('[include-html]');
     var totalElements = elements.length;
     var loadedCount = 0;
 
+    // 콜백이 제공되지 않았을 경우를 대비한 빈 함수 설정
+    callback = callback || function() {}; 
+
     if (totalElements === 0) {
-        callback();
+        // 즉시 콜백 호출 (HTML 조각이 없는 경우)
+        callback(); 
+        return; // 함수 종료
     }
 
     elements.forEach(function(elmnt) {
@@ -21,6 +52,7 @@ function includeHTML(callback) {
                 elmnt.removeAttribute("include-html");
                 loadedCount++;
                 if (loadedCount === totalElements) {
+                    // 모든 HTML 조각 로드 후 콜백 실행
                     callback();
                 }
             }

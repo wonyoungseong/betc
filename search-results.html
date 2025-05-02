@@ -5,18 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>검색 결과 - 뷰티 코스메틱 쇼핑몰</title>
     <link rel="stylesheet" href="styles/styles.css">
-    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="85be34eb-e45a-4f84-8c82-62f3e3578f89" data-blockingmode="auto" data-consentmode="disabled" type="text/javascript"></script>
+    <script src="scripts/include.js"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
     </script>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://data.betc.co.kr/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-56QPGJLB');</script>
-    <!-- End Google Tag Manager -->
-
+    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="85be34eb-e45a-4f84-8c82-62f3e3578f89" data-blockingmode="auto" data-consentmode="disabled" type="text/javascript"></script>
 </head>
 <body>
     <div include-html="components/header.html"></div>
@@ -29,45 +22,43 @@
     <div include-html="components/footer.html"></div>
 
     <!-- 스크립트 로드 -->
-    <script src="scripts/include.js"></script>
     <script src="scripts/user.js"></script>
     <script src="scripts/product.js"></script>
-    <script src="scripts/main.js"></script>
     <script>
-        includeHTML(async function() {
+        async function initializePage() {
             await window.loadProductData();
             window.checkAuthStatus();
             window.addEventListeners();
             const urlParams = new URLSearchParams(window.location.search);
             const query = urlParams.get('query');
             if (query) {
-                document.getElementById('searchInput').value = query;
-                performSearch(query);
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) searchInput.value = query;
+                performSearch(query); 
             }
-        });
+        }
+        includeHTML(initializePage);
 
         function performSearch(query) {
             const searchResults = document.getElementById('searchResults');
             searchResults.innerHTML = '검색 중...';
 
-            setTimeout(() => {
-                const results = window.products.filter(product => 
-                    product.name.toLowerCase().includes(query.toLowerCase()) ||
-                    product.description.toLowerCase().includes(query.toLowerCase())
-                );
+            const results = window.products.filter(product => 
+                product.name.toLowerCase().includes(query.toLowerCase()) ||
+                (product.description && product.description.toLowerCase().includes(query.toLowerCase()))
+            );
 
-                if (results.length > 0) {
-                    searchResults.innerHTML = results.map(product => `
-                        <div class="product-item" onclick="window.viewProduct(${product.id})">
-                            <img src="${product.image}" alt="${product.name}">
-                            <h3>${product.name}</h3>
-                            <p>${product.price.toLocaleString()}원</p>
-                        </div>
-                    `).join('');
-                } else {
-                    searchResults.innerHTML = '검색 결과가 없습니다.';
-                }
-            }, 500);
+            if (results.length > 0) {
+                searchResults.innerHTML = results.map(product => `
+                    <div class="product-item" onclick="window.viewProduct(${product.id})">
+                        <img src="${product.image}" alt="${product.name}">
+                        <h3>${product.name}</h3>
+                        <p>${product.price.toLocaleString()}원</p>
+                    </div>
+                `).join('');
+            } else {
+                searchResults.innerHTML = '검색 결과가 없습니다.';
+            }
         }
     </script>
 </body>

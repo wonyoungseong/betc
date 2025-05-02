@@ -6,17 +6,14 @@
     <title>뷰티 코스메틱 쇼핑몰</title>
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="icon" href="data:,">
+    <script src="scripts/include.js"></script>
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://data.betc.co.kr/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-56QPGJLB');</script>
-    <!-- End Google Tag Manager -->
     <script>
+    // Ensure dataLayer exists
+    window.dataLayer = window.dataLayer || [];
     var BETC_DATA_ENV ="STG"
-        </script>
-       <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="85be34eb-e45a-4f84-8c82-62f3e3578f89" data-blockingmode="auto" data-consentmode="disabled" type="text/javascript"></script>
+    </script>
+    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="85be34eb-e45a-4f84-8c82-62f3e3578f89" data-blockingmode="auto" data-consentmode="disabled" type="text/javascript"></script>
 </head>
 <body>
     <div include-html="components/header.html"></div>
@@ -46,19 +43,24 @@
     </main>
     <div include-html="components/footer.html"></div>
 
-    <script src="scripts/include.js"></script>
     <script src="scripts/user.js"></script>
     <script src="scripts/product.js"></script>
     <script src="scripts/cart.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', async function() {
-            await includeHTML();
-            await window.loadProductData();
+        // Function to initialize page-specific scripts after includes are done
+        async function initializePage() {
+            // It's generally safer to ensure data is loaded before using it
+            // Consider if loadProductData needs to be awaited depending on other functions
+            await window.loadProductData(); 
             window.checkAuthStatus();
             window.addEventListeners();
             window.loadMainProducts();
             window.initializeCategoryNav();
-        });
+        }
+
+        // Call includeHTML, which now also inserts GTM.
+        // Pass initializePage as the callback function.
+        includeHTML(initializePage);
     </script>
 </body>
 </html>

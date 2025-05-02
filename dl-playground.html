@@ -5,14 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Tag Manager DataLayer Playground</title>
     <link rel="stylesheet" href="styles/dl-playground.css">
-        <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="85be34eb-e45a-4f84-8c82-62f3e3578f89" data-blockingmode="auto" data-consentmode="disabled" type="text/javascript"></script>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://data.betc.co.kr/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-56QPGJLB');</script>
-    <!-- End Google Tag Manager -->
+    <script src="scripts/include.js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+    </script>
+    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="85be34eb-e45a-4f84-8c82-62f3e3578f89" data-blockingmode="auto" data-consentmode="disabled" type="text/javascript"></script>
 </head>
 <body>
     <div class="container">
@@ -34,5 +31,14 @@
         <div id="stage-content"></div>
     </div>
     <script src="scripts/dl-playground.js"></script>
+    <script>
+        function initializePage() {
+            // If dl-playground.js relies on DOM elements, it might need to run after DOMContentLoaded
+            // or be called directly here if it's safe.
+            // For now, assume it can be initialized here.
+            // If specific init function exists in dl-playground.js, call it here.
+        }
+        includeHTML(initializePage);
+    </script>
 </body>
 </html>

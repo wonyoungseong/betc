@@ -6,15 +6,11 @@
     <title>립스틱 25% 할인 대축제 - 뷰티 코스메틱</title>
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="styles/promotion.css">
-        <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="85be34eb-e45a-4f84-8c82-62f3e3578f89" data-blockingmode="auto" data-consentmode="disabled" type="text/javascript"></script>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://data.betc.co.kr/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-56QPGJLB');</script>
-    <!-- End Google Tag Manager -->
-    
+    <script src="scripts/include.js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+    </script>
+    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="85be34eb-e45a-4f84-8c82-62f3e3578f89" data-blockingmode="auto" data-consentmode="disabled" type="text/javascript"></script>
 </head>
 <body>
     <div include-html="components/header.html"></div>
@@ -111,15 +107,13 @@
 
     <div include-html="components/footer.html"></div>
 
-    <script src="scripts/include.js"></script>
     <script src="scripts/user.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            includeHTML(function() {
-                window.checkAuthStatus();
-                window.addEventListeners();
-            });
-        });
+        function initializePage() {
+            window.checkAuthStatus();
+            window.addEventListeners();
+        }
+        includeHTML(initializePage);
     </script>
 </body>
 </html>
