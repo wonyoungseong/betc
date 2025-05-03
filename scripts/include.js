@@ -6,6 +6,17 @@ function insertGtmScript() {
 
     // dataLayer 초기화 (이미 초기화되지 않은 경우)
     window.dataLayer = window.dataLayer || [];
+
+    // --- 페이지 뷰 정보 푸시 시작 ---
+    window.dataLayer.push({
+        'page_title': document.title,
+        'page_location': window.location.href,
+        'page_path': window.location.pathname,
+        // 'event': 'page_view_info' // 필요시 별도 이벤트 이름 사용 가능
+    });
+    // --- 페이지 뷰 정보 푸시 끝 ---
+
+    // gtm.js 이벤트 푸시 (GTM 로드 시작 알림)
     window.dataLayer.push({
         'gtm.start': new Date().getTime(),
         event: 'gtm.js'

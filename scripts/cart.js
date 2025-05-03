@@ -53,58 +53,127 @@ function buyNow(productId) {
 // 장바구니 아이템 로드
 function loadCartItems() {
     const cartDiv = document.getElementById('cartItems');
-    if (!cartDiv) return;
-    cartDiv.innerHTML = '';
-    
-    const currentUserId = window.currentUser ? window.currentUser.username : 'guest';
-    const userCart = cart.filter(item => item.userId === currentUserId);
+    const totalPriceSpan = document.getElementById('totalPrice');
+    const checkoutButton = document.querySelector('.checkout-button');
+    cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const currentUser = window.currentUser ? window.currentUser.username : 'guest';
+    const userCart = cart.filter(item => item.userId === currentUser);
+
+    cartDiv.innerHTML = ''; // Clear previous items
+    let total = 0;
 
     if (userCart.length === 0) {
         cartDiv.innerHTML = '<p>장바구니가 비어 있습니다.</p>';
-        updateTotalPrice(0);
+        totalPriceSpan.textContent = '0원';
+        if(checkoutButton) checkoutButton.textContent = '0원 주문하기';
+        if(checkoutButton) checkoutButton.disabled = true;
         return;
     }
 
-    let totalPrice = 0;
-    let totalQuantity = 0;
+    // --- GA4 view_cart 이벤트 푸시 시작 ---
+    if (typeof pushEcommerceEvent === 'function') {
+        const ecommerceData = {
+            currency: 'KRW',
+            value: userCart.reduce((sum, item) => sum + (item.price * item.quantity), 0), // 장바구니 총액
+            items: userCart.map((item, index) => {
+                const productInfo = window.products.find(p => p.id === item.productId); // 상품 추가 정보 가져오기
+                return {
+                    item_id: item.productId.toString(),
+                    item_name: item.productName,
+                    affiliation: productInfo?.affiliation || '뷰티 코스메틱 쇼핑몰',
+                    coupon: productInfo?.coupon || undefined,
+                    discount: productInfo?.originalPrice ? (productInfo.originalPrice - item.price).toFixed(2) * item.quantity : undefined,
+                    index: index, // 장바구니 내 순서 (필요시)
+                    item_brand: productInfo?.brand || undefined,
+                    item_category: productInfo?.category || undefined,
+                    price: item.price,
+                    quantity: item.quantity
+                };
+            })
+        };
+        pushEcommerceEvent('view_cart', ecommerceData);
+    } else {
+        console.warn('pushEcommerceEvent function is not defined. Cannot push view_cart.');
+    }
+    // --- GA4 view_cart 이벤트 푸시 끝 ---
+
     userCart.forEach(item => {
         const div = document.createElement('div');
         div.className = 'cart-item';
-        const itemTotal = item.price * item.quantity;
-        totalPrice += itemTotal;
-        totalQuantity += item.quantity;
+        const productInfo = window.products.find(p => p.id === item.productId);
+        const imageUrl = productInfo ? productInfo.image : 'images/placeholder.png';
+
         div.innerHTML = `
-            <div class="item-name">${item.productName}</div>
-            <div class="item-price">금액: ₩${item.price.toLocaleString()}</div>
-            <div class="item-quantity">수량: <input type="number" value="${item.quantity}" min="1" onchange="updateCartItemQuantity(${item.productId}, this.value)"></div>
-            <div class="item-total">소계: ₩${itemTotal.toLocaleString()}</div>
-            <button onclick="removeFromCart(${item.productId})" class="remove-button">삭제</button>
+            <img src="${imageUrl}" alt="${item.productName}" class="cart-item-image">
+            <div class="cart-item-details">
+                <h3>${item.productName}</h3>
+                <p>가격: ${item.price.toLocaleString()}원</p>
+                <p>수량: ${item.quantity}</p>
+            </div>
+            <button class="remove-item-btn" onclick="window.removeFromCart(${item.productId})">삭제</button>
         `;
         cartDiv.appendChild(div);
+        total += item.price * item.quantity;
     });
 
-    updateTotalPrice(totalPrice, totalQuantity);
+    totalPriceSpan.textContent = `${total.toLocaleString()}원`;
+    if(checkoutButton) checkoutButton.textContent = `${total.toLocaleString()}원 주문하기`;
+    if(checkoutButton) checkoutButton.disabled = false;
 }
 
 // 체크아웃 시작
 function beginCheckout() {
-    if (cart.length === 0) {
+    const currentUser = window.currentUser ? window.currentUser.username : 'guest';
+    const userCart = cart.filter(item => item.userId === currentUser); // 현재 사용자 장바구니 가져오기
+
+    if (userCart.length === 0) {
         alert('장바구니가 비어 있습니다.');
         return;
     }
-    // GTM 이벤트 전송
+
+    // --- GA4 begin_checkout 이벤트 푸시 시작 ---
+    if (typeof pushEcommerceEvent === 'function') {
+        const ecommerceData = {
+            currency: 'KRW',
+            value: userCart.reduce((sum, item) => sum + (item.price * item.quantity), 0), // 장바구니 총액
+            coupon: undefined, // 장바구니 전체 쿠폰이 있다면 추가
+            items: userCart.map((item, index) => {
+                const productInfo = window.products.find(p => p.id === item.productId);
+                return {
+                    item_id: item.productId.toString(),
+                    item_name: item.productName,
+                    affiliation: productInfo?.affiliation || '뷰티 코스메틱 쇼핑몰',
+                    coupon: productInfo?.coupon || undefined, // 아이템 개별 쿠폰
+                    discount: productInfo?.originalPrice ? (productInfo.originalPrice - item.price).toFixed(2) * item.quantity : undefined,
+                    index: index,
+                    item_brand: productInfo?.brand || undefined,
+                    item_category: productInfo?.category || undefined,
+                    price: item.price,
+                    quantity: item.quantity
+                };
+            })
+        };
+        pushEcommerceEvent('begin_checkout', ecommerceData);
+    } else {
+        console.warn('pushEcommerceEvent function is not defined. Cannot push begin_checkout.');
+    }
+    // --- GA4 begin_checkout 이벤트 푸시 끝 ---
+
+    // 기존 GTM 이벤트 전송 코드 제거
+    /*
     dataLayer.push({
         'event': 'begin_checkout',
         'ecommerce': {
-            'items': cart.map(item => ({
-                'item_id': item.id,
+            'items': cart.map(item => ({ // 여기서는 전역 cart를 사용했었음. userCart 사용하도록 변경해야 함.
+                'item_id': item.id,       // 필드명도 GA4와 다름
                 'item_name': item.name,
                 'price': item.price,
                 'quantity': item.quantity
             }))
         }
     });
-    window.location.href = 'checkout.html';
+    */
+    window.location.href = 'checkout.html'; // 이벤트 푸시 후 페이지 이동
 }
 
 // 구매 완료 처리
@@ -122,16 +191,73 @@ window.completePurchase = function(event) {
         return;
     }
 
-    // 여기에 실제 결제 처리 로직을 추가할 수 있습니다.
+    // --- GA4 add_shipping_info 이벤트 푸시 시작 ---
+    const currentUserId = window.currentUser ? window.currentUser.username : 'guest';
+    const userCart = cart.filter(item => item.userId === currentUserId); // 현재 사용자 장바구니
+
+    if (userCart.length > 0 && typeof pushEcommerceEvent === 'function') {
+        const shippingEcommerceData = {
+            currency: 'KRW',
+            value: userCart.reduce((sum, item) => sum + (item.price * item.quantity), 0), // 장바구니 총액
+            coupon: undefined, // 전체 쿠폰 (있다면)
+            shipping_tier: 'Standard', // 배송 옵션 (현재는 기본값)
+            items: userCart.map((item, index) => {
+                const productInfo = window.products.find(p => p.id === item.productId);
+                return {
+                    item_id: item.productId.toString(),
+                    item_name: item.productName,
+                    affiliation: productInfo?.affiliation || '뷰티 코스메틱 쇼핑몰',
+                    coupon: productInfo?.coupon || undefined,
+                    discount: productInfo?.originalPrice ? (productInfo.originalPrice - item.price).toFixed(2) * item.quantity : undefined,
+                    index: index,
+                    item_brand: productInfo?.brand || undefined,
+                    item_category: productInfo?.category || undefined,
+                    price: item.price,
+                    quantity: item.quantity
+                };
+            })
+        };
+        pushEcommerceEvent('add_shipping_info', shippingEcommerceData);
+
+        // --- GA4 add_payment_info 이벤트 푸시 시작 ---
+        const paymentEcommerceData = {
+            currency: 'KRW',
+            value: userCart.reduce((sum, item) => sum + (item.price * item.quantity), 0), // 장바구니 총액
+            payment_type: 'Credit Card', // 결제 수단 (현재는 기본값)
+            coupon: undefined, // 전체 쿠폰 (있다면)
+            items: userCart.map((item, index) => { // items 배열은 shipping과 동일하게 사용
+                const productInfo = window.products.find(p => p.id === item.productId);
+                return {
+                    item_id: item.productId.toString(),
+                    item_name: item.productName,
+                    affiliation: productInfo?.affiliation || '뷰티 코스메틱 쇼핑몰',
+                    coupon: productInfo?.coupon || undefined,
+                    discount: productInfo?.originalPrice ? (productInfo.originalPrice - item.price).toFixed(2) * item.quantity : undefined,
+                    index: index,
+                    item_brand: productInfo?.brand || undefined,
+                    item_category: productInfo?.category || undefined,
+                    price: item.price,
+                    quantity: item.quantity
+                };
+            })
+        };
+        pushEcommerceEvent('add_payment_info', paymentEcommerceData);
+        // --- GA4 add_payment_info 이벤트 푸시 끝 ---
+
+    } else if (userCart.length === 0) {
+         console.warn('Cart is empty. Skipping GA4 events.');
+    } else {
+        console.warn('pushEcommerceEvent function is not defined. Cannot push GA4 events.');
+    }
+    // --- GA4 이벤트 푸시 끝 (shipping & payment) ---
 
     // 구매 내역 저장
-    const currentUserId = window.currentUser ? window.currentUser.username : 'guest';
     const purchaseHistory = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
     const newPurchase = {
         id: Date.now(),
         userId: currentUserId,
-        items: cart.filter(item => item.userId === currentUserId),
-        totalAmount: calculateTotalPrice(),
+        items: userCart,
+        totalAmount: userCart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
         date: new Date().toISOString(),
         shippingInfo: { name, address, phone, email, message }
     };
@@ -142,24 +268,40 @@ window.completePurchase = function(event) {
     cart = cart.filter(item => item.userId !== currentUserId);
     localStorage.setItem('cart', JSON.stringify(cart));
 
-    // GTM 이벤트 전송
-    dataLayer.push({
-        'event': 'purchase',
-        'ecommerce': {
-            'purchase': {
-                'actionField': {
-                    'id': newPurchase.id,
-                    'revenue': newPurchase.totalAmount
-                },
-                'products': newPurchase.items.map(item => ({
-                    'name': item.productName,
-                    'id': item.productId,
-                    'price': item.price,
-                    'quantity': item.quantity
-                }))
-            }
-        }
-    });
+    // --- GA4 purchase 이벤트 푸시 시작 ---
+    if (typeof pushEcommerceEvent === 'function') {
+        const ecommerceData = {
+            transaction_id: newPurchase.id.toString(), // 거래 ID (문자열 권장)
+            affiliation: '뷰티 코스메틱 쇼핑몰', // 제휴사 또는 스토어 이름
+            value: newPurchase.totalAmount, // 총 구매 금액 (세금, 배송비 제외한 상품 총액일 수도 있음 - 확인 필요)
+            tax: 0, // 세금 (정보가 있다면 추가)
+            shipping: 0, // 배송비 (정보가 있다면 추가)
+            currency: 'KRW',
+            coupon: undefined, // 주문 전체에 적용된 쿠폰 (있다면)
+            items: newPurchase.items.map((item, index) => { // 구매한 아이템 정보 매핑
+                const productInfo = window.products.find(p => p.id === item.productId); // 원본 상품 정보 조회
+                return {
+                    item_id: item.productId.toString(),
+                    item_name: item.productName,
+                    affiliation: productInfo?.affiliation || '뷰티 코스메틱 쇼핑몰',
+                    coupon: productInfo?.coupon || undefined, // 아이템 개별 쿠폰
+                    discount: productInfo?.originalPrice ? (productInfo.originalPrice - item.price).toFixed(2) * item.quantity : undefined,
+                    index: index,
+                    item_brand: productInfo?.brand || undefined,
+                    item_category: productInfo?.category || undefined,
+                    // item_category2, 3, 4, 5 ... 필요시 추가
+                    // item_list_id: ?? // 어떤 목록에서 구매했는지 알 수 있다면 추가
+                    // item_list_name: ??
+                    price: item.price,
+                    quantity: item.quantity
+                };
+            })
+        };
+        pushEcommerceEvent('purchase', ecommerceData);
+    } else {
+        console.warn('pushEcommerceEvent function is not defined. Cannot push purchase.');
+    }
+    // --- GA4 purchase 이벤트 푸시 끝 ---
 
     // 결제 완료 페이지로 이동
     window.location.href = 'purchase.html';
@@ -167,10 +309,50 @@ window.completePurchase = function(event) {
 
 // 장바구니에서 제품 제거
 function removeFromCart(productId) {
-    const currentUserId = window.currentUser ? window.currentUser.username : 'guest';
-    cart = cart.filter(item => !(item.userId === currentUserId && item.productId === productId));
-    localStorage.setItem('cart', JSON.stringify(cart));
-    loadCartItems();
+    const currentUser = window.currentUser ? window.currentUser.username : 'guest';
+    // cart 배열에서 현재 사용자의 상품 인덱스 찾기
+    const itemIndex = cart.findIndex(item => item.userId === currentUser && item.productId === productId);
+
+    if (itemIndex !== -1) {
+        // 제거할 아이템 정보 저장 (이벤트 푸시용)
+        const removedItem = { ...cart[itemIndex] }; // 복사본 저장
+        const productInfo = window.products.find(p => p.id === removedItem.productId); // 원본 상품 정보 찾기
+
+        // --- GA4 remove_from_cart 이벤트 푸시 시작 ---
+        if (productInfo && typeof pushEcommerceEvent === 'function') {
+            const ecommerceData = {
+                currency: 'KRW',
+                value: (removedItem.price * removedItem.quantity), // 제거된 아이템의 총 가치
+                items: [{
+                    item_id: removedItem.productId.toString(),
+                    item_name: removedItem.productName,
+                    affiliation: productInfo.affiliation || '뷰티 코스메틱 쇼핑몰',
+                    coupon: productInfo.coupon || undefined, // 상품 원본 데이터에 쿠폰 정보가 있다면 사용
+                    discount: productInfo.originalPrice ? (productInfo.originalPrice - removedItem.price).toFixed(2) * removedItem.quantity : undefined, // 아이템 할인액 * 수량
+                    // index: ?? // 장바구니 내에서의 index 정보 필요 시 추가
+                    item_brand: productInfo.brand || undefined,
+                    item_category: productInfo.category || undefined,
+                    price: removedItem.price,
+                    quantity: removedItem.quantity // 제거된 수량
+                }]
+            };
+            pushEcommerceEvent('remove_from_cart', ecommerceData);
+        } else if (!productInfo){
+            console.warn(`Product info not found for removed item ID ${removedItem.productId}`);
+        } else {
+            console.warn('pushEcommerceEvent function is not defined. Cannot push remove_from_cart.');
+        }
+        // --- GA4 remove_from_cart 이벤트 푸시 끝 ---
+
+        // cart 배열 및 localStorage에서 아이템 제거
+        cart.splice(itemIndex, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        // 장바구니 UI 다시 로드
+        loadCartItems();
+    } else {
+        console.warn(`Item with productId ${productId} not found in cart for user ${currentUser}`);
+    }
 }
 
 function loadOrderSummary() {

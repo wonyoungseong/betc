@@ -18,9 +18,9 @@
             <!-- 장바구니 아이템이 여기에 로드됩니다. -->
         </div>
         <div class="cart-summary">
-            <p>최종 결제액: <span id="totalPrice">0원</span></p>
+            <p>총 금액: <span id="totalPrice">0원</span></p>
+            <a href="checkout.html" class="checkout-button" onclick="event.preventDefault(); window.beginCheckout();">0원 주문하기</a>
         </div>
-        <button onclick="beginCheckout()" class="checkout-button">0원 주문하기</button>
     </main>
     <div include-html="components/footer.html"></div>
     <script src="scripts/product.js"></script>

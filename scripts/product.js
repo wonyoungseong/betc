@@ -181,11 +181,11 @@ function createImageGallery(product) {
     });
 }
 
-window.createProductItem = function(product) {
+window.createProductItem = function(product, listName, index) {
     var item = document.createElement('div');
     item.className = 'product-item';
     item.onclick = function() {
-        window.viewProduct(product.id);
+        window.viewProduct(product.id, listName, index);
     };
     
     var discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
@@ -203,8 +203,39 @@ window.createProductItem = function(product) {
     return item;
 }
 
-window.viewProduct = function(id) {
-    window.location.href = `product-detail.html?id=${id}`;
+window.viewProduct = function(id, listName, index) {
+    const product = window.products.find(p => p.id === id);
+    if (product && typeof pushEcommerceEvent === 'function') {
+        const ecommerceData = {
+            item_list_name: listName,
+            item_list_id: product.category, // 목록 ID로 상품 카테고리 사용 (또는 listName과 동일하게 사용)
+            items: [{
+                item_id: product.id.toString(),
+                item_name: product.name,
+                affiliation: product.affiliation || '뷰티 코스메틱 쇼핑몰',
+                coupon: product.coupon || undefined,
+                discount: product.originalPrice ? (product.originalPrice - product.price).toFixed(2) : undefined,
+                index: index, // 전달받은 인덱스 사용
+                item_brand: product.brand || undefined,
+                item_category: product.category || undefined,
+                item_list_id: product.category, // 아이템에도 목록 ID
+                item_list_name: listName,       // 아이템에도 목록 이름
+                price: product.price,
+                quantity: 1 // 선택 시 수량은 1
+            }]
+        };
+        pushEcommerceEvent('select_item', ecommerceData);
+    } else if (!product) {
+        console.warn(`Product with ID ${id} not found for select_item event.`);
+    } else {
+        console.warn('pushEcommerceEvent function is not defined. Cannot push select_item.');
+    }
+
+    // 페이지 이동 로직 수정: list_name과 list_id(category) 추가
+    const listId = product ? product.category : 'unknown'; // 상품 정보가 있을 경우 카테고리 사용
+    const encodedListName = encodeURIComponent(listName || 'unknown');
+    const encodedListId = encodeURIComponent(listId);
+    window.location.href = `product-detail.html?id=${id}&list_name=${encodedListName}&list_id=${encodedListId}`;
 }
 
 window.searchProduct = function() {
@@ -261,21 +292,79 @@ window.loadProductList = function(category = 'all', sortBy = 'lowprice') {
         }
     });
 
-    filteredProducts.forEach(function(product) {
-        var item = window.createProductItem(product);
+    const listName = category === 'all' ? '전체 제품' : category;
+    const ecommerceData = {
+        item_list_name: listName,
+        item_list_id: category,
+        items: filteredProducts.map((product, index) => ({
+            item_id: product.id.toString(),
+            item_name: product.name,
+            affiliation: product.affiliation || '뷰티 코스메틱 쇼핑몰',
+            coupon: product.coupon || undefined,
+            discount: product.originalPrice ? (product.originalPrice - product.price).toFixed(2) : undefined,
+            index: index,
+            item_brand: product.brand || undefined,
+            item_category: product.category || undefined,
+            item_list_id: category,
+            item_list_name: listName,
+            price: product.price,
+            quantity: 1
+        }))
+    };
+    if (typeof pushEcommerceEvent === 'function') {
+        pushEcommerceEvent('view_item_list', ecommerceData);
+    } else {
+        console.warn('pushEcommerceEvent function is not defined. Cannot push view_item_list.');
+    }
+
+    filteredProducts.forEach(function(product, index) {
+        var item = window.createProductItem(product, listName, index);
         productList.appendChild(item);
     });
 }
 
 window.addToCartWithQuantity = function(productId) {
-    var quantity = parseInt(document.getElementById('quantity').value);
+    var quantityInput = document.getElementById('quantity'); // quantity 입력 필드 가져오기
+    var quantity = quantityInput ? parseInt(quantityInput.value) : 1; // 입력 필드가 있으면 값 사용, 없으면 1
+
     if (isNaN(quantity) || quantity < 1) {
         alert('올바른 수량을 입력해주세요.');
         return;
     }
     
-    const product = products.find(p => p.id === productId);
+    const product = window.products.find(p => p.id === productId);
     if (!product) return;
+
+    // --- GA4 add_to_cart 이벤트 푸시 시작 ---
+    const ecommerceData = {
+        currency: 'KRW', // 통화 코드
+        value: (product.price * quantity), // 아이템 가격 * 수량
+        items: [{
+            item_id: product.id.toString(),
+            item_name: product.name,
+            affiliation: product.affiliation || '뷰티 코스메틱 쇼핑몰',
+            coupon: product.coupon || undefined,
+            discount: product.originalPrice ? (product.originalPrice - product.price).toFixed(2) * quantity : undefined, // 아이템 할인액 * 수량
+            // index: ?? // 목록에서 추가한 경우 index 전달 필요 (현재 구조에서는 어려움)
+            item_brand: product.brand || undefined,
+            item_category: product.category || undefined,
+            // item_category2, 3 등 필요시 추가
+            // item_list_id: ?? // 목록 컨텍스트 필요
+            // item_list_name: ?? // 목록 컨텍스트 필요
+            price: product.price,
+            quantity: quantity
+        }]
+    };
+    if (typeof pushEcommerceEvent === 'function') {
+        pushEcommerceEvent('add_to_cart', ecommerceData);
+    } else {
+        console.warn('pushEcommerceEvent function is not defined. Cannot push add_to_cart.');
+        // Fallback 직접 푸시
+        // window.dataLayer = window.dataLayer || [];
+        // window.dataLayer.push({ ecommerce: null });
+        // window.dataLayer.push({ event: 'add_to_cart', ecommerce: ecommerceData });
+    }
+    // --- GA4 add_to_cart 이벤트 푸시 끝 ---
     
     const cartItem = {
         userId: window.currentUser ? window.currentUser.username : 'guest',
@@ -301,18 +390,8 @@ window.addToCartWithQuantity = function(productId) {
         window.location.href = 'cart.html';
     }
 
-    // GTM 이벤트 전송
-    dataLayer.push({
-        'event': 'add_to_cart',
-        'ecommerce': {
-            'items': [{
-                'item_id': product.id,
-                'item_name': product.name,
-                'price': product.price,
-                'quantity': quantity
-            }]
-        }
-    });
+    // 기존 GTM 이벤트 전송 코드 제거
+    // dataLayer.push({ ... });
 }
 
 window.buyNowWithQuantity = function(productId) {
