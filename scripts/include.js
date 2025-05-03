@@ -5,7 +5,7 @@ function insertGtmScript() {
     }
 
     // dataLayer 초기화 (이미 초기화되지 않은 경우)
-    window.dataLayer = window.dataLayer || [];
+    // window.dataLayer = window.dataLayer || []; 
 
     // --- 페이지 뷰 정보 푸시 시작 ---
     window.dataLayer.push({

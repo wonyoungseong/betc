@@ -45,8 +45,37 @@ window.loadMainProducts = function(category = 'all') {
     // 최대 4개의 제품만 표시
     var displayProducts = filteredProducts.slice(0, 4);
 
-    displayProducts.forEach(function(product) {
-        var item = window.createProductItem(product);
+    // --- GA4 view_item_list 이벤트 푸시 시작 (추가된 부분) ---
+    const listName = '메인 추천 제품'; // 목록 이름 지정
+    const listId = 'main_featured'; // 목록 ID 지정 (임의)
+    const ecommerceData = {
+        item_list_name: listName,
+        item_list_id: listId,
+        items: displayProducts.map((product, index) => ({
+            item_id: product.id.toString(),
+            item_name: product.name,
+            affiliation: product.affiliation || '뷰티 코스메틱 쇼핑몰',
+            coupon: product.coupon || undefined,
+            discount: product.originalPrice ? (product.originalPrice - product.price).toFixed(2) : undefined,
+            index: index,
+            item_brand: product.brand || undefined,
+            item_category: product.category || undefined,
+            item_list_id: listId, // 각 아이템에도 목록 ID 추가
+            item_list_name: listName, // 각 아이템에도 목록 이름 추가
+            price: product.price,
+            quantity: 1
+        }))
+    };
+    if (typeof pushEcommerceEvent === 'function') {
+        pushEcommerceEvent('view_item_list', ecommerceData);
+    } else {
+        console.warn('pushEcommerceEvent function is not defined. Cannot push view_item_list for main products.');
+    }
+    // --- GA4 view_item_list 이벤트 푸시 끝 ---
+
+    displayProducts.forEach(function(product, index) {
+        // createProductItem 호출 시 목록 정보 전달 (select_item을 위해)
+        var item = window.createProductItem(product, listName, index);
         productList.appendChild(item);
     });
 }
