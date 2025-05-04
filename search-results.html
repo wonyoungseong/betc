@@ -42,14 +42,14 @@
 
         function performSearch(query) {
             const searchResults = document.getElementById('searchResults');
-            searchResults.innerHTML = '검색 중...';
+            searchResults.innerHTML = '검색 중...'; // 초기 메시지
 
             const results = window.products.filter(product => 
                 product.name.toLowerCase().includes(query.toLowerCase()) ||
                 (product.description && product.description.toLowerCase().includes(query.toLowerCase()))
             );
 
-            // --- GA4 view_search_results 이벤트 푸시 시작 ---
+            // --- GA4 view_search_results 이벤트 푸시 (검색 행위 자체) ---
             if (typeof pushEvent === 'function') {
                 pushEvent('view_search_results', {
                     search_term: query 
@@ -57,18 +57,99 @@
             } else {
                 console.warn('pushEvent function is not defined. Cannot push view_search_results.');
             }
-            // --- GA4 view_search_results 이벤트 푸시 끝 ---
+            // --- 이벤트 푸시 끝 ---
+
+            // 결과 표시 전 초기화
+            searchResults.innerHTML = ''; 
 
             if (results.length > 0) {
-                searchResults.innerHTML = results.map(product => `
-                    <div class="product-item" onclick="window.viewProduct(${product.id})">
-                        <img src="${product.image}" alt="${product.name}">
-                        <h3>${product.name}</h3>
-                        <p>${product.price.toLocaleString()}원</p>
-                    </div>
-                `).join('');
+                // 검색 결과가 있을 경우
+                searchResults.innerHTML = `<h2>'${query}' 검색 결과 (${results.length}건)</h2>`;
+                
+                const listName = `검색 결과: ${query}`;
+                const listId = 'search_results';
+
+                // --- GA4 view_item_list 이벤트 푸시 (검색 결과 목록) ---
+                if (typeof pushEcommerceEvent === 'function') {
+                    const ecommerceData = {
+                        item_list_name: listName,
+                        item_list_id: listId,
+                        items: results.map((product, index) => ({
+                            item_id: product.id.toString(),
+                            item_name: product.name,
+                            affiliation: product.affiliation || '뷰티 코스메틱 쇼핑몰',
+                            coupon: product.coupon || undefined,
+                            discount: product.originalPrice ? (product.originalPrice - product.price).toFixed(2) : undefined,
+                            index: index + 1, // 1부터 시작
+                            item_brand: product.brand || undefined,
+                            item_category: product.category || undefined,
+                            item_list_id: listId,
+                            item_list_name: listName,
+                            price: product.price,
+                            quantity: 1
+                        }))
+                    };
+                    pushEcommerceEvent('view_item_list', ecommerceData);
+                } else {
+                    console.warn('pushEcommerceEvent function is not defined. Cannot push view_item_list for search results.');
+                }
+                // --- 이벤트 푸시 끝 ---
+
+                // 검색 결과 아이템 표시 (createProductItem 사용)
+                const resultsContainer = document.createElement('div');
+                resultsContainer.className = 'products'; // 기존 스타일 적용
+                results.forEach((product, index) => {
+                    const itemElement = window.createProductItem(product, listName, index); // listName과 0-based index 전달
+                    resultsContainer.appendChild(itemElement);
+                });
+                searchResults.appendChild(resultsContainer);
+
             } else {
-                searchResults.innerHTML = '검색 결과가 없습니다.';
+                // 검색 결과가 없을 경우
+                searchResults.innerHTML = `<p>'${query}'에 대한 검색 결과가 없습니다.</p><h3>추천 상품</h3>`;
+
+                const recommendedProducts = window.products.slice(0, 4); // 상위 4개 제품 추천
+                const listName = '검색결과 없음 추천';
+                const listId = 'no_results_recommendation';
+
+                if (recommendedProducts.length > 0) {
+                    // --- GA4 view_item_list 이벤트 푸시 (추천 상품 목록) ---
+                    if (typeof pushEcommerceEvent === 'function') {
+                        const ecommerceData = {
+                            item_list_name: listName,
+                            item_list_id: listId,
+                            items: recommendedProducts.map((product, index) => ({
+                                item_id: product.id.toString(),
+                                item_name: product.name,
+                                affiliation: product.affiliation || '뷰티 코스메틱 쇼핑몰',
+                                coupon: product.coupon || undefined,
+                                discount: product.originalPrice ? (product.originalPrice - product.price).toFixed(2) : undefined,
+                                index: index + 1, // 1부터 시작
+                                item_brand: product.brand || undefined,
+                                item_category: product.category || undefined,
+                                item_list_id: listId,
+                                item_list_name: listName,
+                                price: product.price,
+                                quantity: 1
+                            }))
+                        };
+                        pushEcommerceEvent('view_item_list', ecommerceData);
+                    } else {
+                        console.warn('pushEcommerceEvent function is not defined. Cannot push view_item_list for recommendations.');
+                    }
+                    // --- 이벤트 푸시 끝 ---
+
+                    // 추천 상품 아이템 표시 (createProductItem 사용)
+                    const recommendationsContainer = document.createElement('div');
+                    recommendationsContainer.className = 'products'; // 기존 스타일 적용
+                    recommendedProducts.forEach((product, index) => {
+                        const itemElement = window.createProductItem(product, listName, index); // listName과 0-based index 전달
+                        recommendationsContainer.appendChild(itemElement);
+                    });
+                    searchResults.appendChild(recommendationsContainer);
+                } else {
+                    searchResults.innerHTML += '<p>추천 상품을 불러올 수 없습니다.</p>';
+                }
             }
         }
     </script>
