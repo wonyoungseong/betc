@@ -216,15 +216,20 @@ window.addEventListeners = function() {
             window.searchProduct();
         });
     }
-}
 
-// 로그인 모달 엔터 키 이벤트 추가
-document.getElementById('loginUsername').addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        document.getElementById('loginSubmit').click(); // 엔터 키로 로그인 버튼 클릭
+    // 로그인 모달 엔터 키 이벤트 리스너 추가
+    const loginUsernameInput = document.getElementById('loginUsername');
+    if (loginUsernameInput) {
+        loginUsernameInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                document.getElementById('loginSubmit').click(); // 엔터 키로 로그인 버튼 클릭
+            }
+        });
+    } else {
+        console.warn("Element with ID 'loginUsername' not found when adding keypress listener.");
     }
-});
+}
 
 function updateOrderCompleteCount() {
     const purchaseList = document.getElementById('purchaseList');

@@ -7,6 +7,15 @@
 window.dataLayer = window.dataLayer || [];
 
 /**
+ * dataLayer의 ecommerce 객체를 초기화합니다.
+ * 새 전자상거래 이벤트를 푸시하기 전에 호출하여 데이터 충돌을 방지합니다.
+ */
+function resetEcommerceData() {
+    window.dataLayer.push({ ecommerce: null });
+    // console.log('Ecommerce object reset in dataLayer.'); // 디버깅용 로그
+}
+
+/**
  * GA4 전자상거래 이벤트를 dataLayer로 푸시하는 헬퍼 함수
  * @param {string} eventName - 푸시할 이벤트 이름 (예: 'add_to_cart')
  * @param {object} eventData - 이벤트와 함께 푸시할 전자상거래 데이터 객체
