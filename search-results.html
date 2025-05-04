@@ -49,6 +49,16 @@
                 (product.description && product.description.toLowerCase().includes(query.toLowerCase()))
             );
 
+            // --- GA4 view_search_results 이벤트 푸시 시작 ---
+            if (typeof pushEvent === 'function') {
+                pushEvent('view_search_results', {
+                    search_term: query 
+                });
+            } else {
+                console.warn('pushEvent function is not defined. Cannot push view_search_results.');
+            }
+            // --- GA4 view_search_results 이벤트 푸시 끝 ---
+
             if (results.length > 0) {
                 searchResults.innerHTML = results.map(product => `
                     <div class="product-item" onclick="window.viewProduct(${product.id})">
