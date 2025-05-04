@@ -1,4 +1,82 @@
-/* GNB 고정 및 스크롤 설정 */
+/* === CSS Reset & Basic Defaults === */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    /* Improves scroll behavior */
+    scroll-behavior: smooth;
+    /* Base font size for rem units */
+    font-size: 16px; 
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Example font stack */
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa; /* Light background */
+    /* Prevent horizontal scroll caused by potential overflow */
+    overflow-x: hidden; 
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block; /* Remove extra space below images */
+    max-width: 100%;
+    height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+    font: inherit; /* Inherit font styles */
+}
+
+a {
+    color: inherit; /* Inherit text color */
+    text-decoration: none; /* Remove underline */
+}
+
+ul,
+ol {
+    list-style: none; /* Remove default list styles */
+}
+
+/* === Spacing System (CSS Variables) === */
+:root {
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-xxl: 48px;
+}
+
+/* === Basic Layout Container === */
+.main-content {
+    /* Add padding for mobile first */
+    padding: var(--space-md);
+    max-width: 1200px; /* Example max width for larger screens */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Example Media Query for larger screens (adjust breakpoint as needed) */
+@media (min-width: 768px) {
+    .main-content {
+        padding: var(--space-lg);
+    }
+}
+
+/* === GNB 고정 및 스크롤 설정 === */
 .gnb {
     position: fixed;
     top: 0;
@@ -9,8 +87,9 @@
     background-color: #4a4a7d;
     color: white;
     padding: 10px 0;
-  }
-/* 기본 스타일 */
+}
+
+/* === 기본 스타일 === */
 body {
     padding-top: 80px; /* GNB의 높이에 맞게 조정하세요 */
     font-family: 'Noto Sans KR', sans-serif;
@@ -30,7 +109,7 @@ body {
     box-sizing: border-box;
 }
 
-/* 헤더 스타일 */
+/* === 헤더 스타일 === */
 header {
     background-color: #4a4a7d;
     color: white;
@@ -116,7 +195,7 @@ header {
     border-radius: 50%;
 }
 
-/* 네비게이션 스타일 */
+/* === 네비게이션 스타일 === */
 nav {
     background-color: #3a3a6d;
     border-top: 1px solid #5a5a8d;
@@ -186,7 +265,7 @@ nav ul.submenu li a:hover {
     background-color: #f1f1f1;
 }
 
-/* 검색 바 스타일 */
+/* === 검색 바 스타일 === */
 .search-bar {
     display: flex;
     justify-content: center;
@@ -209,13 +288,13 @@ nav ul.submenu li a:hover {
     cursor: pointer;
 }
 
-/* 메인 콘텐츠 스타일 */
+/* === 메인 콘텐츠 스타일 === */
 main {
     flex-grow: 1;
     padding: 20px 0;
 }
 
-/* 제품 목록 스타일 */
+/* === 제품 목록 스타일 === */
 .products {
     display: flex;
     flex-wrap: wrap;
@@ -292,7 +371,7 @@ div#productList {
     align-items: center;
 }
 
-/* 버튼 스타일 */
+/* === 버튼 스타일 === */
 button {
     background-color: #333;
     color: #fff;
@@ -305,13 +384,13 @@ button:hover {
     background-color: #555;
 }
 
-/* 메인 콘텐츠 영역 */
+/* === 메인 콘텐츠 영역 === */
 .main-content {
     margin-top: 120px; /* GNB의 높이와 동일하게 설정 */
   }
 
 
-/* 모달 스타일 */
+/* === 모달 스타일 === */
 .modal {
     display: none;
     position: fixed;
@@ -361,7 +440,7 @@ button:hover {
     box-sizing: border-box;
 }
 
-/* 반응형 디자인 */
+/* === 반응형 디자인 === */
 @media screen and (max-width: 1200px) {
     .product-item {
         width: calc(80% - 13.33px); /* 3개의 아이템이 한 줄에 들어갈 수 있도록 조정 */
@@ -442,7 +521,7 @@ button:hover {
     }
 }
 
-/* 카테고리 탭 스타일 */
+/* === 카테고리 탭 스타일 === */
 .category-tabs {
     margin-bottom: 20px;
 }
@@ -509,54 +588,89 @@ button:hover {
 
 .product-list-container {
     display: flex;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    flex-direction: column; /* Mobile first: stack */
+    gap: var(--space-lg);
+    /* Inherits padding and max-width from .main-content if wrapped */
+    max-width: 1200px; /* Or adjust as needed */
+    margin: 0 auto;    /* Center the container */
+    padding: var(--space-md); /* Add padding for mobile */
 }
 
 .category-sidebar {
-    width: 200px;
-    margin-right: 20px;
+    width: 100%; /* Full width on mobile */
+    /* Add some styling for the sidebar */
+    padding: var(--space-md);
+    background-color: #fff; /* White background */
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-bottom: var(--space-lg); /* Space below sidebar on mobile */
 }
 
-.category-list {
-    list-style-type: none;
-    padding: 0;
+.category-sidebar h3 {
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid #eee;
+    font-size: 1.2em;
 }
 
 .category-list li {
-    margin-bottom: 10px;
+    margin-bottom: var(--space-sm);
 }
 
 .category-list a {
-    text-decoration: none;
-    color: #333;
+    padding: var(--space-xs) 0;
+    display: block;
+    transition: color 0.2s ease;
 }
 
+.category-list a:hover,
 .category-list a.active {
+    color: #4a4a7d; /* Theme color */
     font-weight: bold;
-    color: #007bff;
 }
 
 .product-grid-section {
-    flex-grow: 1;
+    width: 100%; /* Full width on mobile */
 }
 
 .sort-options {
-    margin-bottom: 20px;
+    margin-bottom: var(--space-md);
+    text-align: right; /* Align sort dropdown/buttons to the right */
 }
 
-.product-item a {
-    text-decoration: none;
-    color: inherit;
-    display: block;
+.sort-options label {
+    margin-right: var(--space-sm);
 }
 
-.product-item:hover {
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+/* --- Media Query for Desktop Layout --- */
+@media (min-width: 768px) { /* Adjust breakpoint as needed */
+    .product-list-container {
+        flex-direction: row; /* Side-by-side layout */
+        align-items: flex-start; /* Align items to top */
+        gap: var(--space-xl);
+        padding: var(--space-lg); /* Increase padding */
+    }
+
+    .category-sidebar {
+        width: 250px; /* Fixed width for sidebar */
+        flex-shrink: 0; /* Prevent sidebar from shrinking */
+        margin-bottom: 0; /* Remove bottom margin */
+        /* Optional: Make sidebar sticky */
+        /* position: sticky; */
+        /* top: 100px; */ /* Adjust based on header height */
+    }
+
+    .product-grid-section {
+        flex-grow: 1; /* Allow grid to take remaining space */
+    }
 }
 
-/* 히어로 섹션 스타일 */
+/* Ensure product grid within this section uses the general .product-list styles */
+.product-grid-section .product-list {
+    /* Styles are inherited from general .product-list */
+}
+
+/* === 히어로 섹션 스타일 === */
 .hero {
     background-size: cover;
     background-position: center;
@@ -612,7 +726,7 @@ button:hover {
     background-color: #3a3a6d;
 }
 
-/* 카테고리 네비게이션 스타일 */
+/* === 카테고리 네비게이션 스타일 === */
 .category-nav {
     margin-bottom: 40px;
 }
@@ -642,12 +756,12 @@ button:hover {
     border-color: #333;
 }
 
-/* 베스트셀러 및 신제품 섹션 스타일 */
+/* === 베스트셀러 및 신제품 섹션 스타일 === */
 .best-seller, .new-arrivals {
     margin-bottom: 60px;
 }
 
-/* 뷰티 랩 섹션 스타일 */
+/* === 뷰티 랩 섹션 스타일 === */
 .beauty-lab {
     background-size: cover;
     background-position: center;
@@ -704,7 +818,7 @@ button:hover {
     background-color: #3a3a6d;
 }
 
-/* 푸터 스타일 */
+/* === 푸터 스타일 === */
 footer {
     background-color: #f8f8f8;
     padding: 20px 0;
@@ -739,50 +853,58 @@ footer {
     font-size: 18px;
 }
 
-/* 마이페이지 스타일 */
+/* === 마이페이지 스타일 === */
 .mypage-container {
+    /* Inherits padding and max-width from .main-content if wrapped */
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: var(--space-md);
 }
 
-.mypage-container h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
+.mypage-container h2,
+.mypage-container h3 {
+    margin-bottom: var(--space-lg);
+    color: #4a4a7d;
 }
 
+/* --- Order Status Section --- */
 .order-status {
     display: flex;
-    justify-content: space-between;
-    background-color: #4a4a7d;
-    padding: 20px;
-    border-radius: 5px;
-    margin-bottom: 20px;
+    flex-wrap: wrap; /* Allow wrapping */
+    justify-content: space-around; /* Distribute items */
+    background-color: #f8f9fa; /* Lighter background */
+    padding: var(--space-lg);
+    border: 1px solid #eee;
+    border-radius: 8px; /* Rounded corners */
+    margin-bottom: var(--space-xl);
+    gap: var(--space-md); /* Gap between items */
 }
 
 .status-item {
     text-align: center;
-    color: white;
+    color: #333; /* Darker text color */
+    flex: 1; /* Allow items to grow/shrink */
+    min-width: 100px; /* Minimum width for each item */
+    padding: var(--space-sm);
 }
 
 .status-number {
-    font-size: 24px;
+    font-size: 2em; /* Larger number */
     font-weight: bold;
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: var(--space-xs);
+    color: #4a4a7d; /* Theme color */
 }
 
 .status-label {
-    font-size: 14px;
+    font-size: 0.9em; /* Slightly smaller label */
+    color: #555;
 }
 
-#orderHistory {
-    margin-top: 40px;
-}
-
+/* --- Order History Section --- */
 #orderHistory h3 {
-    font-size: 20px;
-    margin-bottom: 15px;
+     padding-bottom: var(--space-md);
+     border-bottom: 1px solid #eee;
 }
 
 #purchaseList {
@@ -790,513 +912,118 @@ footer {
     padding: 0;
 }
 
-#purchaseList li {
-    border-bottom: 1px solid #ddd;
-    padding: 15px 0;
-}
-
-.product-detail-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: 'Noto Sans KR', sans-serif;
-}
-
-.product-detail {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 40px;
-}
-
-.product-image-gallery {
-    width: 34.5%; /* 이미지 갤러리의 너비를 조정 */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.main-image {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-.main-image img {
-    width: 100%;
-    height: auto;
-}
-
-.thumbnail-images {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    gap: 10px;
-}
-
-.thumbnail-images .thumbnail {
-    width: calc((100% - 30px) / 4); /* 4개의 썸네일과 3개의 간격 */
-    height: auto;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: border-color 0.3s;
-    object-fit: cover;
-}
-
-.product-info {
-    width: 60%; /* 상품 정보 영역 너비 조정 */
-    padding-left: 30px; /* 왼쪽 여백 증가 */
-}
-
-.product-description, .product-details, .reviews {
-    margin-top: 40px;
-    width: 100%;
-    clear: both;
-}
-
-@media (max-width: 768px) {
-    .product-detail {
-        flex-direction: column;
-    }
-
-    .product-image-gallery,
-    .product-info {
-        width: 100%;
-        padding-left: 0;
-    }
-}
-
-/* 상품 설명 섹션 */
-.product-description, .product-details, .reviews {
-    margin-top: 40px;
-    width: 100%;
-}
-
-.product-info h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.product-info .price {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.product-info .quantity {
-    margin-bottom: 20px;
-}
-
-.product-info .quantity input {
-    width: 60px;
-    padding: 5px;
-    text-align: center;
-}
-
-.product-info button {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 10px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-}
-
-.product-info button:first-of-type {
-    background-color: #5e0080;
-    color: white;
-}
-
-.product-info button:last-of-type {
-    background-color: #fff;
-    color: #5e0080;
-    border: 1px solid #5e0080;
-}
-
-.product-description h3, .product-details h3, .reviews h3 {
-    font-size: 20px;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-}
-
-.product-details table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.product-details td {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-}
-
-.product-details td:first-child {
-    width: 30%;
-    background-color: #f8f8f8;
-}
-
-.review-summary {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.review-average {
-    font-size: 36px;
-    font-weight: bold;
-    margin-right: 20px;
-}
-
-.star-rating {
-    color: #5e0080;
-    font-size: 24px;
-}
-
-.review-count {
-    font-size: 18px;
-}
-
-.review-input {
-    margin-top: 20px;
-}
-
-.review-input textarea {
-    width: 100%;
-    height: 100px;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-.review-input button {
-    padding: 10px 20px;
-    background-color: #5e0080;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-.cart-page {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.cart-title {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.cart-items {
-    margin-bottom: 20px;
-}
-
-.cart-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-}
-
-.item-name {
-    flex: 2;
-}
-
-.item-price, .item-quantity, .item-total {
-    flex: 1;
-}
-
-.item-quantity input {
-    width: 50px;
-}
-
-.remove-button {
-    background-color: #ff4d4d;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-.cart-summary {
-    text-align: right;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.checkout-button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.checkout-page {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.checkout-title {
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-.checkout-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.order-summary, .shipping-info, .payment-info, .order-total {
-    flex: 1 1 45%;
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 5px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.form-group input, .form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-.checkout-button {
-    width: 100%;
-    padding: 15px;
-    background-color: #4a4a7d;
-    color: white;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    margin-top: 20px;
-}
-
-.checkout-button:hover {
-    background-color: #3a3a6d;
-}
-
-.no-image {
-    width: 250px;
-    height: 250px;
-    background-color: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #999;
-    font-style: italic;
-}
-
-.product-features, .product-ingredients, .product-usage {
-    margin-bottom: 20px;
-}
-
-.product-features h3, .product-ingredients h3, .product-usage h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
-.product-features ul, .product-ingredients ul {
-    list-style-type: disc;
-    padding-left: 20px;
-}
-
-.product-usage p {
-    line-height: 1.6;
-}
-
-/* 이미지 갤러리 스타일 */
-.product-image-gallery {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.main-image img {
-    width: 400px;
-    height: auto;
-    /* margin-bottom: 5px; */
-}
-
-.thumbnail-images {
-    display: flex;
-    gap: 8px;
-}
-
-.thumbnail-images .thumbnail {
-    width: 80px;
-    height: auto;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: border-color 0.3s;
-}
-
-.thumbnail-images .thumbnail.active {
-    border-color: #000;
-}
-
-.search-icon {
-    font-size: 18px;
-    text-decoration: none;
-    margin-left: 15px;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 400px;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.featured-products {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.featured-products h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.product-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    justify-content: center;
-}
-
-.product-item {
-    border: 1px solid #e0e0e0;
+.purchase-item { /* Assuming this class or similar structure exists */
+    border: 1px solid #eee;
     border-radius: 8px;
-    padding: 15px;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    background-color: #fff;
+    display: flex;
+    flex-direction: column; /* Stack info vertically by default */
+    gap: var(--space-md);
 }
 
-.product-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+.purchase-header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Wrap date and order number */
+    gap: var(--space-sm);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px dashed #eee; /* Dashed separator */
+    font-size: 0.9em;
+    color: #555;
 }
 
-.product-image {
-    width: 100%;
-    height: 250px;
+.purchase-header .order-number {
+    font-weight: bold;
+}
+
+.purchase-details {
+    display: flex;
+    flex-direction: column; /* Stack product and total */
+    gap: var(--space-md);
+}
+
+.purchase-product { /* Assuming a structure for each product */
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.purchase-product img {
+    width: 60px; /* Adjust image size */
+    height: 60px;
     object-fit: cover;
     border-radius: 4px;
-    margin-bottom: 10px;
+    flex-shrink: 0;
 }
 
-.product-item h3 {
-    font-size: 18px;
-    margin: 10px 0;
+.purchase-product-info {
+    flex-grow: 1;
 }
 
-.product-item .price {
+.purchase-product-name {
     font-weight: bold;
-    color: #4a4a7d;
+    margin-bottom: var(--space-xs);
 }
 
-.product-item .discount {
-    color: #e74c3c;
-    margin-right: 5px;
-}
-
-.product-item .original-price {
-    text-decoration: line-through;
-    color: #999;
+.purchase-product-details {
     font-size: 0.9em;
+    color: #666;
 }
 
-/* 반응형 디자인 */
-@media screen and (max-width: 768px) {
-    .cart-item {
-        flex-direction: column;
+.purchase-total {
+    text-align: right;
+    font-weight: bold;
+    margin-top: var(--space-sm); /* Space above total */
+}
+
+/* --- Media Queries for My Page --- */
+@media (min-width: 768px) {
+    .purchase-item {
+        flex-direction: row; /* Side-by-side layout for item */
         align-items: flex-start;
     }
-
-    .item-name, .item-price, .item-quantity, .item-total {
-        flex: none;
-        width: 100%;
-        margin-bottom: 10px;
+    .purchase-details {
+        flex-direction: column; /* Keep details stacked */
+        flex-grow: 1;
+    }
+    .purchase-total {
+         margin-left: auto; /* Push total to the right */
+         text-align: right;
+         min-width: 120px; /* Ensure space */
+         margin-top: 0;
+    }
+    .purchase-product {
+       /* Adjustments if needed */
     }
 
+}
+
+@media (max-width: 480px) {
     .order-status {
-        flex-direction: column;
-        align-items: flex-start;
+        /* Stack in 2x2 grid or single column */
+        /* Example: Force single column */
+         /* display: block; */
     }
-
-    .status-item {
-        width: 100%;
-        margin-bottom: 10px;
-    }
+     .status-item {
+        /* Example: Full width for single column */
+        /* width: 100%; */
+        /* min-width: unset; */
+     }
+     .purchase-header {
+         flex-direction: column; /* Stack date/order number */
+         align-items: flex-start;
+     }
+     .purchase-product {
+         flex-direction: column; /* Stack image and info */
+         align-items: flex-start;
+     }
+     .purchase-product img {
+         margin-bottom: var(--space-sm);
+     }
 }
 
-@media screen and (max-width: 480px) {
-    .cart-page, .mypage-container {
-        padding: 10px;
-    }
-
-    .cart-title, .mypage-container h2 {
-        font-size: 20px;
-    }
-
-    .checkout-button {
-        font-size: 14px;
-    }
-
-    .status-number {
-        font-size: 20px;
-    }
-
-    .status-label {
-        font-size: 12px;
-    }
-}
 .hamburger-menu {
     display: none;
     font-size: 24px;
@@ -1305,27 +1032,11 @@ footer {
     margin-left: 20px;
 }
 
-/* Cart Page Styles */
-.cart-item-image {
-    width: 80px; /* 장바구니 이미지 너비 */
-    height: 80px; /* 장바구니 이미지 높이 */
-    object-fit: cover; /* 이미지가 비율을 유지하며 영역을 채우도록 설정 */
-    margin-right: 15px;
-    vertical-align: middle;
-    border: 1px solid #eee; /* 테두리 추가 (선택 사항) */
-    border-radius: 4px; /* 모서리 둥글게 (선택 사항) */
-}
-
-.cart-item-details {
-    display: inline-block; /* 이미지 옆에 텍스트가 오도록 */
-    vertical-align: middle;
-}
-
-/* Checkout Page Styles */
+/* === Checkout Page Styles === */
 .summary-item-image {
-    width: 50px; /* 주문 요약 이미지 너비 */
-    height: 50px; /* 주문 요약 이미지 높이 */
-    object-fit: cover; /* 이미지가 비율을 유지하며 영역을 채우도록 설정 */
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
     margin-right: 10px;
     vertical-align: middle;
     border: 1px solid #eee;
@@ -1333,17 +1044,17 @@ footer {
 }
 
 .summary-item-name {
-    vertical-align: middle; /* 이미지와 텍스트 세로 정렬 */
-    display: inline-block; /* 너비 계산을 위해 */
-    max-width: calc(100% - 150px); /* 이미지, 수량, 가격 공간 제외 (대략적인 값) */
+    vertical-align: middle;
+    display: inline-block;
+    max-width: calc(100% - 150px);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .order-item {
-    display: flex; /* Flexbox 사용하여 아이템 정렬 */
-    align-items: center; /* 세로 중앙 정렬 */
+    display: flex;
+    align-items: center;
     padding: 10px 0;
     border-bottom: 1px solid #f0f0f0;
 }
@@ -1354,36 +1065,33 @@ footer {
 
 .order-item span:last-child {
     margin-right: 0;
-    margin-left: auto; /* 가격을 오른쪽으로 밀기 */
+    margin-left: auto;
 }
 
-/* Search Results Page Specific Styles */
+/* === Search Results Page Specific Styles === */
 .search-results-section,
 .recommendations-section {
-    margin-top: 40px; /* 섹션 간 상단 여백 */
-    padding-top: 30px; /* 섹션 내부 상단 여백 */
-    border-top: 2px solid #f0f0f0; /* 구분선 */
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid #f0f0f0;
 }
 
-/* 첫 번째 섹션일 경우 상단 여백 및 구분선 제거 */
 #searchResults > div:first-child {
     margin-top: 0;
     padding-top: 0;
     border-top: none;
 }
 
-/* 검색 결과 페이지 제목 스타일 */
 #searchResults h2, 
 #searchResults h3 {
-    font-size: 1.6em; /* 제목 크기 */
-    margin-bottom: 25px; /* 제목과 내용 사이 여백 */
-    color: #4a4a7d; /* 테마 색상 */
-    text-align: left; /* 왼쪽 정렬 */
-    padding-bottom: 10px; /* 제목 하단 여백 */
-    border-bottom: 1px solid #eee; /* 제목 하단 구분선 */
+    font-size: 1.6em;
+    margin-bottom: 25px;
+    color: #4a4a7d;
+    text-align: left;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
 }
 
-/* '결과 없음' 메시지 스타일 */
 .no-results-message {
     font-size: 1.2em;
     color: #666;
@@ -1391,16 +1099,389 @@ footer {
     text-align: center;
 }
 
-/* 추천 상품 없을 때 메시지 */
 .no-recommendations-message {
     font-size: 1em;
     color: #999;
     padding: 10px 0;
 }
 
-/* 상품 목록 정렬 (기본 그리드 유지, 필요시 조정) */
 .search-results-items,
 .recommendations-items {
-    /* .products 클래스 스타일 상속 */
-    justify-content: flex-start; /* 왼쪽 정렬 */
+    justify-content: flex-start;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        height: 450px;
+        padding: 0 var(--space-lg);
+    }
+    .hero h1 {
+        font-size: 2.2em;
+    }
+    .hero p {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        height: 350px;
+        padding: 0 var(--space-md);
+    }
+    .hero h1 {
+        font-size: 1.8em;
+    }
+    .hero p {
+        font-size: 0.9em;
+    }
+    .cta-button {
+        padding: 8px 16px;
+        font-size: 0.9em;
+    }
+}
+
+.category-nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+@media (max-width: 768px) {
+    .category-nav {
+         margin-bottom: var(--space-lg);
+    }
+    .category-nav a {
+        padding: var(--space-xs) var(--space-sm);
+        font-size: 0.9em;
+    }
+}
+
+.product-list {
+    gap: var(--space-lg);
+}
+
+@media (max-width: 576px) {
+    .product-list {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+        gap: var(--space-md);
+    }
+    .product-item h3 {
+        font-size: 1em;
+    }
+    .product-item .price {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 768px) {
+    .beauty-lab {
+        height: 300px;
+    }
+    .beauty-lab h2 {
+        font-size: 2em;
+    }
+    .beauty-lab p {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .beauty-lab {
+        height: 250px;
+    }
+    .beauty-lab h2 {
+        font-size: 1.6em;
+    }
+    .beauty-lab p {
+        font-size: 0.9em;
+    }
+}
+
+/* === Checkout Page Specific Styles === */
+.checkout-page {
+    /* Inherits padding and max-width from .main-content if wrapped */
+    max-width: 1200px; /* Adjust max-width */
+    margin: 0 auto;
+    padding: var(--space-md);
+}
+
+.checkout-title {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    font-size: 1.8em;
+}
+
+.checkout-container {
+    display: flex;
+    flex-direction: column; /* Mobile first: stack */
+    gap: var(--space-xl);
+}
+
+.checkout-section { /* Common class for summary, shipping, payment */
+    background-color: #fff; /* White background */
+    padding: var(--space-lg);
+    border: 1px solid #eee;
+    border-radius: 4px;
+}
+
+.checkout-section h3 {
+    font-size: 1.4em;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid #eee;
+}
+
+/* --- Order Summary Specifics --- */
+.order-summary .order-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.order-summary .order-item:last-child {
+    border-bottom: none;
+}
+.summary-item-image { /* Already styled, check consistency */
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+.summary-item-details {
+    flex-grow: 1;
+}
+.summary-item-name {
+    font-weight: bold;
+    display: block; /* Ensure it takes block space */
+}
+.summary-item-price,
+.summary-item-quantity {
+    color: #555;
+    font-size: 0.9em;
+}
+.summary-item-total {
+    font-weight: bold;
+    text-align: right;
+    min-width: 70px; /* Ensure space */
+}
+
+
+/* --- Form Group Styles --- */
+.form-group {
+    margin-bottom: var(--space-md);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: var(--space-sm);
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: var(--space-md);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.form-group textarea {
+    min-height: 80px; /* Adjust height */
+    resize: vertical; /* Allow vertical resize */
+}
+
+/* --- Order Total Section --- */
+.order-total-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.order-total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-xs) 0;
+}
+
+.order-total-row.final-total {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-top: var(--space-sm);
+    padding-top: var(--space-md);
+    border-top: 1px solid #eee;
+}
+
+/* --- Media Query for Checkout Desktop Layout --- */
+@media (min-width: 992px) { /* Wider breakpoint for two columns */
+    .checkout-container {
+        flex-direction: row;
+        align-items: flex-start; /* Align columns to top */
+        flex-wrap: wrap; /* Added for fallback */
+    }
+
+    .checkout-form-sections { /* Wrapper for shipping/payment */
+        flex: 2; /* Take more space */
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-xl);
+        order: 1; /* Ensure form is first visually if needed */
+        flex-basis: 60%; /* Fallback basis */
+    }
+
+    .order-summary-section { /* Wrapper for summary/total */
+        flex: 1; /* Take less space */
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-xl);
+        /* Optional: Sticky summary */
+        /* position: sticky; */
+        /* top: 100px; */
+        order: 2; /* Ensure summary is second visually */
+        flex-basis: 35%; /* Fallback basis */
+    }
+
+    /* Adjustments for potentially missing wrapper divs */
+    /* If wrappers .checkout-form-sections & .order-summary-section don't exist: */
+    .shipping-info {
+        order: 1;
+        flex-basis: 60%; /* Adjust percentage as needed */
+    }
+     .payment-info {
+        order: 2;
+        flex-basis: 60%; /* Adjust percentage as needed */
+    }
+    .order-summary {
+         order: 3;
+         flex-basis: 35%; /* Adjust percentage as needed */
+    }
+    .order-total {
+         order: 4;
+         flex-basis: 35%; /* Adjust percentage as needed */
+    }
+}
+
+/* === Header Responsive Refinements === */
+/* Ensure GNB height matches body padding-top */
+header.gnb {
+    /* height: 80px; */ /* Example height, ensure this matches */
+    /* ... other fixed styles ... */
+    border-bottom: 1px solid #3a3a6d; /* Add subtle bottom border */
+}
+
+body {
+     padding-top: 80px; /* MUST match header.gnb height */
+     /* ... other body styles ... */
+}
+
+@media (max-width: 768px) {
+    .header-top {
+        flex-wrap: wrap; /* Allow items to wrap */
+        padding: var(--space-sm) var(--space-md); /* Adjust padding */
+    }
+
+    .logo {
+        flex-basis: 50%; /* Give logo more space */
+    }
+
+    .user-menu {
+        flex-basis: 50%; /* Give user menu space */
+        justify-content: flex-end; /* Align user menu items to the right */
+        font-size: 0.9em; /* Slightly smaller font */
+    }
+
+    .user-menu a {
+        margin-left: var(--space-sm); /* Adjust spacing */
+    }
+
+    .search-bar {
+        flex-basis: 100%; /* Full width for search bar */
+        order: 3; /* Place search bar below logo/user menu */
+        margin: var(--space-md) 0 0 0; /* Add top margin */
+        width: auto; /* Reset fixed width */
+    }
+
+    .hamburger-menu {
+        display: block; /* Ensure hamburger is visible */
+        position: absolute; /* Position relative to header */
+        top: 50%;
+        right: var(--space-md);
+        transform: translateY(-50%);
+    }
+
+    nav {
+        display: none; /* Hide nav by default */
+        width: 100%;
+        background-color: #3a3a6d; /* Ensure background */
+        position: absolute; /* Position below header top */
+        top: 100%; /* Position it right below the header top part */
+        left: 0;
+        z-index: 999; /* Below main GNB z-index but above content */
+        border-top: 1px solid #5a5a8d;
+    }
+
+    nav.active { /* Style for when hamburger is clicked */
+        display: block;
+    }
+
+    nav ul {
+        flex-direction: column;
+        align-items: stretch; /* Stretch items */
+        padding: var(--space-sm) 0; /* Add padding */
+    }
+
+    nav li {
+        margin: 0;
+        width: 100%;
+        text-align: center; /* Center nav links */
+        border-bottom: 1px solid #5a5a8d; /* Separator lines */
+    }
+    nav li:last-child {
+        border-bottom: none;
+    }
+
+    nav a {
+        padding: var(--space-md); /* Increase tap area */
+        display: block;
+        width: 100%;
+    }
+}
+
+/* === Footer Styles === */
+footer {
+    background-color: #f8f9fa; /* Match body background or choose another */
+    color: #555; /* Adjust text color */
+    padding: var(--space-lg) 0; /* Add vertical padding */
+    margin-top: auto; /* Pushes footer to bottom */
+    border-top: 1px solid #eee; /* Subtle top border */
+}
+
+.footer-container {
+    /* Apply consistent container styles */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-md); /* Horizontal padding */
+    text-align: center;
+}
+
+/* Optional: Adjust footer link styles if they exist */
+.footer-links {
+    margin-bottom: var(--space-md);
+}
+
+.footer-links a {
+    margin: 0 var(--space-sm);
+    color: #4a4a7d; /* Use theme color for links */
+    text-decoration: underline; /* Add underline for clarity */
+}
+
+.footer-info p {
+    font-size: 0.9em;
+    color: #777;
 }
