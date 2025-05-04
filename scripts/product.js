@@ -419,7 +419,7 @@ window.addToCartWithQuantity = function(productId) {
             item_name: product.name,
             affiliation: product.affiliation || '뷰티 코스메틱 쇼핑몰',
             coupon: product.coupon || undefined,
-            discount: product.originalPrice ? (product.originalPrice - product.price) * quantity : undefined,
+            discount: product.originalPrice ? (product.originalPrice - product.price) : undefined,
             index: index + 1,
             item_brand: product.brand || undefined,
             item_category: product.category || undefined,

@@ -82,7 +82,7 @@ function loadCartItems() {
                     item_name: item.productName,
                     affiliation: itemDetails?.affiliation || '뷰티 코스메틱 쇼핑몰',
                     coupon: itemDetails?.coupon || undefined,
-                    discount: itemDetails?.originalPrice ? (itemDetails.originalPrice - item.price) * item.quantity : undefined,
+                    discount: itemDetails?.originalPrice ? (itemDetails.originalPrice - item.price) : undefined,
                     index: index + 1, // 장바구니 내 순서 (1부터 시작)
                     item_brand: itemDetails?.brand || undefined,
                     item_category: itemDetails?.category || undefined,
@@ -175,7 +175,7 @@ window.completePurchase = function(event) {
                     item_name: item.productName,
                     affiliation: itemDetails?.affiliation || '뷰티 코스메틱 쇼핑몰',
                     coupon: itemDetails?.coupon || undefined,
-                    discount: itemDetails?.originalPrice ? (itemDetails.originalPrice - item.price) * item.quantity : undefined,
+                    discount: itemDetails?.originalPrice ? (itemDetails.originalPrice - item.price) : undefined,
                     index: index + 1, // 1부터 시작
                     item_brand: itemDetails?.brand || undefined,
                     item_category: itemDetails?.category || undefined,
@@ -199,7 +199,7 @@ window.completePurchase = function(event) {
                     item_name: item.productName,
                     affiliation: itemDetails?.affiliation || '뷰티 코스메틱 쇼핑몰',
                     coupon: itemDetails?.coupon || undefined,
-                    discount: itemDetails?.originalPrice ? Number((itemDetails.originalPrice - item.price) * item.quantity) : undefined,
+                    discount: itemDetails?.originalPrice ? Number(itemDetails.originalPrice - item.price) : undefined,
                     index: index + 1, // 1부터 시작
                     item_brand: itemDetails?.brand || undefined,
                     item_category: itemDetails?.category || undefined,
@@ -252,7 +252,7 @@ window.completePurchase = function(event) {
                     item_name: item.productName,
                     affiliation: itemDetails?.affiliation || '뷰티 코스메틱 쇼핑몰',
                     coupon: itemDetails?.coupon || undefined, // 아이템 개별 쿠폰
-                    discount: itemDetails?.originalPrice ? Number((itemDetails.originalPrice - item.price) * item.quantity) : undefined,
+                    discount: itemDetails?.originalPrice ? Number(itemDetails.originalPrice - item.price) : undefined,
                     index: index + 1, // 1부터 시작
                     item_brand: itemDetails?.brand || undefined,
                     item_category: itemDetails?.category || undefined,
@@ -295,8 +295,7 @@ function removeFromCart(productId) {
                     item_name: removedItem.productName,
                     affiliation: productInfo.affiliation || '뷰티 코스메틱 쇼핑몰',
                     coupon: productInfo.coupon || undefined, // 상품 원본 데이터에 쿠폰 정보가 있다면 사용
-                    discount: productInfo.originalPrice ? (productInfo.originalPrice - removedItem.price) * removedItem.quantity : undefined, // 아이템 할인액 * 수량
-                    // index: index + 1, // 장바구니 내에서의 index 정보 필요 시 추가 (1부터 시작)
+                    discount: productInfo.originalPrice ? (productInfo.originalPrice - removedItem.price) : undefined, // Per item discount
                     item_brand: productInfo.brand || undefined,
                     item_category: productInfo.category || undefined,
                     price: removedItem.price,

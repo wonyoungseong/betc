@@ -71,10 +71,13 @@
 
             // --- GA4 begin_checkout 이벤트 푸시 (페이지 로드 시) ---
             const currentUserId = window.currentUser ? window.currentUser.username : 'guest';
-            // cart.js에서 정의된 전역 cart 변수에 접근합니다.
-            // 이 시점에서 cart 변수가 사용 가능하다고 가정합니다. 
-            // (cart.js가 이 스크립트보다 먼저 로드되어야 합니다.)
-            const userCart = window.cart ? window.cart.filter(item => item.userId === currentUserId) : []; 
+            console.log('[Checkout Debug] Current User ID:', currentUserId);
+            
+            const globalCart = window.cart || [];
+            console.log('[Checkout Debug] Global Cart on Load:', JSON.stringify(globalCart));
+            
+            const userCart = globalCart.filter(item => item.userId === currentUserId);
+            console.log('[Checkout Debug] Filtered User Cart:', JSON.stringify(userCart));
 
             if (userCart.length > 0 && typeof pushEcommerceEvent === 'function') {
                 const ecommerceData = {
@@ -97,11 +100,12 @@
                         };
                     })
                 };
+                console.log('[Checkout Debug] Pushing begin_checkout event.');
                 pushEcommerceEvent('begin_checkout', ecommerceData);
             } else if (userCart.length === 0) {
-                console.log('Cart is empty on checkout page load, skipping begin_checkout.');
+                console.log('[Checkout Debug] Cart is considered empty, skipping begin_checkout.');
             } else {
-                console.warn('pushEcommerceEvent function is not defined. Cannot push begin_checkout on page load.');
+                console.warn('[Checkout Debug] pushEcommerceEvent function is not defined.');
             }
             // --- End GA4 Event ---
 
