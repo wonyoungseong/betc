@@ -424,6 +424,22 @@ button:hover {
     .product-item {
         width: calc(33.33% - 10px); /* 2개의 아이템이 한 줄에 들어갈 수 있도록 조정 */
     }
+
+    .status-label {
+        font-size: 12px;
+    }
+    
+    /* 상품 상세 페이지 썸네일 조정 */
+    .thumbnail-images {
+        flex-wrap: wrap; /* 썸네일 줄바꿈 허용 */
+        justify-content: center; /* 중앙 정렬 */
+        gap: 8px; /* 간격 약간 줄임 */
+    }
+
+    .thumbnail-images .thumbnail {
+        width: 70px; /* 모바일 썸네일 너비 조정 */
+        /* height: auto; 는 유지 */
+    }
 }
 
 /* 카테고리 탭 스타일 */
@@ -1287,4 +1303,56 @@ footer {
     cursor: pointer;
     color: white;
     margin-left: 20px;
+}
+
+/* Cart Page Styles */
+.cart-item-image {
+    width: 80px; /* 장바구니 이미지 너비 */
+    height: 80px; /* 장바구니 이미지 높이 */
+    object-fit: cover; /* 이미지가 비율을 유지하며 영역을 채우도록 설정 */
+    margin-right: 15px;
+    vertical-align: middle;
+    border: 1px solid #eee; /* 테두리 추가 (선택 사항) */
+    border-radius: 4px; /* 모서리 둥글게 (선택 사항) */
+}
+
+.cart-item-details {
+    display: inline-block; /* 이미지 옆에 텍스트가 오도록 */
+    vertical-align: middle;
+}
+
+/* Checkout Page Styles */
+.summary-item-image {
+    width: 50px; /* 주문 요약 이미지 너비 */
+    height: 50px; /* 주문 요약 이미지 높이 */
+    object-fit: cover; /* 이미지가 비율을 유지하며 영역을 채우도록 설정 */
+    margin-right: 10px;
+    vertical-align: middle;
+    border: 1px solid #eee;
+    border-radius: 4px;
+}
+
+.summary-item-name {
+    vertical-align: middle; /* 이미지와 텍스트 세로 정렬 */
+    display: inline-block; /* 너비 계산을 위해 */
+    max-width: calc(100% - 150px); /* 이미지, 수량, 가격 공간 제외 (대략적인 값) */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.order-item {
+    display: flex; /* Flexbox 사용하여 아이템 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.order-item span {
+    margin-right: 10px;
+}
+
+.order-item span:last-child {
+    margin-right: 0;
+    margin-left: auto; /* 가격을 오른쪽으로 밀기 */
 }
