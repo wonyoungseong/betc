@@ -13,9 +13,16 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.style.display = 'block';
         emailInput.focus();
         if (!beginSubscriptionFired) {
-            pushGeneralEvent('begin_subscription');
+            const eventData = {
+                event: 'begin_subscription',
+                event_category: 'subscription',
+                event_action: 'begin_subscription',
+                event_label: undefined
+            };
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push(eventData);
             beginSubscriptionFired = true;
-            console.log('begin_subscription event pushed (once).');
+            console.log('begin_subscription event pushed (category: subscription).');
         }
     }
 
@@ -30,8 +37,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (validateEmail(email)) {
             console.log('구독 이메일:', email);
 
-            pushGeneralEvent('complete_subscription');
-            console.log('complete_subscription event pushed.');
+            const eventData = {
+                event: 'complete_subscription',
+                event_category: 'subscription',
+                event_action: 'complete_subscription',
+                event_label: undefined
+            };
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push(eventData);
+            console.log('complete_subscription event pushed (category: subscription).');
 
             subscriptionComplete = true;
             subscriptionMessage.textContent = '구독이 완료되었습니다!';
