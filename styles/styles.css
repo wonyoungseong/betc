@@ -323,11 +323,14 @@ div#productList {
 }
 
 .product-item img {
-    /* max-width: 100%; */
-    height: auto;
-    border-radius: 4px;
-    max-width: 100%; /* 최대 너비 설정 */
-    min-width: 150px; /* 최소 너비 설정 */
+    display: block; /* Remove extra space below image */
+    max-width: 100%; /* Prevent image from exceeding parent width */
+    height: 200px; /* Set a fixed height for consistency */
+    object-fit: cover; /* Scale image nicely to cover the area, cropping if needed */
+    margin-left: auto; /* Center image horizontally */
+    margin-right: auto; /* Center image horizontally */
+    margin-bottom: var(--space-md); /* Add space below image */
+    border-radius: 4px; /* Optional: slightly rounded corners */
 }
 
 .product-item h3 {
