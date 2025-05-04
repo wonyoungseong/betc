@@ -50,12 +50,12 @@
             );
 
             // --- GA4 view_search_results 이벤트 푸시 (검색 행위 자체) ---
-            if (typeof pushGeneralEvent === 'function') {
-                pushGeneralEvent('view_search_results', {
+            if (typeof pushEvent === 'function') {
+                pushEvent('view_search_results', {
                     search_term: query 
                 });
             } else {
-                console.warn('pushGeneralEvent function is not defined. Cannot push view_search_results.');
+                console.warn('pushEvent function is not defined. Cannot push view_search_results.');
             }
             // --- 이벤트 푸시 끝 ---
 
