@@ -31,7 +31,28 @@ window.pushEcommerceEvent = function(eventName, eventData) {
     }
 }
 
+/**
+ * 일반 GA4 이벤트를 dataLayer로 푸시하는 헬퍼 함수
+ * @param {string} eventName - 푸시할 이벤트 이름 (예: 'login')
+ * @param {object} [eventData={}] - 이벤트와 함께 푸시할 추가 데이터 객체 (선택 사항)
+ */
+window.pushEvent = function(eventName, eventData = {}) {
+    if (!eventName) {
+        console.warn('pushEvent: eventName이 제공되지 않았습니다.');
+        return;
+    }
+
+    // 이벤트 데이터와 함께 이벤트 푸시
+    const dataToPush = { event: eventName, ...eventData };
+    window.dataLayer.push(dataToPush);
+
+    if (window.debugMode) { 
+        console.log(`GA4 Event Pushed: ${eventName}`, dataToPush);
+    }
+}
+
 // 디버그 모드 설정 (개발 중에만 true로 설정)
 window.debugMode = false; // 필요에 따라 true로 변경하여 콘솔 로그 확인
 
 console.log('global.js loaded and pushEcommerceEvent is ready.'); 
+console.log('pushEvent function is also ready.'); // 로그 추가 

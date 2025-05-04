@@ -24,8 +24,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     subscribeBtn.addEventListener('click', function() {
+        console.log('subscribeBtn clicked!');
+        console.log('Checking pushEvent for begin_subscription:', typeof pushEvent);
         if (typeof pushEvent === 'function') {
             pushEvent('begin_subscription', { /* 필요 시 추가 데이터 */ });
+            console.log('begin_subscription event pushed.');
         } else {
             console.warn('pushEvent function is not defined. Cannot push begin_subscription.');
         }
@@ -33,12 +36,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     submitEmail.addEventListener('click', function() {
+        console.log('submitEmail clicked!');
+        console.log('Checking pushEvent for complete_subscription:', typeof pushEvent);
         if (emailInput.value && typeof pushEvent === 'function') {
             pushEvent('complete_subscription', {
                 // email_address: emailInput.value // 필요 시 이메일 주소 포함 
             });
+            console.log('complete_subscription event pushed.');
         } else if (!emailInput.value) {
-            // 이메일 미입력 시 알림 등 처리 가능
+            console.log('Email not entered, skipping complete_subscription event.');
         } else {
             console.warn('pushEvent function is not defined. Cannot push complete_subscription.');
         }
