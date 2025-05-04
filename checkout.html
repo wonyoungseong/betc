@@ -73,8 +73,9 @@
             const currentUserId = window.currentUser ? window.currentUser.username : 'guest';
             console.log('[Checkout Debug] Current User ID:', currentUserId);
             
-            const globalCart = window.cart || [];
-            console.log('[Checkout Debug] Global Cart on Load:', JSON.stringify(globalCart));
+            const globalCartString = localStorage.getItem('cart');
+            const globalCart = globalCartString ? JSON.parse(globalCartString) : [];
+            console.log('[Checkout Debug] Cart from localStorage:', JSON.stringify(globalCart));
             
             const userCart = globalCart.filter(item => item.userId === currentUserId);
             console.log('[Checkout Debug] Filtered User Cart:', JSON.stringify(userCart));
@@ -103,7 +104,7 @@
                 console.log('[Checkout Debug] Pushing begin_checkout event.');
                 pushEcommerceEvent('begin_checkout', ecommerceData);
             } else if (userCart.length === 0) {
-                console.log('[Checkout Debug] Cart is considered empty, skipping begin_checkout.');
+                console.log('[Checkout Debug] Cart is considered empty (from localStorage), skipping begin_checkout.');
             } else {
                 console.warn('[Checkout Debug] pushEcommerceEvent function is not defined.');
             }
@@ -111,6 +112,28 @@
 
             loadOrderSummary();
         }
+        
+        function loadOrderSummary() {
+            const summaryDiv = document.getElementById('orderSummary');
+            const totalPriceDiv = document.getElementById('totalPrice');
+            if (!summaryDiv || !totalPriceDiv) return;
+
+            const currentUserId = window.currentUser ? window.currentUser.username : 'guest';
+            const globalCartString = localStorage.getItem('cart');
+            const globalCart = globalCartString ? JSON.parse(globalCartString) : [];
+            const userCart = globalCart.filter(item => item.userId === currentUserId);
+            
+            if (userCart.length === 0) {
+                summaryDiv.innerHTML = '<p>주문할 상품이 없습니다.</p>';
+                totalPriceDiv.innerHTML = '0원';
+                const checkoutButton = document.querySelector('.checkout-button');
+                if (checkoutButton) { checkoutButton.disabled = true; }
+                return;
+            }
+
+            // ... (rest of loadOrderSummary logic) ...
+        }
+        
         includeHTML(initializePage);
     </script>
 </body>
