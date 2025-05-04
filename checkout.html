@@ -68,6 +68,43 @@
         async function initializePage() {
             await window.loadProductData();
             checkAuthStatus();
+
+            // --- GA4 begin_checkout 이벤트 푸시 (페이지 로드 시) ---
+            const currentUserId = window.currentUser ? window.currentUser.username : 'guest';
+            // cart.js에서 정의된 전역 cart 변수에 접근합니다.
+            // 이 시점에서 cart 변수가 사용 가능하다고 가정합니다. 
+            // (cart.js가 이 스크립트보다 먼저 로드되어야 합니다.)
+            const userCart = window.cart ? window.cart.filter(item => item.userId === currentUserId) : []; 
+
+            if (userCart.length > 0 && typeof pushEcommerceEvent === 'function') {
+                const ecommerceData = {
+                    currency: 'KRW',
+                    value: userCart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                    coupon: undefined, // 필요 시 쿠폰 정보 추가
+                    items: userCart.map((item, index) => {
+                        const itemDetails = window.products.find(p => p.id === item.productId);
+                        return {
+                            item_id: item.productId.toString(),
+                            item_name: item.productName,
+                            affiliation: itemDetails?.affiliation || '뷰티 코스메틱 쇼핑몰',
+                            coupon: itemDetails?.coupon || undefined,
+                            discount: itemDetails?.originalPrice ? (itemDetails.originalPrice - item.price) * item.quantity : undefined,
+                            index: index + 1,
+                            item_brand: itemDetails?.brand || undefined,
+                            item_category: itemDetails?.category || undefined,
+                            price: item.price,
+                            quantity: item.quantity
+                        };
+                    })
+                };
+                pushEcommerceEvent('begin_checkout', ecommerceData);
+            } else if (userCart.length === 0) {
+                console.log('Cart is empty on checkout page load, skipping begin_checkout.');
+            } else {
+                console.warn('pushEcommerceEvent function is not defined. Cannot push begin_checkout on page load.');
+            }
+            // --- End GA4 Event ---
+
             loadOrderSummary();
         }
         includeHTML(initializePage);

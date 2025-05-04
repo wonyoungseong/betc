@@ -467,7 +467,14 @@ window.addToCartWithQuantity = function(productId) {
 }
 
 window.buyNowWithQuantity = function(productId) {
+    // 1. Add the item to the cart (this function also handles the add_to_cart GA4 event)
     window.addToCartWithQuantity(productId);
+    
+    // 2. Directly navigate to the checkout page
+    // The begin_checkout event should have been triggered when initiating checkout from the cart page, 
+    // or potentially not triggered at all in a 'buy now' flow if skipping the standard cart checkout start.
+    // For simplicity now, we navigate directly. If a distinct 'buy_now_checkout_start' event is needed, 
+    // it could be added here, but standard GA4 doesn't define one.
     window.location.href = 'checkout.html';
 }
 
