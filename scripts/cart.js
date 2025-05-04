@@ -77,12 +77,13 @@ function loadCartItems() {
             value: userCart.reduce((sum, item) => sum + (item.price * item.quantity), 0), // 장바구니 총액
             items: userCart.map((item, index) => {
                 const productInfo = window.products.find(p => p.id === item.productId); // 상품 추가 정보 가져오기
+                const itemDetails = lookupProductDetails(item.productId);
                 return {
                     item_id: item.productId.toString(),
                     item_name: item.productName,
                     affiliation: productInfo?.affiliation || '뷰티 코스메틱 쇼핑몰',
                     coupon: productInfo?.coupon || undefined,
-                    discount: productInfo?.originalPrice ? (productInfo.originalPrice - item.price).toFixed(2) * item.quantity : undefined,
+                    discount: itemDetails.originalPrice ? (itemDetails.originalPrice - item.price) * item.quantity : undefined,
                     index: index + 1, // 장바구니 내 순서 (1부터 시작)
                     item_brand: productInfo?.brand || undefined,
                     item_category: productInfo?.category || undefined,
@@ -147,12 +148,13 @@ function beginCheckout() {
             coupon: undefined, // 장바구니 전체 쿠폰이 있다면 추가
             items: userCart.map((item, index) => {
                 const productInfo = window.products.find(p => p.id === item.productId);
+                const itemDetails = lookupProductDetails(item.productId);
                 return {
                     item_id: item.productId.toString(),
                     item_name: item.productName,
                     affiliation: productInfo?.affiliation || '뷰티 코스메틱 쇼핑몰',
                     coupon: productInfo?.coupon || undefined, // 아이템 개별 쿠폰
-                    discount: productInfo?.originalPrice ? (productInfo.originalPrice - item.price).toFixed(2) * item.quantity : undefined,
+                    discount: itemDetails.originalPrice ? (itemDetails.originalPrice - item.price) * item.quantity : undefined,
                     index: index + 1, // 1부터 시작
                     item_brand: productInfo?.brand || undefined,
                     item_category: productInfo?.category || undefined,
@@ -210,16 +212,16 @@ window.completePurchase = function(event) {
             coupon: undefined, // 전체 쿠폰 (있다면)
             shipping_tier: 'Standard', // 배송 옵션 (현재는 기본값)
             items: userCart.map((item, index) => {
-                const productInfo = window.products.find(p => p.id === item.productId);
+                const itemDetails = lookupProductDetails(item.productId);
                 return {
                     item_id: item.productId.toString(),
                     item_name: item.productName,
-                    affiliation: productInfo?.affiliation || '뷰티 코스메틱 쇼핑몰',
-                    coupon: productInfo?.coupon || undefined,
-                    discount: productInfo?.originalPrice ? (productInfo.originalPrice - item.price).toFixed(2) * item.quantity : undefined,
+                    affiliation: itemDetails?.affiliation || '뷰티 코스메틱 쇼핑몰',
+                    coupon: itemDetails?.coupon || undefined,
+                    discount: itemDetails.originalPrice ? Number((itemDetails.originalPrice - item.price) * item.quantity) : undefined,
                     index: index + 1, // 1부터 시작
-                    item_brand: productInfo?.brand || undefined,
-                    item_category: productInfo?.category || undefined,
+                    item_brand: itemDetails?.brand || undefined,
+                    item_category: itemDetails?.category || undefined,
                     price: item.price,
                     quantity: item.quantity
                 };
@@ -234,16 +236,16 @@ window.completePurchase = function(event) {
             payment_type: 'Credit Card', // 결제 수단 (현재는 기본값)
             coupon: undefined, // 전체 쿠폰 (있다면)
             items: userCart.map((item, index) => { // items 배열은 shipping과 동일하게 사용
-                const productInfo = window.products.find(p => p.id === item.productId);
+                const itemDetails = lookupProductDetails(item.productId);
                 return {
                     item_id: item.productId.toString(),
                     item_name: item.productName,
-                    affiliation: productInfo?.affiliation || '뷰티 코스메틱 쇼핑몰',
-                    coupon: productInfo?.coupon || undefined,
-                    discount: productInfo?.originalPrice ? (productInfo.originalPrice - item.price).toFixed(2) * item.quantity : undefined,
+                    affiliation: itemDetails?.affiliation || '뷰티 코스메틱 쇼핑몰',
+                    coupon: itemDetails?.coupon || undefined,
+                    discount: itemDetails.originalPrice ? Number((itemDetails.originalPrice - item.price) * item.quantity) : undefined,
                     index: index + 1, // 1부터 시작
-                    item_brand: productInfo?.brand || undefined,
-                    item_category: productInfo?.category || undefined,
+                    item_brand: itemDetails?.brand || undefined,
+                    item_category: itemDetails?.category || undefined,
                     price: item.price,
                     quantity: item.quantity
                 };
@@ -278,7 +280,7 @@ window.completePurchase = function(event) {
 
     // --- GA4 purchase 이벤트 푸시 시작 ---
     if (typeof pushEcommerceEvent === 'function') {
-        const ecommerceData = {
+        const purchaseEcommerceData = {
             transaction_id: newPurchase.id.toString(), // 거래 ID (문자열 권장)
             affiliation: '뷰티 코스메틱 쇼핑몰', // 제휴사 또는 스토어 이름
             value: newPurchase.totalAmount, // 총 구매 금액 (세금, 배송비 제외한 상품 총액일 수도 있음 - 확인 필요)
@@ -287,16 +289,16 @@ window.completePurchase = function(event) {
             currency: 'KRW',
             coupon: undefined, // 주문 전체에 적용된 쿠폰 (있다면)
             items: newPurchase.items.map((item, index) => { // 구매한 아이템 정보 매핑
-                const productInfo = window.products.find(p => p.id === item.productId); // 원본 상품 정보 조회
+                const itemDetails = lookupProductDetails(item.productId);
                 return {
                     item_id: item.productId.toString(),
                     item_name: item.productName,
-                    affiliation: productInfo?.affiliation || '뷰티 코스메틱 쇼핑몰',
-                    coupon: productInfo?.coupon || undefined, // 아이템 개별 쿠폰
-                    discount: productInfo?.originalPrice ? (productInfo.originalPrice - item.price).toFixed(2) * item.quantity : undefined,
+                    affiliation: itemDetails?.affiliation || '뷰티 코스메틱 쇼핑몰',
+                    coupon: itemDetails?.coupon || undefined, // 아이템 개별 쿠폰
+                    discount: itemDetails.originalPrice ? Number((itemDetails.originalPrice - item.price) * item.quantity) : undefined,
                     index: index + 1, // 1부터 시작
-                    item_brand: productInfo?.brand || undefined,
-                    item_category: productInfo?.category || undefined,
+                    item_brand: itemDetails?.brand || undefined,
+                    item_category: itemDetails?.category || undefined,
                     // item_category2, 3, 4, 5 ... 필요시 추가
                     // item_list_id: ?? // 어떤 목록에서 구매했는지 알 수 있다면 추가
                     // item_list_name: ??
@@ -305,7 +307,7 @@ window.completePurchase = function(event) {
                 };
             })
         };
-        pushEcommerceEvent('purchase', ecommerceData);
+        pushEcommerceEvent('purchase', purchaseEcommerceData);
     } else {
         console.warn('pushEcommerceEvent function is not defined. Cannot push purchase.');
     }
@@ -336,7 +338,7 @@ function removeFromCart(productId) {
                     item_name: removedItem.productName,
                     affiliation: productInfo.affiliation || '뷰티 코스메틱 쇼핑몰',
                     coupon: productInfo.coupon || undefined, // 상품 원본 데이터에 쿠폰 정보가 있다면 사용
-                    discount: productInfo.originalPrice ? (productInfo.originalPrice - removedItem.price).toFixed(2) * removedItem.quantity : undefined, // 아이템 할인액 * 수량
+                    discount: productInfo.originalPrice ? (productInfo.originalPrice - removedItem.price) * removedItem.quantity : undefined, // 아이템 할인액 * 수량
                     // index: index + 1, // 장바구니 내에서의 index 정보 필요 시 추가 (1부터 시작)
                     item_brand: productInfo.brand || undefined,
                     item_category: productInfo.category || undefined,

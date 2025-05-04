@@ -1,69 +1,73 @@
 document.addEventListener('DOMContentLoaded', function() {
     const subscribeBtn = document.getElementById('subscribeBtn');
     const modal = document.getElementById('subscribeModal');
-    const submitEmail = document.getElementById('submitEmail');
+    const submitEmailBtn = document.getElementById('submitEmail');
     const emailInput = document.getElementById('emailInput');
     const subscriptionMessage = document.getElementById('subscriptionMessage');
 
+    let beginSubscriptionFired = false;
+    let subscriptionComplete = false;
+
     function showModal() {
+        if (subscriptionComplete) return;
         modal.style.display = 'block';
-        emailInput.focus(); // 모달이 열릴 때 이메일 입력 필드에 포커스
+        emailInput.focus();
+        if (!beginSubscriptionFired) {
+            pushGeneralEvent('begin_subscription');
+            beginSubscriptionFired = true;
+            console.log('begin_subscription event pushed (once).');
+        }
     }
 
     function hideModal() {
         modal.style.display = 'none';
-        subscriptionMessage.style.display = 'none';
     }
 
     function submitSubscription() {
-        if (emailInput.value) {
+        if (subscriptionComplete) return;
+
+        const email = emailInput.value.trim();
+        if (validateEmail(email)) {
+            console.log('구독 이메일:', email);
+
+            pushGeneralEvent('complete_subscription');
+            console.log('complete_subscription event pushed.');
+
+            subscriptionComplete = true;
+            subscriptionMessage.textContent = '구독이 완료되었습니다!';
             subscriptionMessage.style.display = 'block';
-            emailInput.value = '';
-            setTimeout(hideModal, 3000);
+            emailInput.disabled = true;
+            submitEmailBtn.textContent = '구독 완료';
+            submitEmailBtn.disabled = true;
+
+            setTimeout(hideModal, 2000);
+
+        } else {
+            alert('유효한 이메일 주소를 입력해주세요.');
         }
     }
 
-    subscribeBtn.addEventListener('click', function() {
-        console.log('subscribeBtn clicked!');
-        console.log('Checking pushEvent for begin_subscription:', typeof pushEvent);
-        if (typeof pushEvent === 'function') {
-            pushEvent('begin_subscription', { /* 필요 시 추가 데이터 */ });
-            console.log('begin_subscription event pushed.');
-        } else {
-            console.warn('pushEvent function is not defined. Cannot push begin_subscription.');
-        }
-        showModal();
-        // --- GA4 Event: begin_subscription ---
-        pushGeneralEvent('begin_subscription');
-        // --- End GA4 Event ---
-    });
+    function validateEmail(email) {
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
 
-    submitEmail.addEventListener('click', function() {
-        console.log('submitEmail clicked!');
-        console.log('Checking pushEvent for complete_subscription:', typeof pushEvent);
-        if (emailInput.value && typeof pushEvent === 'function') {
-            pushEvent('complete_subscription', {
-                // email_address: emailInput.value // 필요 시 이메일 주소 포함 
-            });
-            console.log('complete_subscription event pushed.');
-        } else if (!emailInput.value) {
-            console.log('Email not entered, skipping complete_subscription event.');
-        } else {
-            console.warn('pushEvent function is not defined. Cannot push complete_subscription.');
-        }
-        submitSubscription();
-        // --- GA4 Event: complete_subscription ---
-        pushGeneralEvent('complete_subscription');
-        // --- End GA4 Event ---
-    });
+    if (subscribeBtn) {
+        subscribeBtn.addEventListener('click', showModal);
+    }
 
-    // Enter 키 입력 처리
-    emailInput.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault(); // 폼 제출 방지
-            submitSubscription();
-        }
-    });
+    if (submitEmailBtn) {
+        submitEmailBtn.addEventListener('click', submitSubscription);
+    }
+
+    if (emailInput) {
+        emailInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' && !subscriptionComplete) {
+                event.preventDefault();
+                submitSubscription();
+            }
+        });
+    }
 
     window.addEventListener('click', function(event) {
         if (event.target == modal) {
