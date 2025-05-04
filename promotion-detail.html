@@ -113,6 +113,26 @@
         function initializePage() {
             window.checkAuthStatus();
             window.addEventListeners();
+
+            // --- GA4 Event: view_promotion (Detail View) ---
+            // 상세 페이지에 표시되는 특정 프로모션 정보를 구성합니다.
+            // 이 정보는 페이지 콘텐츠나 URL 파라미터 등에서 가져와야 합니다.
+            // 여기서는 립스틱 프로모션 페이지로 가정하고 데이터를 하드코딩합니다.
+            const promotionData = {
+                item_id: 'promo_lipstick25', // 예시 상품 ID
+                item_name: '립스틱 25% 할인', // 예시 상품명
+                promotion_id: 'lipstick_promo_detail', // 상세 페이지 뷰를 위한 ID
+                promotion_name: '립스틱 25% 할인',
+                creative_name: 'lipstick_detail_page',
+                creative_slot: 'main_content',
+                location_id: 'promotion_detail_page'
+            };
+            if (typeof pushEcommerceEvent === 'function') {
+                pushEcommerceEvent('view_promotion', { items: [promotionData] });
+            } else {
+                console.warn('pushEcommerceEvent is not defined. Cannot push view_promotion for detail.');
+            }
+            // --- End GA4 Event ---
         }
         includeHTML(initializePage);
     </script>

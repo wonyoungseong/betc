@@ -41,8 +41,8 @@
         includeHTML(initializePage);
 
         function performSearch(query) {
-            const searchResults = document.getElementById('searchResults');
-            searchResults.innerHTML = '검색 중...'; // 초기 메시지
+            const searchResultsDiv = document.getElementById('searchResults'); // 변수명 명확화
+            searchResultsDiv.innerHTML = '검색 중...'; // 초기 메시지
 
             const results = window.products.filter(product => 
                 product.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -60,11 +60,13 @@
             // --- 이벤트 푸시 끝 ---
 
             // 결과 표시 전 초기화
-            searchResults.innerHTML = ''; 
+            searchResultsDiv.innerHTML = ''; 
 
             if (results.length > 0) {
                 // 검색 결과가 있을 경우
-                searchResults.innerHTML = `<h2>'${query}' 검색 결과 (${results.length}건)</h2>`;
+                const resultsSection = document.createElement('div');
+                resultsSection.className = 'search-results-section'; // 섹션 클래스 추가
+                resultsSection.innerHTML = `<h2>'${query}' 검색 결과 (${results.length}건)</h2>`; // 섹션 제목
                 
                 const listName = `검색 결과: ${query}`;
                 const listId = 'search_results';
@@ -97,22 +99,27 @@
 
                 // 검색 결과 아이템 표시 (createProductItem 사용)
                 const resultsContainer = document.createElement('div');
-                resultsContainer.className = 'products'; // 기존 스타일 적용
+                resultsContainer.className = 'products search-results-items'; // 상품 목록 컨테이너
                 results.forEach((product, index) => {
-                    const itemElement = window.createProductItem(product, listName, index); // listName과 0-based index 전달
+                    const itemElement = window.createProductItem(product, listName, index); 
                     resultsContainer.appendChild(itemElement);
                 });
-                searchResults.appendChild(resultsContainer);
+                resultsSection.appendChild(resultsContainer); // 섹션에 상품 목록 추가
+                searchResultsDiv.appendChild(resultsSection); // 최종 부모에 섹션 추가
 
             } else {
                 // 검색 결과가 없을 경우
-                searchResults.innerHTML = `<p>'${query}'에 대한 검색 결과가 없습니다.</p><h3>추천 상품</h3>`;
+                searchResultsDiv.innerHTML = `<p class="no-results-message">'${query}'에 대한 검색 결과가 없습니다.</p>`; // 결과 없음 메시지
 
-                const recommendedProducts = window.products.slice(0, 4); // 상위 4개 제품 추천
+                const recommendedProducts = window.products.slice(0, 4); 
                 const listName = '검색결과 없음 추천';
                 const listId = 'no_results_recommendation';
 
                 if (recommendedProducts.length > 0) {
+                    const recommendationsSection = document.createElement('div');
+                    recommendationsSection.className = 'recommendations-section'; // 섹션 클래스 추가
+                    recommendationsSection.innerHTML = `<h3>추천 상품</h3>`; // 섹션 제목
+
                     // --- GA4 view_item_list 이벤트 푸시 (추천 상품 목록) ---
                     if (typeof pushEcommerceEvent === 'function') {
                         const ecommerceData = {
@@ -141,14 +148,15 @@
 
                     // 추천 상품 아이템 표시 (createProductItem 사용)
                     const recommendationsContainer = document.createElement('div');
-                    recommendationsContainer.className = 'products'; // 기존 스타일 적용
+                    recommendationsContainer.className = 'products recommendations-items'; // 상품 목록 컨테이너
                     recommendedProducts.forEach((product, index) => {
-                        const itemElement = window.createProductItem(product, listName, index); // listName과 0-based index 전달
+                        const itemElement = window.createProductItem(product, listName, index); 
                         recommendationsContainer.appendChild(itemElement);
                     });
-                    searchResults.appendChild(recommendationsContainer);
+                    recommendationsSection.appendChild(recommendationsContainer); // 섹션에 상품 목록 추가
+                    searchResultsDiv.appendChild(recommendationsSection); // 최종 부모에 섹션 추가
                 } else {
-                    searchResults.innerHTML += '<p>추천 상품을 불러올 수 없습니다.</p>';
+                    searchResultsDiv.innerHTML += '<p class="no-recommendations-message">추천 상품을 불러올 수 없습니다.</p>'; // 추천 상품도 없을 경우
                 }
             }
         }

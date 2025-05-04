@@ -23,7 +23,7 @@
             <div class="hero-content">
                 <h1><br>립스틱 25% 할인!</h1>
                 <p>가장 사랑받는 립스틱을<br>지금 바로 뷰티 코스메틱에서 <br>더욱 특별한 가격에 만나보세요!</p>
-                <a href="promotion-detail.html" class="cta-button">자세히 보기</a>
+                <a href="promotion-detail.html" class="cta-button" id="heroPromoLink">자세히 보기</a>
             </div>
         </section>
         
@@ -38,7 +38,7 @@
             <div class="beauty-lab-content">
                 <h2></h2>
                 <p>다양한 피부 고민을 위한 맞춤형 솔루션을 제공하는<br>뷰티 앤 라이프 랩을 만나보세요.</p>
-                <a href="campaign-detail.html" class="cta-button">자세히 보기</a>
+                <a href="campaign-detail.html" class="cta-button" id="beautyLabPromoLink">자세히 보기</a>
             </div>
         </section>
     </main>
@@ -57,6 +57,80 @@
             window.addEventListeners();
             window.loadMainProducts();
             window.initializeCategoryNav();
+
+            // --- GA4 Event: view_promotion ---
+            const promotions = [
+                {
+                    item_id: 'promo_lipstick25', // 프로모션 관련 대표 상품 ID 또는 프로모션 코드
+                    item_name: '립스틱 25% 할인 프로모션', // 또는 상품명
+                    promotion_id: 'lipstick_promo_hero',
+                    promotion_name: '립스틱 25% 할인',
+                    creative_name: 'hero_banner_lipstick',
+                    creative_slot: 'slot1_hero',
+                    location_id: 'index_page_hero' // 프로모션 위치 식별자
+                },
+                {
+                    item_id: 'promo_beautylab',
+                    item_name: '뷰티 앤 라이프 랩 캠페인',
+                    promotion_id: 'beauty_lab_campaign',
+                    promotion_name: '뷰티 앤 라이프 랩',
+                    creative_name: 'beauty_lab_banner',
+                    creative_slot: 'slot2_beautylab',
+                    location_id: 'index_page_beautylab'
+                }
+            ];
+            if (typeof pushEcommerceEvent === 'function') {
+                 pushEcommerceEvent('view_promotion', { items: promotions });
+            } else {
+                console.warn('pushEcommerceEvent is not defined. Cannot push view_promotion.');
+            }
+            // --- End GA4 Event ---
+
+            // --- Add Event Listeners for select_promotion ---
+            const heroPromoLink = document.getElementById('heroPromoLink');
+            if (heroPromoLink) {
+                heroPromoLink.addEventListener('click', function(e) {
+                    e.preventDefault(); // 기본 링크 동작 방지
+                    const promotionData = {
+                        item_id: 'promo_lipstick25',
+                        item_name: '립스틱 25% 할인 프로모션',
+                        promotion_id: 'lipstick_promo_hero',
+                        promotion_name: '립스틱 25% 할인',
+                        creative_name: 'hero_banner_lipstick',
+                        creative_slot: 'slot1_hero',
+                        location_id: 'index_page_hero'
+                    };
+                    if (typeof pushEcommerceEvent === 'function') {
+                         pushEcommerceEvent('select_promotion', { items: [promotionData] });
+                    } else {
+                        console.warn('pushEcommerceEvent is not defined. Cannot push select_promotion.');
+                    }
+                    window.location.href = this.href; // 페이지 이동
+                });
+            }
+
+            const beautyLabPromoLink = document.getElementById('beautyLabPromoLink');
+            if (beautyLabPromoLink) {
+                beautyLabPromoLink.addEventListener('click', function(e) {
+                    e.preventDefault(); // 기본 링크 동작 방지
+                    const promotionData = {
+                        item_id: 'promo_beautylab',
+                        item_name: '뷰티 앤 라이프 랩 캠페인',
+                        promotion_id: 'beauty_lab_campaign',
+                        promotion_name: '뷰티 앤 라이프 랩',
+                        creative_name: 'beauty_lab_banner',
+                        creative_slot: 'slot2_beautylab',
+                        location_id: 'index_page_beautylab'
+                    };
+                    if (typeof pushEcommerceEvent === 'function') {
+                         pushEcommerceEvent('select_promotion', { items: [promotionData] });
+                    } else {
+                        console.warn('pushEcommerceEvent is not defined. Cannot push select_promotion.');
+                    }
+                    window.location.href = this.href; // 페이지 이동
+                });
+            }
+            // --- End Event Listeners ---
         }
 
         // Call includeHTML, which now also inserts GTM.

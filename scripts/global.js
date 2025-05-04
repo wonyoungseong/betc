@@ -11,24 +11,36 @@ window.dataLayer = window.dataLayer || [];
  * @param {string} eventName - 푸시할 이벤트 이름 (예: 'add_to_cart')
  * @param {object} eventData - 이벤트와 함께 푸시할 전자상거래 데이터 객체
  */
-window.pushEcommerceEvent = function(eventName, eventData) {
-    if (!eventName || !eventData) {
-        console.warn('pushEcommerceEvent: eventName 또는 eventData가 제공되지 않았습니다.');
-        return;
-    }
+function pushEcommerceEvent(eventName, ecommerceData) {
+    console.log(`Pushing GA4 Event: ${eventName}`, ecommerceData);
+    resetEcommerceData(); // Ensure ecommerce object is clean before pushing new data
 
-    // 이전 ecommerce 객체를 초기화 (선택적 권장 사항)
-    window.dataLayer.push({ ecommerce: null });
-
-    // 새 이벤트 푸시
-    window.dataLayer.push({
+    const eventData = {
         event: eventName,
-        ecommerce: eventData
-    });
+        event_category: "ecommerce", // Auto-set for ecommerce events
+        event_action: eventName,      // Auto-set for ecommerce events
+        event_label: undefined,       // Set as undefined per request
+        ecommerce: ecommerceData
+    };
 
-    if (window.debugMode) { // 디버그 모드가 활성화된 경우 콘솔에 로그 출력 (선택 사항)
-        console.log(`GA4 Event Pushed: ${eventName}`, eventData);
-    }
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(eventData);
+}
+
+// New helper function for non-ecommerce events
+function pushGeneralEvent(eventName, customData = {}) {
+    console.log(`Pushing GA4 Event: ${eventName}`, customData);
+
+    const eventData = {
+        event: eventName,
+        event_category: eventName, // Auto-set for general events
+        event_action: eventName,   // Auto-set for general events
+        event_label: undefined,    // Set as undefined per request
+        ...customData              // Merge any additional parameters
+    };
+
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(eventData);
 }
 
 /**

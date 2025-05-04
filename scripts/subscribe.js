@@ -33,6 +33,9 @@ document.addEventListener('DOMContentLoaded', function() {
             console.warn('pushEvent function is not defined. Cannot push begin_subscription.');
         }
         showModal();
+        // --- GA4 Event: begin_subscription ---
+        pushGeneralEvent('begin_subscription');
+        // --- End GA4 Event ---
     });
 
     submitEmail.addEventListener('click', function() {
@@ -49,6 +52,9 @@ document.addEventListener('DOMContentLoaded', function() {
             console.warn('pushEvent function is not defined. Cannot push complete_subscription.');
         }
         submitSubscription();
+        // --- GA4 Event: complete_subscription ---
+        pushGeneralEvent('complete_subscription');
+        // --- End GA4 Event ---
     });
 
     // Enter 키 입력 처리

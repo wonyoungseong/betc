@@ -330,6 +330,17 @@ window.loadSearchResults = function() {
     } else {
         resultsDiv.innerHTML = '<p>검색 결과가 없습니다.</p>';
     }
+
+    // Display products
+    displayProducts(results, resultsDiv, 'Search Results');
+
+    // --- GA4 Event: view_search_results ---
+    if (query) {
+        pushGeneralEvent('view_search_results', {
+            search_term: query
+        });
+    }
+    // --- End GA4 Event ---
 }
 
 window.loadProductList = function(category = 'all', sortBy = 'lowprice') {

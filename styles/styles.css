@@ -1356,3 +1356,51 @@ footer {
     margin-right: 0;
     margin-left: auto; /* 가격을 오른쪽으로 밀기 */
 }
+
+/* Search Results Page Specific Styles */
+.search-results-section,
+.recommendations-section {
+    margin-top: 40px; /* 섹션 간 상단 여백 */
+    padding-top: 30px; /* 섹션 내부 상단 여백 */
+    border-top: 2px solid #f0f0f0; /* 구분선 */
+}
+
+/* 첫 번째 섹션일 경우 상단 여백 및 구분선 제거 */
+#searchResults > div:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+/* 검색 결과 페이지 제목 스타일 */
+#searchResults h2, 
+#searchResults h3 {
+    font-size: 1.6em; /* 제목 크기 */
+    margin-bottom: 25px; /* 제목과 내용 사이 여백 */
+    color: #4a4a7d; /* 테마 색상 */
+    text-align: left; /* 왼쪽 정렬 */
+    padding-bottom: 10px; /* 제목 하단 여백 */
+    border-bottom: 1px solid #eee; /* 제목 하단 구분선 */
+}
+
+/* '결과 없음' 메시지 스타일 */
+.no-results-message {
+    font-size: 1.2em;
+    color: #666;
+    padding: 20px 0;
+    text-align: center;
+}
+
+/* 추천 상품 없을 때 메시지 */
+.no-recommendations-message {
+    font-size: 1em;
+    color: #999;
+    padding: 10px 0;
+}
+
+/* 상품 목록 정렬 (기본 그리드 유지, 필요시 조정) */
+.search-results-items,
+.recommendations-items {
+    /* .products 클래스 스타일 상속 */
+    justify-content: flex-start; /* 왼쪽 정렬 */
+}

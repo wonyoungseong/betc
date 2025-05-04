@@ -68,24 +68,24 @@ window.submitReview = function() {
     ratingInput.value = '5';
     window.loadReviews(id);
     
-    // --- GA4 write_review 이벤트 푸시 시작 ---
-    if (typeof pushEvent === 'function') { // global.js의 pushEvent 사용 (일반 이벤트)
-        const eventData = {
-            product_id: id.toString(),
-            review_score: rating
-        };
-        pushEvent('write_review', eventData);
-    } else {
-        console.warn('pushEvent function is not defined. Cannot push write_review.');
-        // 대체: 직접 dataLayer.push 사용
-        // window.dataLayer = window.dataLayer || [];
-        // window.dataLayer.push({
-        //     event: 'write_review',
-        //     product_id: id.toString(),
-        //     review_score: rating
-        // });
-    }
-    // --- GA4 write_review 이벤트 푸시 끝 ---
+    // 리뷰 데이터 생성 (실제로는 사용자 정보 등 더 많은 정보 포함)
+    const newReview = {
+        productId: id, // 현재 상품 ID (어딘가에서 설정되어 있어야 함)
+        rating: rating,
+        text: reviewText,
+        author: window.currentUser ? window.currentUser.username : '익명', // 현재 로그인 사용자
+        date: new Date().toISOString().split('T')[0]
+    };
+
+    // --- GA4 Event: write_review ---
+    pushGeneralEvent('write_review', {
+        product_id: id.toString(), // 상품 ID는 문자열로
+        review_score: rating // 평점
+    });
+    // --- End GA4 Event ---
+
+    // 리뷰 저장 (현재는 로컬 스토리지 사용)
+    saveReview(newReview);
     
     alert('리뷰가 등록되었습니다.');
 }
