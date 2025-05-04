@@ -67,5 +67,25 @@ window.submitReview = function() {
     reviewInput.value = '';
     ratingInput.value = '5';
     window.loadReviews(id);
+    
+    // --- GA4 write_review 이벤트 푸시 시작 ---
+    if (typeof pushEvent === 'function') { // global.js의 pushEvent 사용 (일반 이벤트)
+        const eventData = {
+            product_id: id.toString(),
+            review_score: rating
+        };
+        pushEvent('write_review', eventData);
+    } else {
+        console.warn('pushEvent function is not defined. Cannot push write_review.');
+        // 대체: 직접 dataLayer.push 사용
+        // window.dataLayer = window.dataLayer || [];
+        // window.dataLayer.push({
+        //     event: 'write_review',
+        //     product_id: id.toString(),
+        //     review_score: rating
+        // });
+    }
+    // --- GA4 write_review 이벤트 푸시 끝 ---
+    
     alert('리뷰가 등록되었습니다.');
 }

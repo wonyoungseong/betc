@@ -50,6 +50,15 @@ window.login = function() {
         window.currentUser = { username: username };
         localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
         window.checkAuthStatus();
+        
+        // --- GA4 login 이벤트 푸시 --- 
+        if (typeof pushEvent === 'function') {
+            pushEvent('login'); 
+        } else {
+            console.warn('pushEvent function is not defined. Cannot push login event.');
+        }
+        // --- 이벤트 푸시 끝 ---
+        
         alert(`${username}님으로 로그인되었습니다.`);
         window.closeLoginModal();
     } else {
@@ -64,6 +73,15 @@ window.signup = function() {
         window.currentUser = { username: username };
         localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
         window.checkAuthStatus();
+
+        // --- GA4 sign_up 이벤트 푸시 --- 
+        if (typeof pushEvent === 'function') {
+            pushEvent('sign_up');
+        } else {
+            console.warn('pushEvent function is not defined. Cannot push sign_up event.');
+        }
+        // --- 이벤트 푸시 끝 ---
+        
         alert(`${username}님으로 회원가입 및 로그인되었습니다.`);
         window.closeSignupModal();
     } else {

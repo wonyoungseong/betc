@@ -23,9 +23,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    subscribeBtn.addEventListener('click', showModal);
+    subscribeBtn.addEventListener('click', function() {
+        if (typeof pushEvent === 'function') {
+            pushEvent('begin_subscription', { /* 필요 시 추가 데이터 */ });
+        } else {
+            console.warn('pushEvent function is not defined. Cannot push begin_subscription.');
+        }
+        showModal();
+    });
 
-    submitEmail.addEventListener('click', submitSubscription);
+    submitEmail.addEventListener('click', function() {
+        if (emailInput.value && typeof pushEvent === 'function') {
+            pushEvent('complete_subscription', {
+                // email_address: emailInput.value // 필요 시 이메일 주소 포함 
+            });
+        } else if (!emailInput.value) {
+            // 이메일 미입력 시 알림 등 처리 가능
+        } else {
+            console.warn('pushEvent function is not defined. Cannot push complete_subscription.');
+        }
+        submitSubscription();
+    });
 
     // Enter 키 입력 처리
     emailInput.addEventListener('keypress', function(event) {

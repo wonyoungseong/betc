@@ -154,6 +154,36 @@ window.loadProductDetail = function() {
         // 리뷰 로드 함수 호출
         window.loadReviews(id);
 
+        // --- GA4 view_item 이벤트 푸시 시작 ---
+        if (typeof pushEcommerceEvent === 'function') {
+            // URL에서 list_name과 list_id 가져오기 (select_item에서 전달됨)
+            const listName = params.get('list_name') || 'undefined'; // 목록 정보가 없을 경우 대비
+            const listId = params.get('list_id') || 'undefined';
+
+            const ecommerceData = {
+                currency: 'KRW',
+                value: product.price,
+                items: [{
+                    item_id: product.id.toString(),
+                    item_name: product.name,
+                    affiliation: product.affiliation || '뷰티 코스메틱 쇼핑몰',
+                    coupon: product.coupon || undefined,
+                    discount: product.originalPrice ? (product.originalPrice - product.price).toFixed(2) : undefined,
+                    // index: ?? // 단일 아이템 뷰에서는 index가 의미 없을 수 있음
+                    item_brand: product.brand || undefined,
+                    item_category: product.category || undefined,
+                    item_list_id: listId, // 어떤 목록에서 왔는지 식별
+                    item_list_name: listName,
+                    price: product.price,
+                    quantity: 1 // 상세 보기 시 수량은 1
+                }]
+            };
+            pushEcommerceEvent('view_item', ecommerceData);
+        } else {
+            console.warn('pushEcommerceEvent function is not defined. Cannot push view_item.');
+        }
+        // --- GA4 view_item 이벤트 푸시 끝 ---
+
         // 콘텐츠 로드 후 여백 조정
         setTimeout(function() {
             var gnbHeight = document.querySelector('.gnb').offsetHeight;
