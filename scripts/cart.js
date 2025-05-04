@@ -83,7 +83,7 @@ function loadCartItems() {
                     affiliation: productInfo?.affiliation || '뷰티 코스메틱 쇼핑몰',
                     coupon: productInfo?.coupon || undefined,
                     discount: productInfo?.originalPrice ? (productInfo.originalPrice - item.price).toFixed(2) * item.quantity : undefined,
-                    index: index, // 장바구니 내 순서 (필요시)
+                    index: index + 1, // 장바구니 내 순서 (1부터 시작)
                     item_brand: productInfo?.brand || undefined,
                     item_category: productInfo?.category || undefined,
                     price: item.price,
@@ -101,10 +101,18 @@ function loadCartItems() {
         const div = document.createElement('div');
         div.className = 'cart-item';
         const productInfo = window.products.find(p => p.id === item.productId);
-        const imageUrl = productInfo ? productInfo.image : 'images/placeholder.png';
+        
+        // 이미지 URL 처리 개선
+        let imageUrl = 'images/placeholder.png'; // 기본 이미지 경로
+        if (productInfo && productInfo.image) {
+            imageUrl = productInfo.image; // 상품 정보에 이미지가 있으면 사용
+        } else if (!productInfo) {
+             console.warn(`Product info not found for cart item ID ${item.productId}. Using placeholder image.`);
+        }
+        // 상품 정보는 있지만 이미지가 없는 경우도 placeholder 사용
 
         div.innerHTML = `
-            <img src="${imageUrl}" alt="${item.productName}" class="cart-item-image">
+            <img src="${imageUrl}" alt="${item.productName}" class="cart-item-image" onerror="this.onerror=null; this.src='images/placeholder.png'; console.error('Failed to load image:', this.src);">
             <div class="cart-item-details">
                 <h3>${item.productName}</h3>
                 <p>가격: ${item.price.toLocaleString()}원</p>
@@ -145,7 +153,7 @@ function beginCheckout() {
                     affiliation: productInfo?.affiliation || '뷰티 코스메틱 쇼핑몰',
                     coupon: productInfo?.coupon || undefined, // 아이템 개별 쿠폰
                     discount: productInfo?.originalPrice ? (productInfo.originalPrice - item.price).toFixed(2) * item.quantity : undefined,
-                    index: index,
+                    index: index + 1, // 1부터 시작
                     item_brand: productInfo?.brand || undefined,
                     item_category: productInfo?.category || undefined,
                     price: item.price,
@@ -209,7 +217,7 @@ window.completePurchase = function(event) {
                     affiliation: productInfo?.affiliation || '뷰티 코스메틱 쇼핑몰',
                     coupon: productInfo?.coupon || undefined,
                     discount: productInfo?.originalPrice ? (productInfo.originalPrice - item.price).toFixed(2) * item.quantity : undefined,
-                    index: index,
+                    index: index + 1, // 1부터 시작
                     item_brand: productInfo?.brand || undefined,
                     item_category: productInfo?.category || undefined,
                     price: item.price,
@@ -233,7 +241,7 @@ window.completePurchase = function(event) {
                     affiliation: productInfo?.affiliation || '뷰티 코스메틱 쇼핑몰',
                     coupon: productInfo?.coupon || undefined,
                     discount: productInfo?.originalPrice ? (productInfo.originalPrice - item.price).toFixed(2) * item.quantity : undefined,
-                    index: index,
+                    index: index + 1, // 1부터 시작
                     item_brand: productInfo?.brand || undefined,
                     item_category: productInfo?.category || undefined,
                     price: item.price,
@@ -286,7 +294,7 @@ window.completePurchase = function(event) {
                     affiliation: productInfo?.affiliation || '뷰티 코스메틱 쇼핑몰',
                     coupon: productInfo?.coupon || undefined, // 아이템 개별 쿠폰
                     discount: productInfo?.originalPrice ? (productInfo.originalPrice - item.price).toFixed(2) * item.quantity : undefined,
-                    index: index,
+                    index: index + 1, // 1부터 시작
                     item_brand: productInfo?.brand || undefined,
                     item_category: productInfo?.category || undefined,
                     // item_category2, 3, 4, 5 ... 필요시 추가
@@ -329,7 +337,7 @@ function removeFromCart(productId) {
                     affiliation: productInfo.affiliation || '뷰티 코스메틱 쇼핑몰',
                     coupon: productInfo.coupon || undefined, // 상품 원본 데이터에 쿠폰 정보가 있다면 사용
                     discount: productInfo.originalPrice ? (productInfo.originalPrice - removedItem.price).toFixed(2) * removedItem.quantity : undefined, // 아이템 할인액 * 수량
-                    // index: ?? // 장바구니 내에서의 index 정보 필요 시 추가
+                    // index: index + 1, // 장바구니 내에서의 index 정보 필요 시 추가 (1부터 시작)
                     item_brand: productInfo.brand || undefined,
                     item_category: productInfo.category || undefined,
                     price: removedItem.price,
@@ -375,9 +383,20 @@ function loadOrderSummary() {
     userCart.forEach(item => {
         const itemTotal = item.price * item.quantity;
         totalAmount += itemTotal;
+        
+        // 상품 정보 및 이미지 URL 가져오기
+        const productInfo = window.products.find(p => p.id === item.productId);
+        let imageUrl = 'images/placeholder.png'; // 기본 이미지
+        if (productInfo && productInfo.image) {
+            imageUrl = productInfo.image;
+        } else if (!productInfo) {
+            console.warn(`Product info not found for checkout summary item ID ${item.productId}. Using placeholder image.`);
+        }
+
         summaryHTML += `
             <li class="order-item">
-                <span>${item.productName}</span>
+                <img src="${imageUrl}" alt="${item.productName}" class="summary-item-image" onerror="this.onerror=null; this.src='images/placeholder.png';"> <!-- 이미지 추가 -->
+                <span class="summary-item-name">${item.productName}</span>
                 <span>${item.quantity}개</span>
                 <span>₩${itemTotal.toLocaleString()}</span>
             </li>

@@ -28,7 +28,8 @@
     <script src="scripts/user.js"></script>
     <script src="scripts/cart.js"></script>
     <script>
-        function initializePage() {
+        async function initializePage() {
+            await window.loadProductData();
             window.checkAuthStatus();
             window.addEventListeners();
             loadCartItems();

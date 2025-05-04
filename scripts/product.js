@@ -34,6 +34,7 @@ window.loadProductData = async function() {
     }
 }
 window.loadMainProducts = function(category = 'all') {
+    console.log('loadMainProducts called with category:', category); // 로그 추가
     var productList = document.getElementById('mainProductList');
     if (!productList) return;
     productList.innerHTML = '';
@@ -44,10 +45,11 @@ window.loadMainProducts = function(category = 'all') {
 
     // 최대 4개의 제품만 표시
     var displayProducts = filteredProducts.slice(0, 4);
+    console.log('Products to display:', displayProducts.length, displayProducts); // 로그 추가
 
-    // --- GA4 view_item_list 이벤트 푸시 시작 (추가된 부분) ---
-    const listName = '메인 추천 제품'; // 목록 이름 지정
-    const listId = 'main_featured'; // 목록 ID 지정 (임의)
+    // --- GA4 view_item_list 이벤트 푸시 시작 ---
+    const listName = '메인 추천 제품';
+    const listId = 'main_featured';
     const ecommerceData = {
         item_list_name: listName,
         item_list_id: listId,
@@ -57,7 +59,7 @@ window.loadMainProducts = function(category = 'all') {
             affiliation: product.affiliation || '뷰티 코스메틱 쇼핑몰',
             coupon: product.coupon || undefined,
             discount: product.originalPrice ? (product.originalPrice - product.price).toFixed(2) : undefined,
-            index: index,
+            index: index + 1,
             item_brand: product.brand || undefined,
             item_category: product.category || undefined,
             item_list_id: listId, // 각 아이템에도 목록 ID 추가
@@ -66,7 +68,10 @@ window.loadMainProducts = function(category = 'all') {
             quantity: 1
         }))
     };
+
+    console.log('Checking pushEcommerceEvent:', typeof pushEcommerceEvent); // 로그 추가
     if (typeof pushEcommerceEvent === 'function') {
+        console.log('Pushing view_item_list for main products:', ecommerceData); // 로그 추가
         pushEcommerceEvent('view_item_list', ecommerceData);
     } else {
         console.warn('pushEcommerceEvent function is not defined. Cannot push view_item_list for main products.');
@@ -244,7 +249,7 @@ window.viewProduct = function(id, listName, index) {
                 affiliation: product.affiliation || '뷰티 코스메틱 쇼핑몰',
                 coupon: product.coupon || undefined,
                 discount: product.originalPrice ? (product.originalPrice - product.price).toFixed(2) : undefined,
-                index: index, // 전달받은 인덱스 사용
+                index: index + 1,
                 item_brand: product.brand || undefined,
                 item_category: product.category || undefined,
                 item_list_id: product.category, // 아이템에도 목록 ID
@@ -331,7 +336,7 @@ window.loadProductList = function(category = 'all', sortBy = 'lowprice') {
             affiliation: product.affiliation || '뷰티 코스메틱 쇼핑몰',
             coupon: product.coupon || undefined,
             discount: product.originalPrice ? (product.originalPrice - product.price).toFixed(2) : undefined,
-            index: index,
+            index: index + 1,
             item_brand: product.brand || undefined,
             item_category: product.category || undefined,
             item_list_id: category,
@@ -374,12 +379,9 @@ window.addToCartWithQuantity = function(productId) {
             affiliation: product.affiliation || '뷰티 코스메틱 쇼핑몰',
             coupon: product.coupon || undefined,
             discount: product.originalPrice ? (product.originalPrice - product.price).toFixed(2) * quantity : undefined, // 아이템 할인액 * 수량
-            // index: ?? // 목록에서 추가한 경우 index 전달 필요 (현재 구조에서는 어려움)
+            index: index + 1,
             item_brand: product.brand || undefined,
             item_category: product.category || undefined,
-            // item_category2, 3 등 필요시 추가
-            // item_list_id: ?? // 목록 컨텍스트 필요
-            // item_list_name: ?? // 목록 컨텍스트 필요
             price: product.price,
             quantity: quantity
         }]
