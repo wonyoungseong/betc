@@ -51,11 +51,11 @@ window.login = function() {
         localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
         window.checkAuthStatus();
         
-        // --- GA4 login 이벤트 푸시 --- 
-        if (typeof pushEvent === 'function') {
-            pushEvent('login'); 
+        // --- GA4 login 이벤트 푸시 (pushGeneralEvent 사용) --- 
+        if (typeof pushGeneralEvent === 'function') {
+             pushGeneralEvent('login');
         } else {
-            console.warn('pushEvent function is not defined. Cannot push login event.');
+            console.warn('pushGeneralEvent function is not defined. Cannot push login event.');
         }
         // --- 이벤트 푸시 끝 ---
         
@@ -74,11 +74,11 @@ window.signup = function() {
         localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
         window.checkAuthStatus();
 
-        // --- GA4 sign_up 이벤트 푸시 --- 
-        if (typeof pushEvent === 'function') {
-            pushEvent('sign_up');
+        // --- GA4 sign_up 이벤트 푸시 (pushGeneralEvent 사용) --- 
+        if (typeof pushGeneralEvent === 'function') {
+             pushGeneralEvent('sign_up');
         } else {
-            console.warn('pushEvent function is not defined. Cannot push sign_up event.');
+            console.warn('pushGeneralEvent function is not defined. Cannot push sign_up event.');
         }
         // --- 이벤트 푸시 끝 ---
         
