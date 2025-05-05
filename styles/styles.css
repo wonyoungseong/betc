@@ -1423,7 +1423,6 @@ footer {
          top: 100%; /* Position below header top */
          left: 0;
          z-index: 999;
-         border-top: 1px solid #5a5a8d;
     }
 
      nav.active {
@@ -1759,4 +1758,155 @@ footer {
         margin-left: 0;
         margin-top: var(--space-sm);
     }
+}
+
+/* --- Header Responsive Refinements --- */
+@media screen and (max-width: 768px) {
+    .header-top {
+        flex-wrap: wrap;
+        justify-content: space-between; /* 로고와 메뉴 영역 양쪽 정렬 */
+        padding: 10px 15px; /* 패딩 약간 조정 */
+    }
+    .logo {
+        width: auto; /* 자동 너비 */
+        text-align: left; /* 왼쪽 정렬 */
+        margin-bottom: 0; /* 아래 마진 제거 */
+        flex-grow: 1; /* 로고 영역이 공간 차지하도록 */
+    }
+    .hamburger-menu {
+        display: block; /* 햄버거 메뉴 표시 */
+        order: 3; /* 햄버거 메뉴 순서 조정 */
+    }
+    nav#mainNav { /* 네비게이션 숨김 및 위치 조정 */
+        display: none;
+        order: 4; /* 순서 맨 뒤로 */
+        width: 100%;
+        position: absolute;
+        top: 100%; /* 헤더 아래로 */
+        left: 0;
+        background-color: #4a4a7d; /* 배경색 유지 */
+        z-index: 999;
+    }
+    nav#mainNav.active { /* 활성화 시 표시 */
+        display: block;
+    }
+    nav#mainNav ul { /* 세로 정렬 */
+       flex-direction: column;
+       align-items: flex-start;
+       padding: 10px 0;
+    }
+    nav#mainNav li {
+        width: 100%;
+        text-align: left;
+    }
+    nav#mainNav a {
+        padding: 12px 20px; /* 패딩 조정 */
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .search-bar {
+        order: 2; /* 검색창 순서 조정 */
+        width: auto; /* 자동 너비 */
+        min-width: 40px; /* 아이콘 버튼만 보일 정도의 최소 너비 */
+        flex-grow: 0; /* 기본적으로 늘어나지 않음 */
+        margin: 0; /* 마진 제거 */
+        /* 필요 시 특정 너비 이하에서 input 숨기기 */
+    }
+    .search-bar input#searchInput {
+        /* 768px 이하에서는 숨기거나 너비 최소화 가능 */
+        /* 예: display: none; 또는 width: 0; padding: 0; border: 0; */
+         max-width: 200px; /* 검색창 최대 너비 제한 */
+         transition: max-width 0.3s ease; /* 부드러운 전환 효과 */
+    }
+     .user-menu {
+        order: 1; /* 사용자 메뉴 순서 맨 앞으로 */
+        width: auto;
+        margin-left: 0; /* 마진 제거 */
+    }
+    /* 로그인/회원가입 텍스트 숨기기 (아이콘만 남기기) */
+    .user-menu a:not(.icon-link) {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .logo a {
+        font-size: 18px; /* 로고 더 작게 */
+    }
+     .search-bar input#searchInput {
+         max-width: 120px; /* 더 좁은 화면에서 검색창 더 작게 */
+     }
+    .user-menu {
+        gap: var(--space-xs); /* 아이콘 간격 줄이기 */
+    }
+    .icon-link img, #logoutLink img {
+        width: 18px; /* 아이콘 크기 줄이기 */
+        height: 18px;
+    }
+     nav#mainNav a { /* 모바일 메뉴 패딩 추가 조정 */
+        padding: 10px 15px;
+    }
+}
+
+/* --- Product List Responsive Refinements --- */
+/* 기본 Product List (Desktop) - 기존 .product-list 확인 필요 */
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 기본 4 컬럼 */
+    gap: var(--space-lg); /* 카드 사이 간격 */
+    justify-content: center; /* 필요 시 */
+    /* 기존 스타일과 병합/확인 필요 */
+    align-items: stretch; /* 아이템 높이 맞춤 */
+}
+
+/* Tablet */
+@media screen and (max-width: 992px) { /* 4개 -> 3개 */
+    .product-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Mobile Landscape / Small Tablet */
+@media screen and (max-width: 768px) { /* 3개 -> 2개 */
+    .product-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-md); /* 간격 줄이기 */
+    }
+}
+
+/* Mobile Portrait */
+@media screen and (max-width: 480px) { /* 2개 -> 2개 (또는 1개) */
+    .product-list {
+        grid-template-columns: repeat(2, 1fr); /* 모바일에서도 2개 유지 */
+        /* 또는 1개 컬럼으로 변경: grid-template-columns: 1fr; */
+        gap: var(--space-sm); /* 간격 더 줄이기 */
+    }
+    /* 모바일에서 상품 카드 내부 스타일 조정 */
+    .product-item {
+        padding: var(--space-sm); /* 카드 내부 패딩 줄이기 */
+    }
+    .product-item h3 {
+        font-size: 0.9em; /* 폰트 크기 줄이기 */
+        margin: var(--space-xs) 0; /* 마진 조정 */
+    }
+     .product-item .price, .product-item .original-price, .product-item .discount {
+        font-size: 0.85em; /* 가격 폰트 크기 줄이기 */
+    }
+     .product-item p { /* 일반 텍스트 마진 조정 */
+         margin: var(--space-xs) 0;
+     }
+}
+
+/* Product Item Image (기존 규칙과 병합) */
+.product-item img {
+    display: block;
+    width: 100%; /* 너비 100% */
+    max-width: 100%; /* 부모 너비 초과 방지 */
+    height: auto; /* 비율 유지 */
+    aspect-ratio: 1 / 1; /* 1:1 비율 유지 (선호에 따라 조정) */
+    object-fit: cover; /* 컨테이너에 맞춰 이미지 자르기 */
+    margin-bottom: var(--space-md); /* 이미지와 텍스트 사이 간격 */
+    border-radius: 4px; /* 이미지 모서리 둥글게 (선택 사항) */
+    /* 기존 object-fit, max-width, height 등과 병합/수정 */
 }
