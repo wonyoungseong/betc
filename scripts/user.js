@@ -343,46 +343,15 @@ function closeModals() {
 
 // 이벤트 리스너 추가
 document.addEventListener('DOMContentLoaded', function() {
-    const hamburgerMenu = document.getElementById('hamburgerMenu');
-    const mainNav = document.getElementById('mainNav');
-    const searchBar = document.getElementById('searchBar');
+    // Initialize margin first
+    updateMainContentMargin();
 
-    function adjustLayout() {
-        if (window.innerWidth <= 480) {
-            searchBar.style.display = 'block';
-            hamburgerMenu.style.display = 'block';
-            searchBar.style.position = 'absolute';
-            searchBar.style.top = mainNav.offsetHeight + 'px';
-            searchBar.style.width = '100%';
-        } else {
-            searchBar.style.display = 'flex';
-            hamburgerMenu.style.display = 'none';
-            searchBar.style.position = 'static';
-            searchBar.style.width = 'auto';
-        }
-    }
+    // Attach main event listeners (which includes hamburger toggle)
+    addEventListeners();
 
-    if (hamburgerMenu) {
-        hamburgerMenu.addEventListener('click', function() {
-            mainNav.classList.toggle('active');
-        });
-    }
-
-    window.addEventListener('resize', adjustLayout);
-    adjustLayout();
-
-    document.getElementById('loginLink').addEventListener('click', showLoginModal);
-    document.getElementById('signupLink').addEventListener('click', showSignupModal);
-    document.getElementById('closeLoginModal').addEventListener('click', closeModals);
-    document.getElementById('closeSignupModal').addEventListener('click', closeModals);
-
-    // 모달 외부 클릭 시 닫기
-    window.onclick = function(event) {
-        if (event.target == document.getElementById('loginModal') || 
-            event.target == document.getElementById('signupModal')) {
-            closeModals();
-        }
-    }
+    // Remove adjustLayout call from here, rely on resize listener in addEventListeners
+    // window.addEventListener('resize', adjustLayout);
+    // adjustLayout(); // Remove initial call from here too
 });
 
 // --- NEW FUNCTION: Update Cart Count in Header ---
