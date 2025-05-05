@@ -1440,8 +1440,32 @@ footer {
 }
 
 
-/* === Product Detail Page Specific Styles (Revision for Dynamic Thumbnails) === */
-/* ... (.product-detail-container, .product-detail, .product-image-gallery, .main-image styles remain mostly the same) ... */
+/* === Product Detail Page Specific Styles === */
+.product-detail-container {
+    /* Container styles if needed */
+}
+
+.product-detail {
+    /* Mobile first: stack image and info */
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl); /* Space before description */
+}
+
+.product-image-gallery {
+    width: 100%;
+}
+
+.main-image img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1; /* Maintain square aspect ratio */
+    object-fit: cover;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-bottom: var(--space-md);
+}
 
 .thumbnail-images {
     display: flex;
@@ -1453,21 +1477,20 @@ footer {
     overflow-x: auto; /* Allow horizontal scroll if needed, instead of wrapping */
     -webkit-overflow-scrolling: touch; /* Smooth scroll on touch devices */
     /* Optionally hide scrollbar visually */
-     /* scrollbar-width: none; /* Firefox */ */
-     /* &::-webkit-scrollbar { display: none; } /* Chrome, Safari, Opera */ */
-} /* <<< Correct closing brace for .thumbnail-images */
+    /* scrollbar-width: none; /* Firefox */ */
+    /* &::-webkit-scrollbar { display: none; } /* Chrome, Safari, Opera */ */
+} 
 
-/* More specific selector for thumbnails */
 .thumbnail-images .thumbnail {
     display: block;
-    /* width is set by JS */
+    /* width is set by JS or fixed */
     height: auto;
-    object-fit: contain;
+    width: 70px; /* Fixed thumbnail width */
+    object-fit: cover; /* Changed from contain */
     cursor: pointer;
     border: 2px solid transparent;
     border-radius: 4px;
     transition: border-color 0.2s ease-in-out;
-    max-width: none;
     flex-shrink: 0;
     margin: 0; /* Remove individual margins */
     box-sizing: border-box; /* Ensure padding/border included in width */
@@ -1478,24 +1501,140 @@ footer {
     border-color: #4a4a7d; /* Highlight */
 }
 
-/* === 반응형 수정 === */
+.product-info {
+    width: 100%;
+}
+
+/* Product Info Internal Styling */
+.product-info h2 {
+    font-size: 1.8em; /* 상품명 크기 */
+    margin-bottom: var(--space-sm);
+    line-height: 1.3;
+}
+
+.product-info .price {
+    font-size: 1.6em; /* 가격 크기 */
+    font-weight: bold;
+    margin-bottom: var(--space-lg);
+    display: block; /* 블록 요소로 만들어 마진 적용 */
+}
+.product-info .price .discount {
+     font-size: 0.8em; /* 할인율 크기 조정 */
+     margin-right: var(--space-sm);
+     color: #e74c3c;
+}
+ .product-info .price .original-price {
+     font-size: 0.7em; /* 원래 가격 크기 조정 */
+     color: #888;
+     text-decoration: line-through;
+     margin-left: var(--space-sm);
+ }
+.product-info .current-price {
+    color: #333; /* 현재 가격 색상 */
+}
+
+
+.product-info .quantity {
+    margin-bottom: var(--space-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.product-info .quantity label {
+    font-weight: bold;
+}
+
+.product-info .quantity input[type="number"] {
+    width: 70px; /* 수량 입력 필드 너비 */
+    padding: var(--space-sm);
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.product-info button {
+    display: block; /* 버튼을 블록 요소로 */
+    width: 100%;     /* 버튼 너비를 100%로 */
+    padding: var(--space-md); /* 버튼 패딩 */
+    font-size: 1.1em; /* 버튼 폰트 크기 */
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    margin-bottom: var(--space-md); /* 버튼 사이 간격 */
+    text-align: center;
+}
+ .product-info button:last-of-type {
+     margin-bottom: 0; /* 마지막 버튼 하단 마진 제거 */
+ }
+
+/* 장바구니 버튼 스타일 */
+.product-info button:nth-of-type(1) { /* 첫번째 버튼 (장바구니 가정) */
+    background-color: #fff;
+    color: #4a4a7d;
+    border: 1px solid #4a4a7d;
+}
+ .product-info button:nth-of-type(1):hover {
+    background-color: #f0f0f8;
+ }
+
+
+/* 바로 구매 버튼 스타일 */
+.product-info button:nth-of-type(2) { /* 두번째 버튼 (바로구매 가정) */
+    background-color: #4a4a7d;
+    color: white;
+    border: 1px solid #4a4a7d;
+}
+.product-info button:nth-of-type(2):hover {
+    background-color: #3a3a6d;
+    border-color: #3a3a6d;
+ }
+
+/* --- 상세 정보 섹션 스타일링 (아래 배치) --- */
+.product-description,
+.product-details,
+.reviews {
+    margin-top: var(--space-xl); /* 상단 섹션과의 간격 */
+    padding-top: var(--space-xl); /* 섹션 내부 상단 패딩 */
+    border-top: 1px solid #eee; /* 구분선 */
+    width: 100%; /* 전체 너비 사용 */
+}
+
+/* --- 데스크탑 레이아웃 (product-detail) --- */
+@media (min-width: 768px) {
+     .product-detail { 
+        display: flex;
+        flex-direction: row; /* Side-by-side */
+        align-items: flex-start; /* Align top */
+        gap: var(--space-xxl); /* Gap between columns */
+    }
+
+    .product-image-gallery {
+        width: 40%; /* Image gallery width */
+        flex-shrink: 0;
+    }
+
+    .product-info {
+        width: 60%; /* Product info width */
+        flex-grow: 1; /* Allow info to grow if needed */
+    }
+    /* Description and reviews remain full width below */
+}
+
+
+/* === 반응형 수정 (body padding) === */
 @media screen and (max-width: 768px) {
     body {
-        /* Adjust default padding for potentially different mobile header height */
          padding-top: calc(80px + 30px); /* Mobile header height + 30px buffer */
     }
 
     body.mobile-nav-active {
-        /* Increase padding-top when mobile nav is open */
-        /* Estimate or measure accurately */
         padding-top: calc(80px + 70px + 30px); /* Example: header + nav + buffer */
     }
 
     /* Removed duplicated nav#mainNav rules */
 
-    /* Ensure main content respects padding */
     .main-content {
-       /* No margin needed, body padding handles spacing */
        margin-top: 0 !important; /* Reinforce */
     }
 }
@@ -1627,4 +1766,3 @@ gap: var(--space-md); /* 요소 간 간격 */
         padding: var(--space-sm) var(--space-md);
     }
 } /* <<< Correct closing brace for media query */
-
