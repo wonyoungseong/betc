@@ -289,16 +289,21 @@ main {
 }
 
 /* === 제품 목록 스타일 === */
-.products {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: flex-start; /* 왼쪽부터 채우도록 변경 */
+.products { /* Changed from .product-list to match HTML */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Default 4 columns */
+    gap: var(--space-lg);
+    /* Reset potentially conflicting flex properties */
+    overflow-x: visible;
+    justify-content: center; /* Changed from center */
+    align-items: stretch; /* Changed from center */
+    padding-bottom: 0;
+    scroll-snap-type: none;
 }
 
-div#productList {
-    justify-content: center;
-    align-items: center;
+div#productList { /* Style for the ID if needed, though .products should cover it */
+    /* justify-content: center; */ /* Now handled by .products */
+    /* align-items: center; */   /* Now handled by .products */
 }
 
 .product-item {
@@ -307,9 +312,13 @@ div#productList {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     padding: 15px;
-    /* margin-bottom: 20px; */ /* Removed margin, use gap in parent */
     background-color: #fff;
     text-align: left; /* Reset text alignment */
+    display: block; /* Default display for grid layout */
+    width: auto; /* Allow grid to control width */
+    flex: none; /* Remove flex settings */
+    scroll-snap-align: none;
+    margin-bottom: 0; /* Use gap from parent grid */
 }
 
 .product-item:hover {
@@ -362,17 +371,7 @@ div#productList {
     color: inherit;
 }
 
-.product-list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Default 4 columns */
-    gap: var(--space-lg);
-    /* Reset potentially conflicting flex properties */
-    overflow-x: visible;
-    justify-content: center; /* Changed from center */
-    align-items: stretch; /* Changed from center */
-    padding-bottom: 0;
-    scroll-snap-type: none;
-}
+/* Removed redundant .product-list rule */
 
 /* === 버튼 스타일 === */
 button {
@@ -555,10 +554,9 @@ button:hover {
     }
 }
 
-/* Ensure product grid within this section uses the general .product-list styles */
-.product-grid-section .product-list {
-    /* Styles are inherited from general .product-list */
-    /* Removed empty rule formerly at Ln 1411 */
+/* Ensure product grid within this section uses the general .products styles */
+.product-grid-section .products { /* Changed from .product-list */
+    /* Styles are inherited from general .products */
 }
 
 /* === 히어로 섹션 스타일 === */
@@ -1040,10 +1038,9 @@ footer {
 /* Removed duplicated .product-list rule */
 
 @media (max-width: 576px) {
-    /* Adjusted product list rule for smaller screens */
-    .product-list {
+    /* Adjusted products rule for smaller screens */
+    .products { /* Changed from .product-list */
         /* Keep flex properties for horizontal scroll below 768px */
-        /* grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); */
         gap: var(--space-md);
     }
     .product-item {
@@ -1365,7 +1362,7 @@ footer {
 /* === Product List Responsive Refinements === */
 /* Tablet and Smaller - Horizontal Scroll */
 @media screen and (max-width: 768px) {
-    .product-list {
+    .products { /* Changed from .product-list */
         display: flex; /* Change to flex */
         overflow-x: auto; /* Enable horizontal scroll */
         padding-bottom: var(--space-md); /* Space for scrollbar */
@@ -1409,9 +1406,9 @@ footer {
      }
 }
 
-/* Ensure default product-list for wider screens is still grid */
+/* Ensure default products for wider screens is still grid */
 @media screen and (min-width: 769px) { /* Breakpoint slightly above 768 */
-    .product-list {
+    .products { /* Changed from .product-list */
         display: grid;
         grid-template-columns: repeat(4, 1fr); /* Default 4 columns */
         gap: var(--space-lg);
@@ -1432,7 +1429,7 @@ footer {
     }
     /* Media queries for 3 and 2 columns on wider screens */
     @media screen and (max-width: 992px) {
-        .product-list {
+        .products { /* Changed from .product-list */
             grid-template-columns: repeat(3, 1fr);
         }
     }
@@ -1638,6 +1635,156 @@ footer {
        margin-top: 0 !important; /* Reinforce */
     }
 }
+
+/* === Cart Page Layout & Item Refinement === */
+.cart-page {
+    /* Add specific styles if needed, often inherits from .main-content */
+}
+
+/* New Layout Container (Desktop First) */
+.cart-layout-container {
+    display: flex; /* Keep flex for desktop */
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+    align-items: flex-start;
+}
+
+.cart-items-column {
+    flex: 2; /* 아이템 목록이 더 넓은 공간 차지 (비율 조정 가능) */
+    min-width: 300px; /* 최소 너비 설정 */
+}
+
+.cart-summary-column {
+    flex: 1;
+    min-width: 250px;
+}
+
+/* Cart items styling (adjust existing .cart-items if needed) */
+.cart-items {
+    border: none; /* Remove previous border if using column wrapper */
+    border-radius: 0;
+    overflow: visible; /* Reset overflow */
+    margin-bottom: 0; /* Remove margin if using column wrapper */
+}
+
+/* Cart Item Refinement */
+.cart-item {
+    display: flex;
+    align-items: center; /* 아이템 내부 요소 수직 정렬 */
+    gap: var(--space-md);
+    border-bottom: 1px solid #eee;
+    padding-bottom: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.cart-item-image {
+    flex-shrink: 0; /* 이미지가 줄어들지 않도록 */
+    width: 80px; /* 이미지 크기 조정 */
+    height: 80px;
+    object-fit: cover;
+}
+
+.item-details {
+    flex-grow: 1; /* 이름/가격 부분이 남은 공간 차지 */
+}
+
+.item-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-left: auto; /* 컨트롤을 오른쪽으로 밀기 */
+}
+
+.item-quantity input {
+    width: 60px; /* 수량 입력 필드 너비 */
+    text-align: center;
+}
+
+.item-total {
+    min-width: 80px; /* 합계 표시 너비 확보 */
+    text-align: right;
+    font-weight: bold;
+}
+
+.remove-button {
+    /* 기존 스타일 유지 또는 조정 */
+    padding: var(--space-sm) var(--space-md);
+    background-color: #dc3545; /* 빨간색 배경 */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.remove-button:hover {
+    background-color: #c82333; /* 어두운 빨간색 */
+}
+
+/* Summary Column Styling (Desktop) */
+.cart-summary {
+    background-color: #f8f9fa; /* 약간 다른 배경색 */
+    padding: var(--space-lg);
+    border: 1px solid #eee;
+    border-radius: 4px;
+}
+
+.cart-summary p {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-md);
+    font-size: 1.1em;
+}
+
+.cart-summary #totalPrice {
+    font-weight: bold;
+}
+
+.checkout-button { /* 이미 스타일이 있을 수 있으므로 확인 */
+    display: block; /* 버튼을 블록 요소로 */
+    width: 100%;
+    padding: var(--space-md);
+    background-color: #4a4a7d; /* 기본 버튼 색상 */
+    color: white;
+    text-align: center;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.checkout-button:hover {
+    background-color: #3a3a6d; /* 호버 색상 */
+}
+
+.checkout-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* 반응형 조정 (예: 768px 미만일 때 세로 정렬) */
+@media (max-width: 768px) {
+    .cart-layout-container {
+        flex-direction: column;
+    }
+    .cart-summary-column {
+        position: static; /* 스티키 해제 */
+        width: 100%;
+    }
+    .cart-item {
+        flex-wrap: wrap; /* 컨트롤 영역이 아래로 떨어지도록 */
+    }
+    .item-controls {
+        width: 100%;
+        justify-content: flex-end; /* 오른쪽 정렬 */
+        margin-left: 0;
+        margin-top: var(--space-sm);
+    }
+}
+
 
 /* --- Form Group Styles (Apple Inspired) --- */
 /* Apply specifically to shipping info */
