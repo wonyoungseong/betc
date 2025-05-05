@@ -155,35 +155,33 @@ function cancelPurchase(index) {
     }
 }
 
-// Function to update main content margin based on header height
+// Function to update main content margin based on header/nav bottom position
 function updateMainContentMargin() {
     const header = document.querySelector('header.gnb');
-    const mainContent = document.querySelector('main.main-content'); // Ensure selector matches your main content area
-    const mainNav = document.getElementById('mainNav'); // 네비게이션 요소 선택
+    const mainContent = document.querySelector('main.main-content');
+    const mainNav = document.getElementById('mainNav');
 
     if (header && mainContent) {
-        // Start with the visible header's height
-        let headerHeight = header.offsetHeight;
+        let marginTop = 0;
+        const headerBottom = header.getBoundingClientRect().bottom;
 
-        // Check if the mobile nav is active AND displayed (important for CSS transitions/visibility)
+        // Check if mobile nav is active AND displayed
         if (mainNav && mainNav.classList.contains('active') && window.getComputedStyle(mainNav).display !== 'none') {
-             // Use getBoundingClientRect().height which includes padding and border
-             headerHeight = header.getBoundingClientRect().bottom + mainNav.getBoundingClientRect().height;
-             // Or, if nav slides under the header, just add its height:
-             // headerHeight += mainNav.getBoundingClientRect().height;
+            // If nav is active and displayed, use its bottom position relative to the viewport top
+            const navBottom = mainNav.getBoundingClientRect().bottom;
+            // Use the larger of the two bottom positions
+            marginTop = Math.max(headerBottom, navBottom);
         } else {
-            // If nav is not active or not displayed, just use header's bottom position relative to viewport
-            headerHeight = header.getBoundingClientRect().bottom;
-            // Or simply use offsetHeight if nav is guaranteed to be display: none
-            // headerHeight = header.offsetHeight;
+            // Otherwise, use the header's bottom position
+            marginTop = headerBottom;
         }
 
+        // Ensure margin is not negative (e.g., if header is off-screen) and apply
+        mainContent.style.marginTop = `${Math.max(0, marginTop)}px`;
+        // console.log('Updated main margin-top:', Math.max(0, marginTop)); // Debugging log
 
-        // Ensure a minimum margin if needed, or handle headerHeight being 0
-        mainContent.style.marginTop = `${Math.max(0, headerHeight)}px`;
-        // console.log('Updated main margin-top:', headerHeight); // Debugging log
     } else {
-         // console.warn('Header or Main Content not found for margin update.'); // Debugging log
+        // console.warn('Header or Main Content not found for margin update.'); // Debugging log
     }
 }
 
