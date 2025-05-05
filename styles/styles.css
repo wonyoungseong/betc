@@ -1043,13 +1043,14 @@ footer {
 }
 
 .hamburger-menu {
-    display: none;
+    display: none !important; /* Ensure it's hidden by default, use !important for safety */
     font-size: 24px;
     cursor: pointer;
     color: white;
     background: none;
     border: none;
     padding: 0;
+    line-height: 1; /* Ensure proper vertical alignment */
 }
 
 /* === Checkout Page Styles === */
@@ -1391,13 +1392,14 @@ footer {
 
 /* Default state (Desktop): Hide hamburger */
 .hamburger-menu {
-    display: none; /* Hidden by default */
+    display: none !important; /* Ensure it's hidden by default, use !important for safety */
     font-size: 24px;
     cursor: pointer;
     color: white;
     background: none;
     border: none;
     padding: 0;
+    line-height: 1; /* Ensure proper vertical alignment */
 }
 
 @media (max-width: 768px) {
@@ -1405,30 +1407,28 @@ footer {
 
     /* Mobile state: Show hamburger */
     .hamburger-menu {
-        display: block; /* Make it visible */
+        display: block !important; /* Force display block */
+        order: 3;
+        position: static;
+        transform: none;
+        margin-left: var(--space-sm);
     }
 
-    /* Hide the default nav links on mobile */
-    nav {
-         display: none; /* Ensure nav is hidden initially */
-         width: 100%;
-         background-color: #3a3a6d;
-         position: absolute;
-         top: 100%; /* Position below header top */
-         left: 0;
-         z-index: 999;
+    /* Ensure search bar takes full width on the next line */
+    .search-bar {
+        order: 4;
+        flex-basis: 100%;
+        margin-top: var(--space-sm);
+        /* Keep other styles for full width */
+        width: 100%; /* Explicitly set width */
+        min-width: unset;
+        max-width: none;
     }
-
-     nav.active {
-        display: block; /* Show nav when hamburger is clicked */
+     .search-bar input#searchInput {
+         max-width: none;
      }
 
-    /* ... other mobile nav styles like ul, li, a ... */
-
-    /* Hide desktop user menu text links if needed, keep icons */
-    /* Example: */
-    /* .user-menu a:not(.icon-link) { display: none; } */
-    /* Or adjust layout as done previously */
+    /* ... other mobile header styles ... */
 }
 
 /* ... rest of the styles ... */
@@ -1789,11 +1789,11 @@ footer {
          max-width: none; /* Allow full width */
      }
     .hamburger-menu {
-        display: block;
-        order: 3; /* Hamburger third, next to user menu */
-        position: static; /* Remove absolute positioning */
+        display: block !important; /* Force display block */
+        order: 3;
+        position: static;
         transform: none;
-        margin-left: var(--space-sm); /* Add some space */
+        margin-left: var(--space-sm);
     }
     nav#mainNav { /* Ensure ID selector is used */
         display: none;
