@@ -1,4 +1,3 @@
-\
 /* General Reset & Base Styles */
 *,
 *::before,
@@ -84,16 +83,9 @@ ol {
     }
 }
 
+/* Removed empty .gnb ruleset */
 
-/* Global Navigation Bar (GNB) */
-.gnb {
-    /* GNB styles */
-}
-
-/* Body padding adjustment for mobile nav */
-body {
-    /* Default padding-top is set above */
-}
+/* Removed empty body ruleset */
 
 body.mobile-nav-active {
     /* Padding adjusted by JS if needed, or set fixed if nav height is fixed */
@@ -209,10 +201,7 @@ header {
     filter: brightness(0) invert(1); /* Make icons white */
 }
 
-
-#logoutLink img {
-    /* Specific styles for logout icon if needed */
-}
+/* Removed empty #logoutLink img ruleset */
 
 .cart-count {
     background-color: var(--color-accent);
@@ -304,15 +293,11 @@ nav#mainNav ul.submenu li a:hover {
     color: var(--color-secondary);
 }
 
-/* Main Content General Styles */
-main {
-    /* padding-top ensures content starts below fixed header */
-    /* padding-top is handled by body padding */
-}
+/* Removed empty main ruleset */
 
 
 /* Product List Styles */
-.products { 
+.products {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid */
     gap: var(--space-lg);
@@ -323,10 +308,7 @@ main {
 
 /* No media queries needed if default is grid */
 
-
-div#productList { /* Style for the ID if needed */
-    /* Specific styles for the product list container */
-}
+/* Removed empty div#productList ruleset */
 
 .product-item {
     background-color: var(--color-background);
@@ -459,18 +441,22 @@ button:hover {
     cursor: pointer;
 }
 
+/* Ensure modal inputs respect container padding */
 .modal input {
     width: 100%;
     padding: var(--space-md);
     margin-bottom: var(--space-md);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-sm);
+    box-sizing: border-box; /* Include padding in width calculation */
+    max-width: 100%; /* Prevent exceeding container width */
 }
 
 .modal button {
     width: 100%;
     padding: var(--space-md);
     font-size: 1.1em; /* Slightly larger font for modal buttons */
+    box-sizing: border-box;
 }
 
 /* Category Tabs */
@@ -679,9 +665,8 @@ button:hover {
 
 
 /* Featured Sections (Best Seller, New Arrivals) */
-.best-seller, .new-arrivals {
-    margin-bottom: var(--space-xl);
-}
+/* REMOVED empty .best-seller, .new-arrivals ruleset */
+
 .best-seller h2, .new-arrivals h2 {
     text-align: center;
     font-size: 1.8em;
@@ -833,9 +818,7 @@ footer {
     text-align: center;
 }
 
-.status-item {
-    /* No specific style needed, flex handles layout */
-}
+/* Removed empty .status-item ruleset */
 
 .status-item a { /* Make status items clickable */
     text-decoration: none;
@@ -862,9 +845,7 @@ footer {
     margin-bottom: var(--space-md);
 }
 
-#purchaseList {
-    /* Container for purchase items */
-}
+/* Removed empty #purchaseList ruleset */
 
 .purchase-item { /* Assuming this class or similar structure exists */
     background-color: var(--color-background-alt);
@@ -889,17 +870,14 @@ footer {
     color: var(--color-text-light);
 }
 
-.purchase-header .order-date {
-    /* Style for order date */
-}
+/* Removed empty .purchase-header .order-date ruleset */
+
 .purchase-header .order-number {
     font-weight: 500;
     color: var(--color-text);
 }
 
-.purchase-details {
-    /* Container for product details within an order */
-}
+/* Removed empty .purchase-details ruleset */
 
 .purchase-product { /* Assuming a structure for each product */
     display: flex;
@@ -940,18 +918,8 @@ footer {
 
 /* Responsive Adjustments for My Page */
 @media (min-width: 768px) {
-    .purchase-item {
-        /* Potentially adjust padding or layout for larger screens */
-    }
-    .purchase-details {
-        /* Could use grid or flex for better alignment */
-    }
-    .purchase-total {
-        /* Align total more clearly if needed */
-    }
-    /* Add other desktop-specific styles here */
+    /* Add desktop-specific styles here if needed */
 }
-
 
 @media (max-width: 480px) {
     .order-status {
@@ -976,7 +944,7 @@ footer {
         width: 80px; /* Slightly larger image on small screens */
         height: 80px;
      }
-}
+} /* This closes the @media (max-width: 480px) block */
 
 /* === Order Summary Component (Used in Cart & Checkout) === */
 
@@ -1004,9 +972,8 @@ footer {
     font-size: 0.95em;
 }
 
-.order-item span {
-    /* Span elements within order item */
-}
+/* Removed empty .order-item span ruleset */
+
 .order-item span:last-child {
     font-weight: 500; /* Make value slightly bolder */
 }
@@ -1014,13 +981,7 @@ footer {
 
 /* === Search Results Page (search-results.html) === */
 
-.search-results-section,
-.recommendations-section {
-    margin-bottom: var(--space-xl);
-    background-color: var(--color-background);
-    padding: var(--space-lg);
-    border-radius: var(--border-radius-md);
-}
+/* Removed empty .search-results-section, .recommendations-section ruleset */
 
 #searchResults > div:first-child { /* Target the 'Results for...' div */
     margin-bottom: var(--space-md); /* Add space below the heading */
@@ -1028,7 +989,7 @@ footer {
     font-weight: 500;
 }
 
-#searchResults h2, 
+#searchResults h2,
 #recommendations h2 {
     font-size: 1.5em;
     color: var(--color-primary);
@@ -1051,10 +1012,7 @@ footer {
 }
 
 /* Use existing .products grid for results and recommendations */
-.search-results-items,
-.recommendation-items {
-    /* These containers might not be needed if using .products directly */
-}
+/* Removed empty .search-results-items, .recommendation-items ruleset */
 
 
 /* === Responsive Design Adjustments === */
@@ -1109,7 +1067,7 @@ footer {
 
 @media (max-width: 576px) {
     /* Ensure product items are usable on small screens */
-    .products { /* Inherits grid */ }
+    /* Removed empty .products ruleset */
     .product-item {
          padding: var(--space-sm);
     }
@@ -1205,685 +1163,7 @@ footer {
 }
 
 
-/* Adjust checkout layout for smaller screens */
-@media (min-width: 992px) { /* Use desired breakpoint for 2-column sticky layout */
-    .checkout-layout-container {
-        flex-wrap: nowrap; /* Prevent wrapping on large screens */
-    }
-    .checkout-form-column {
-        /* Styles already set */
-    }
-    .checkout-summary-column {
-         position: sticky; /* Ensure sticky */
-         top: calc(80px + 50px + 30px + var(--space-xl)); /* Adjust top positioning */
-    }
-
-    /* Apple-inspired Form Styles - Apply only on larger screens or globally if desired */
-    .checkout-page .shipping-info .form-group label,
-    .checkout-page .payment-info .form-group label { /* More specific selector */
-        display: block;
-        font-size: 0.85em;
-        color: #666;
-        margin-bottom: 6px; /* Space below label */
-        font-weight: 500; /* Slightly bolder label */
-        transition: color 0.3s ease;
-    }
-
-    .checkout-page .shipping-info .form-group input[type="text"],
-    .checkout-page .shipping-info .form-group input[type="email"],
-    .checkout-page .shipping-info .form-group input[type="tel"],
-    .checkout-page .shipping-info .form-group select,
-    .checkout-page .payment-info .form-group input[type="text"],
-    .checkout-page .payment-info .form-group input[type="number"],
-    .checkout-page .payment-info .form-group select { /* Specificity */
-        width: 100%;
-        padding: 12px 15px; /* Generous padding */
-        border: 1px solid #d1d1d1; /* Lighter border */
-        border-radius: 8px; /* More rounded corners */
-        font-size: 1em;
-        background-color: #fff;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Subtle shadow */
-    }
-
-    .checkout-page .shipping-info .form-group input[type="text"]:focus,
-    .checkout-page .shipping-info .form-group input[type="email"]:focus,
-    .checkout-page .shipping-info .form-group input[type="tel"]:focus,
-    .checkout-page .shipping-info .form-group select:focus,
-    .checkout-page .payment-info .form-group input[type="text"]:focus,
-    .checkout-page .payment-info .form-group input[type="number"]:focus,
-    .checkout-page .payment-info .form-group select:focus { /* Specificity */
-        outline: none;
-        border-color: var(--color-primary); /* Highlight border on focus */
-        box-shadow: 0 0 0 3px rgba(74, 74, 125, 0.15); /* Focus ring */
-    }
-
-    .checkout-page .shipping-info .form-group textarea { /* Specificity */
-        /* Similar styles for textarea if needed */
-        resize: vertical; /* Allow vertical resize */
-        min-height: 80px;
-    }
-
-}
-
-
-/* Hamburger Menu Icon */
-.hamburger-menu {
-    display: none; /* Hidden by default on larger screens */
-    cursor: pointer;
-    padding: var(--space-sm);
-    background: none;
-    border: none;
-}
-.hamburger-menu span {
-    display: block;
-    width: 25px;
-    height: 3px;
-    background-color: white;
-    margin: 5px 0;
-    transition: all 0.3s ease-in-out;
-}
-
-
-/* Responsive Header & Nav */
-@media (max-width: 768px) {
-    .header-top {
-        padding: var(--space-sm) var(--space-md); /* Reduce padding */
-        height: 80px; /* Maintain height */
-        /* Removed justify-content: space-between; hamburger handles nav */
-        /* Let items naturally space or use flex properties if needed */
-    }
-
-    header {
-        /* Header itself remains fixed */
-    }
-
-    .logo {
-        flex-grow: 1; /* Allow logo to take space */
-        text-align: left; /* Align logo left */
-    }
-
-    .user-menu {
-        /* Icons might be hidden in hamburger or kept visible */
-        gap: var(--space-sm); /* Reduce gap */
-    }
-    .user-menu a:not(.icon-link) { /* Hide text links like "My Page" */
-        display: none;
-    }
-
-    .search-bar {
-        /* Search bar is removed from header top, moved to mobile menu */
-        display: none;
-    }
-
-    .hamburger-menu {
-        display: block; /* Show hamburger */
-        order: 3; /* Place hamburger last potentially */
-        margin-left: auto; /* Push hamburger to the right if needed after logo */
-    }
-
-
-    /* Mobile Navigation Panel */
-    nav#mainNav {
-        display: block; /* Change to block for vertical layout */
-        position: absolute;
-        top: 80px; /* Position below header top */
-        left: 0;
-        width: 100%;
-        background-color: #333; /* Dark background for mobile nav */
-        max-height: 0; /* Hidden by default */
-        overflow: hidden;
-        transition: max-height 0.5s cubic-bezier(0, 1, 0, 1); /* Smooth slide down */
-        box-shadow: none; /* Remove desktop shadow */
-        height: auto; /* Override fixed height */
-        padding-bottom: var(--space-md); /* Add padding at the bottom */
-    }
-
-    nav#mainNav.active {
-        max-height: 100vh; /* Allow full height */
-        transition: max-height 1s ease-in-out; /* Slower transition */
-    }
-
-    nav#mainNav ul {
-        flex-direction: column; /* Stack items vertically */
-        width: 100%;
-        height: auto; /* Reset height */
-        padding: var(--space-md) 0; /* Padding top/bottom */
-    }
-
-    nav#mainNav li {
-        width: 100%;
-        border-bottom: 1px solid #444; /* Separator lines */
-        display: block; /* Ensure full width */
-    }
-
-     nav#mainNav li:last-child {
-         border-bottom: none;
-     }
-
-    nav#mainNav a {
-        padding: var(--space-md) var(--space-lg); /* Adjust padding */
-        color: white; /* White text */
-        line-height: normal; /* Reset line height */
-        display: block; /* Full width links */
-    }
-    nav#mainNav a:hover {
-        background-color: #444; /* Darker hover */
-    }
-
-    /* Mobile Search Item (inside mobile nav) */
-    .mobile-search-item {
-        display: block; /* Show in mobile nav */
-        padding: var(--space-md) var(--space-lg);
-        border-top: 1px solid #444; /* Separator above search */
-    }
-}
-
-
-/* Styles for screens larger than mobile breakpoint */
-@media screen and (min-width: 769px) {
-    header {
-         /* Keep header styles */
-    }
-    .header-top {
-         /* Keep header-top styles */
-    }
-    .search-bar {
-        display: flex; /* Show search bar */
-        flex-grow: 0.5; /* Adjust as needed */
-        max-width: 400px;
-        /* Restore other desktop search bar styles */
-        margin-left: auto; /* Push towards center/right */
-        margin-right: var(--space-lg); /* Space before user menu */
-    }
-
-    /* Hide mobile-specific elements */
-    .mobile-search-item {
-        display: none;
-    }
-    .hamburger-menu {
-        display: none;
-    }
-
-    /* Restore desktop navigation */
-    nav#mainNav {
-        display: flex; /* Horizontal flex layout */
-        position: static; /* Not absolute */
-        max-height: none; /* Remove height limit */
-        background-color: white; /* White background */
-        height: 50px; /* Fixed height */
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        padding-bottom: 0; /* Remove mobile padding */
-        justify-content: center;
-    }
-    nav#mainNav ul {
-        flex-direction: row; /* Horizontal layout */
-        padding: 0; /* Remove mobile padding */
-        height: 100%;
-    }
-    nav#mainNav li {
-        border-bottom: none; /* Remove mobile border */
-        display: flex;
-        align-items: center;
-    }
-     nav#mainNav li:last-child {
-         /* No special style needed */
-     }
-    nav#mainNav a {
-        padding: 0 var(--space-lg); /* Restore desktop padding */
-        color: var(--color-primary); /* Restore desktop color */
-        line-height: 50px; /* Restore line height */
-    }
-     .user-menu a:not(.icon-link) {
-         display: flex; /* Show text links again */
-     }
-}
-
-/* Mobile Search Form Styles (within mobile nav) */
-.mobile-search-item {
-     /* display: block; set in media query */
-}
-.mobile-search-form {
-    display: flex;
-    background-color: #444; /* Slightly lighter than nav background */
-    border-radius: var(--border-radius-sm);
-    padding: var(--space-xs);
-}
-#mobileSearchInput {
-    flex-grow: 1;
-    padding: var(--space-sm);
-    border: none;
-    background: none;
-    color: white;
-    outline: none;
-    font-size: 0.9em;
-}
-#mobileSearchInput::placeholder {
-    color: #aaa;
-}
-#mobileSearchButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: var(--space-xs);
-}
-#mobileSearchButton img {
-    width: 18px;
-    height: 18px;
-    filter: brightness(0) invert(1); /* White icon */
-}
-
-
-/* --- Product Detail Page (product-detail.html) --- */
-
-.product-detail-container {
-    /* Container for the entire product detail section */
-}
-.product-detail {
-    display: flex;
-    flex-direction: column; /* Stack image/info and description vertically by default */
-    gap: var(--space-lg);
-    background-color: var(--color-background);
-    padding: var(--space-xl);
-    border-radius: var(--border-radius-md);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-
-.product-image-gallery {
-    width: 100%; /* Full width on mobile */
-    margin-bottom: var(--space-lg); /* Space below gallery on mobile */
-}
-.main-image img {
-    width: 100%;
-    height: auto; /* Maintain aspect ratio */
-    max-height: 450px; /* Limit max height */
-    object-fit: contain; /* Ensure whole image is visible */
-    border: 1px solid var(--color-border-light);
-    border-radius: var(--border-radius-md);
-    margin-bottom: var(--space-md);
-}
-
-.thumbnail-images {
-    display: flex;
-    flex-wrap: nowrap; /* Explicitly prevent wrapping */
-    justify-content: flex-start;
-    gap: var(--space-sm); /* Use gap for spacing */
-    width: 100%;
-    padding: var(--space-sm) 0; /* Remove horizontal padding, keep vertical */
-    overflow-x: auto; /* Allow horizontal scroll if needed */
-    -webkit-overflow-scrolling: touch; /* Smooth scroll on touch devices */
-    /* Optionally hide scrollbar visually if desired */
-    /* scrollbar-width: none; */ 
-    /* &::-webkit-scrollbar { display: none; } */
-}
-
-/* Ensure thumbnail images themselves don't shrink and have fixed size */
-.thumbnail-images .thumbnail { /* Use .thumbnail if it's the wrapper div */
-    /* Re-applying and slightly adjusting from earlier definition */
-    display: block;
-    width: 70px; /* Fixed thumbnail width */
-    height: 70px; /* Fixed thumbnail height */
-    object-fit: cover; /* Cover the area */
-    cursor: pointer;
-    border: 2px solid transparent;
-    border-radius: var(--border-radius-sm);
-    transition: border-color 0.2s ease-in-out;
-    flex-shrink: 0; /* <<< Crucial: Prevent shrinking */
-    margin: 0; /* Remove individual margins if gap is used */
-    box-sizing: border-box;
-}
-.thumbnail-images img { /* If using img directly without .thumbnail wrapper */
-    display: block;
-    width: 70px;
-    height: 70px;
-    object-fit: cover;
-    cursor: pointer;
-    border: 2px solid transparent;
-    border-radius: var(--border-radius-sm);
-    transition: border-color 0.2s ease-in-out;
-    flex-shrink: 0; /* <<< Crucial: Prevent shrinking */
-}
-
-.thumbnail-images .thumbnail.active,
-.thumbnail-images .thumbnail:hover,
-.thumbnail-images img.active,
-.thumbnail-images img:hover {
-    border-color: var(--color-primary); /* Highlight */
-}
-
-.product-info {
-    width: 100%; /* Full width on mobile */
-}
-
-/* Product Info Internal Styling */
-.product-info h2 {
-    font-size: 1.8em; /* 상품명 크기 */
-    margin-bottom: var(--space-sm);
-    line-height: 1.3;
-}
-
-.product-info .price {
-    font-size: 1.6em; /* 가격 크기 */
-    font-weight: bold;
-    margin-bottom: var(--space-lg);
-    display: block; /* 블록 요소로 만들어 마진 적용 */
-    color: var(--color-text); /* Default price color */
-}
-.product-info .price .discount {
-     font-size: 0.8em; /* 할인율 크기 조정 */
-     margin-right: var(--space-sm);
-     color: #e74c3c; /* Discount color */
-}
- .product-info .price .original-price {
-     font-size: 0.7em; /* 원래 가격 크기 조정 */
-     color: #888;
-     text-decoration: line-through;
-     margin-left: var(--space-sm);
- }
-.product-info .current-price {
-    /* This class might not be needed if default price color is set */
-}
-
-
-.product-info .quantity {
-    margin-bottom: var(--space-lg);
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-}
-
-.product-info .quantity label {
-    font-weight: bold;
-    margin-right: var(--space-xs); /* Space after label */
-}
-
-.product-info .quantity input[type="number"] {
-    width: 70px; /* 수량 입력 필드 너비 */
-    padding: var(--space-sm);
-    text-align: center;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-sm);
-}
-
-.product-info button {
-    display: block; /* 버튼을 블록 요소로 */
-    width: 100%;     /* 버튼 너비를 100%로 */
-    padding: var(--space-md); /* 버튼 패딩 */
-    font-size: 1.1em; /* 버튼 폰트 크기 */
-    border-radius: var(--border-radius-sm);
-    cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
-    margin-bottom: var(--space-md); /* 버튼 사이 간격 */
-    text-align: center;
-    border: 1px solid transparent; /* Add base border */
-}
- .product-info button:last-of-type {
-     margin-bottom: 0; /* 마지막 버튼 하단 마진 제거 */
- }
-
-/* 장바구니 버튼 스타일 */
-.product-info button#addToCartBtn { /* Use ID for specificity if available */
-    background-color: #fff;
-    color: var(--color-primary);
-    border-color: var(--color-primary);
-}
- .product-info button#addToCartBtn:hover {
-    background-color: var(--color-background-alt);
- }
-
-
-/* 바로 구매 버튼 스타일 */
-.product-info button#buyNowBtn { /* Use ID for specificity if available */
-    background-color: var(--color-primary);
-    color: white;
-    border-color: var(--color-primary);
-}
-.product-info button#buyNowBtn:hover {
-    background-color: var(--color-secondary);
-    border-color: var(--color-secondary);
- }
-
-/* --- 상세 정보 섹션 스타일링 (상품 설명, 상세 정보, 리뷰) --- */
-.product-description,
-.product-details,
-.reviews {
-    margin-top: var(--space-xl); /* 상단 섹션과의 간격 */
-    padding-top: var(--space-xl); /* 섹션 내부 상단 패딩 */
-    border-top: 1px solid var(--color-border-light); /* 구분선 */
-    width: 100%; /* 전체 너비 사용 */
-}
-.product-description h3,
-.product-details h3,
-.reviews h3 {
-    font-size: 1.4em;
-    margin-bottom: var(--space-lg);
-    color: var(--color-primary);
-}
-
-
-/* --- 데스크탑 레이아웃 (product-detail) --- */
-@media (min-width: 768px) {
-     .product-detail { 
-        display: flex;
-        flex-direction: row; /* Side-by-side */
-        align-items: flex-start; /* Align top */
-        gap: var(--space-xxl); /* Wider gap between columns */
-        flex-wrap: wrap; /* Allow description/reviews to wrap below */
-    }
-
-    .product-image-gallery {
-        width: 45%; /* Adjust width distribution */
-        flex-shrink: 0;
-        margin-bottom: 0; /* Remove bottom margin */
-        position: sticky; /* Make gallery sticky */
-        top: calc(80px + 50px + 30px + var(--space-xl)); /* Adjust top position */
-        align-self: flex-start; /* Ensure sticky respects top alignment */
-    }
-
-    .product-info {
-        width: 50%; /* Adjust width distribution */
-        flex-grow: 1; /* Allow info to grow */
-    }
-
-    /* Description, Details, Reviews take full width below the two columns */
-    .product-description,
-    .product-details,
-    .reviews {
-        width: 100%;
-        flex-basis: 100%; /* Ensure they take full width when wrapping */
-        margin-top: var(--space-lg); /* Adjust top margin */
-        padding-top: var(--space-lg); /* Adjust padding */
-    }
-}
-
-
-/* === 반응형 수정 (body padding - simplified) === */
-@media screen and (max-width: 768px) {
-    /* body padding is handled globally */
-    .main-content {
-       /* margin-top: 0 !important; Reinforce if needed, but body padding should handle it */
-    }
-}
-
-/* === Cart Page Layout & Item Refinement === */
-.cart-page {
-    /* Add specific styles if needed, often inherits from .main-content */
-    max-width: 1000px; /* Limit width for cart focus */
-    margin: 0 auto;
-}
-
-/* Default Layout Container (2 columns) - Kept for consistency, maybe overridden */
-.cart-layout-container {
-    display: flex;
-    flex-wrap: wrap; /* Allow wrapping */
-    gap: var(--space-xl); /* Consistent gap */
-    align-items: flex-start;
-}
-
-.cart-items-column {
-    flex: 2; /* Items list takes more space */
-    min-width: 300px;
-    background-color: var(--color-background);
-    padding: var(--space-lg);
-    border-radius: var(--border-radius-md);
-    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
-}
-
-.cart-summary-column {
-    flex: 1;
-    min-width: 250px;
-    position: sticky; /* Make summary sticky */
-    top: calc(80px + 50px + 30px + var(--space-lg)); /* Adjust top position based on fixed elements */
-    background-color: var(--color-background-alt);
-    padding: var(--space-lg);
-    border-radius: var(--border-radius-md);
-    border: 1px solid var(--color-border-light);
-}
-
-/* Cart Items List */
-.cart-items {
-    /* Container for individual cart items */
-}
-
-.cart-items h2 { /* Heading for the items list */
-    font-size: 1.4em;
-    margin-bottom: var(--space-lg);
-    color: var(--color-primary);
-    border-bottom: 1px solid var(--color-border-light);
-    padding-bottom: var(--space-sm);
-}
-
-.cart-item {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-    padding: var(--space-md) 0; /* Vertical padding, no horizontal */
-    border-bottom: 1px solid var(--color-border-light);
-}
-
-.cart-item:last-child {
-    border-bottom: none;
-}
-
-.cart-item-image {
-    width: 80px; /* Slightly larger image in cart */
-    height: 80px;
-    object-fit: cover;
-    border-radius: var(--border-radius-sm);
-    flex-shrink: 0; /* Prevent image shrinking */
-}
-
-.item-details {
-    flex-grow: 1; /* Take remaining space */
-    display: flex;
-    flex-direction: column; /* Stack name and price */
-    gap: var(--space-xs);
-}
-.item-details a { /* Make product name clickable */
-    color: var(--color-primary);
-    font-weight: 500;
-    transition: color 0.2s ease;
-}
-.item-details a:hover { color: var(--color-secondary); }
-.item-details .item-price {
-    font-size: 0.9em;
-    color: var(--color-text-light);
-}
-
-.item-controls {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-}
-
-.item-quantity input {
-    width: 50px; /* Smaller quantity input */
-    text-align: center;
-    padding: var(--space-xs);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-sm);
-}
-
-.item-total {
-    font-weight: 500;
-    min-width: 80px; /* Ensure space for total price */
-    text-align: right;
-}
-
-.remove-button {
-    background: none;
-    border: none;
-    color: #e74c3c; /* Red color for removal */
-    cursor: pointer;
-    padding: var(--space-xs);
-    font-size: 1.1em; /* Slightly larger icon/text */
-    line-height: 1; /* Prevent extra space */
-    transition: color 0.2s ease;
-}
-
-.remove-button:hover {
-    color: #c0392b; /* Darker red on hover */
-}
-
-/* Cart Summary Box */
-.cart-summary {
-    /* Styles for the summary box itself are in .cart-summary-column */
-}
-
-.cart-summary h3 { /* Summary Title */
-    font-size: 1.4em;
-    margin-bottom: var(--space-lg);
-    color: var(--color-primary);
-    border-bottom: 1px solid var(--color-border-light);
-    padding-bottom: var(--space-sm);
-}
-
-.cart-summary p { /* Use for subtotal, shipping, etc. */
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: var(--space-md);
-    font-size: 0.95em;
-}
-.cart-summary p span:last-child {
-    font-weight: 500;
-}
-
-.cart-summary #totalPrice { /* Style for the final total */
-    font-size: 1.3em;
-    font-weight: bold;
-    color: var(--color-primary);
-    margin-top: var(--space-lg);
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--color-border);
-}
-
-.checkout-button { /* Checkout button style */
-    display: block;
-    width: 100%;
-    padding: var(--space-md);
-    background-color: var(--color-primary);
-    color: white;
-    text-align: center;
-    font-size: 1.1em;
-    font-weight: bold;
-    border: none;
-    border-radius: var(--border-radius-sm);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: var(--space-lg); /* Space above button */
-}
-
-.checkout-button:hover {
-    background-color: var(--color-secondary);
-}
-.checkout-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-
 /* --- Apple-Inspired Form Styles (Checkout Page - Global Application) --- */
-/* Apply these styles globally within the checkout page, not just large screens */
 
 .checkout-page .shipping-info .form-group,
 .checkout-page .payment-info .form-group {
@@ -1899,6 +1179,7 @@ footer {
     font-weight: 500;
 }
 
+/* Base styles for inputs/selects */
 .checkout-page .shipping-info .form-group input[type="text"],
 .checkout-page .shipping-info .form-group input[type="email"],
 .checkout-page .shipping-info .form-group input[type="tel"],
@@ -1913,9 +1194,10 @@ footer {
     font-size: 1em;
     background-color: #fff;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    /* box-shadow: 0 1px 2px rgba(0,0,0,0.04); /* Very subtle shadow */ */
+    box-sizing: border-box;
 }
 
+/* Focus styles for inputs/selects */
 .checkout-page .shipping-info .form-group input[type="text"]:focus,
 .checkout-page .shipping-info .form-group input[type="email"]:focus,
 .checkout-page .shipping-info .form-group input[type="tel"]:focus,
@@ -1928,6 +1210,7 @@ footer {
     box-shadow: 0 0 0 3px rgba(122, 122, 191, 0.2); /* Lighter focus ring */
 }
 
+/* Base styles for textarea */
 .checkout-page .shipping-info .form-group textarea {
     width: 100%;
     padding: 14px 16px;
@@ -1938,18 +1221,64 @@ footer {
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     resize: vertical;
     min-height: 100px; /* Taller textarea */
+    box-sizing: border-box;
 }
+
+/* Focus styles for textarea */
 .checkout-page .shipping-info .form-group textarea:focus {
     outline: none;
     border-color: var(--color-secondary);
     box-shadow: 0 0 0 3px rgba(122, 122, 191, 0.2);
 }
 
+/* Styles specific to larger screens for Apple forms */
+@media (min-width: 992px) { 
+    .checkout-layout-container {
+        flex-wrap: nowrap;
+    }
+    .checkout-summary-column {
+         position: sticky;
+         top: calc(80px + 50px + 30px + var(--space-xl));
+    }
+
+    .checkout-page .shipping-info .form-group input[type="text"],
+    .checkout-page .shipping-info .form-group input[type="email"],
+    .checkout-page .shipping-info .form-group input[type="tel"],
+    .checkout-page .shipping-info .form-group select,
+    .checkout-page .payment-info .form-group input[type="text"],
+    .checkout-page .payment-info .form-group input[type="number"],
+    .checkout-page .payment-info .form-group select {
+        padding: 12px 15px; /* Override base padding */
+        border-radius: 8px; /* Override base radius */
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Add subtle shadow */
+    }
+
+    .checkout-page .shipping-info .form-group input[type="text"]:focus,
+    .checkout-page .shipping-info .form-group input[type="email"]:focus,
+    .checkout-page .shipping-info .form-group input[type="tel"]:focus,
+    .checkout-page .shipping-info .form-group select:focus,
+    .checkout-page .payment-info .form-group input[type="text"]:focus,
+    .checkout-page .payment-info .form-group input[type="number"]:focus,
+    .checkout-page .payment-info .form-group select:focus {
+        border-color: var(--color-primary); /* Override base focus border */
+        box-shadow: 0 0 0 3px rgba(74, 74, 125, 0.15); /* Override base focus shadow */
+    }
+
+    .checkout-page .shipping-info .form-group textarea {
+         padding: 12px 15px; /* Override base padding */
+         border-radius: 8px; /* Override base radius */
+         box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Add subtle shadow */
+         min-height: 80px; /* Override base height */
+    }
+    .checkout-page .shipping-info .form-group textarea:focus {
+        border-color: var(--color-primary); /* Override base focus border */
+        box-shadow: 0 0 0 3px rgba(74, 74, 125, 0.15); /* Override base focus shadow */
+    }
+} /* End of @media (min-width: 992px) */
+
 
 /* --- Reviews Section --- */
-.reviews {
-    /* General container styles already set */
-}
+
 .review-summary {
     margin-bottom: var(--space-lg);
     /* Add styles for average rating, star display if needed */
@@ -1972,11 +1301,8 @@ footer {
     gap: var(--space-md);
 }
 
-.review-input label { /* Style labels if needed */
-    display: block;
-    margin-bottom: var(--space-xs);
-    font-weight: 500;
-}
+/* Removed empty .review-input label ruleset */
+
 .review-input select#ratingInput {
     padding: var(--space-sm) var(--space-md);
     border: 1px solid var(--color-border);
@@ -2008,6 +1334,7 @@ footer {
     transition: background-color 0.2s ease;
     margin-left: auto; /* Push button to the right */
     flex-basis: content; /* Let button size itself */
+    box-sizing: border-box;
 }
 
 .review-input button:hover {
@@ -2028,4 +1355,4 @@ footer {
         margin-left: 0;
         flex-basis: auto;
     }
-}
+} 
