@@ -102,24 +102,31 @@ function loadCartItems() {
         div.className = 'cart-item';
         const productInfo = window.products.find(p => p.id === item.productId);
         
-        // 이미지 URL 처리 개선
-        let imageUrl = 'images/placeholder.png'; // 기본 이미지 경로
+        let imageUrl = 'images/placeholder.png';
         if (productInfo && productInfo.image) {
-            imageUrl = productInfo.image; // 상품 정보에 이미지가 있으면 사용
+            imageUrl = productInfo.image;
         } else if (!productInfo) {
              console.warn(`Product info not found for cart item ID ${item.productId}. Using placeholder image.`);
         }
-        // 상품 정보는 있지만 이미지가 없는 경우도 placeholder 사용
 
+        // --- Updated innerHTML structure --- 
         div.innerHTML = `
             <img src="${imageUrl}" alt="${item.productName}" class="cart-item-image" onerror="this.onerror=null; this.src='images/placeholder.png'; console.error('Failed to load image:', this.src);">
-            <div class="cart-item-details">
-                <h3>${item.productName}</h3>
-                <p>가격: ${item.price.toLocaleString()}원</p>
-                <p>수량: ${item.quantity}</p>
+            <div class="item-details">
+                <h3 class="item-name">${item.productName}</h3>
+                <p class="item-price">${item.price.toLocaleString()}원 / 개</p> 
             </div>
-            <button class="remove-item-btn" onclick="window.removeFromCart(${item.productId})">삭제</button>
+            <div class="item-controls"> 
+                <div class="item-quantity">
+                    <label for="qty-${item.productId}" style="display: none;">수량:</label> 
+                    <input type="number" id="qty-${item.productId}" value="${item.quantity}" min="1" onchange="updateCartItemQuantity(${item.productId}, this.value)">
+                </div>
+                <div class="item-total">₩${(item.price * item.quantity).toLocaleString()}</div>
+                <button class="remove-button" onclick="window.removeFromCart(${item.productId})">삭제</button>
+            </div>
         `;
+        // --- End Updated innerHTML structure ---
+
         cartDiv.appendChild(div);
         total += item.price * item.quantity;
     });
