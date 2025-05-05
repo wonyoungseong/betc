@@ -155,61 +155,20 @@ function cancelPurchase(index) {
     }
 }
 
-// Function to update main content margin based on header/nav height
-function updateMainContentMargin() {
-    const header = document.querySelector('header.gnb');
-    const mainContent = document.querySelector('main.main-content');
-    const mainNav = document.getElementById('mainNav');
-
-    if (!header || !mainContent) {
-        // console.warn('Header or Main Content element not found for margin update.');
-        return;
-    }
-
-    let marginTop = header.offsetHeight; // Start with header height
-
-    // Check if mobile nav is active AND displayed
-    if (mainNav && mainNav.classList.contains('active') && window.getComputedStyle(mainNav).display !== 'none') {
-        // If nav is active, add its height to the margin
-        // Use offsetHeight as it includes padding and borders
-        marginTop += mainNav.offsetHeight;
-    }
-
-    // Ensure margin is not negative and apply
-    mainContent.style.marginTop = `${Math.max(0, marginTop)}px`;
-    // console.log(`Calculated marginTop: ${marginTop}px`); // Debugging log
-}
-
-// Debounce function
-const debounce = (func, wait) => {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-};
-
 // --- Named Event Handlers ---
 
-// Refined hamburger click handler with potential double requestAnimationFrame for timing
+// Modify handleHamburgerClick to toggle body class instead of calling margin update
 const handleHamburgerClick = () => {
     const mainNav = document.getElementById('mainNav');
     if (mainNav) {
         mainNav.classList.toggle('active');
-        // Double rAF for potentially better timing after style toggle
-        requestAnimationFrame(() => {
-             requestAnimationFrame(updateMainContentMargin);
-        });
+        document.body.classList.toggle('mobile-nav-active'); // Toggle class on body
     }
 };
 
 const handleMainSearch = () => {
     if (typeof window.searchProduct === 'function') {
-        window.searchProduct(); // Assumes main search uses #searchInput value internally
+        window.searchProduct();
     } else {
         console.error('searchProduct function is not defined.');
     }
@@ -219,9 +178,10 @@ const handleMobileSearch = () => {
     const mobileSearchInput = document.getElementById('mobileSearchInput');
     const mainNav = document.getElementById('mainNav');
      if (typeof window.searchProduct === 'function' && mobileSearchInput) {
-        window.searchProduct(mobileSearchInput.value); // Pass mobile input value
+        window.searchProduct(mobileSearchInput.value);
         if (mainNav) mainNav.classList.remove('active'); // Close nav after search
-        requestAnimationFrame(updateMainContentMargin); // Update margin after closing nav
+        // No need to update margin here anymore
+        document.body.classList.remove('mobile-nav-active'); // Also remove body class
     } else {
         console.error('searchProduct function or mobileSearchInput not defined.');
     }
@@ -243,11 +203,9 @@ const handleMobileSearchInputKeypress = (event) => {
 
 const handleLogout = (e) => {
     e.preventDefault();
-    window.logout(); // Assuming logout function exists globally
+    console.log("Logout link clicked"); // 로그 추가
+    window.logout();
 };
-
-// Debounced version of the margin update function for resize
-const debouncedUpdateMargin = debounce(updateMainContentMargin, 100);
 
 
 // Event listeners setup function
@@ -257,8 +215,6 @@ function addEventListeners() {
     if (hamburgerMenu) {
         hamburgerMenu.removeEventListener('click', handleHamburgerClick);
         hamburgerMenu.addEventListener('click', handleHamburgerClick);
-    } else {
-        // console.warn('Hamburger menu button not found.');
     }
 
     // --- Search ---
@@ -284,30 +240,56 @@ function addEventListeners() {
          mobileSearchInput.addEventListener('keypress', handleMobileSearchInputKeypress);
      }
 
-    // --- Logout ---
-    const logoutLink = document.getElementById('logoutLink');
-    if (logoutLink) {
-        logoutLink.removeEventListener('click', handleLogout);
-        logoutLink.addEventListener('click', handleLogout);
+    // --- Login/Signup Links --- ADDED console.log
+    const loginLink = document.getElementById('loginLink');
+    const signupLink = document.getElementById('signupLink');
+
+    if (loginLink) {
+        // Define handler locally for removal/addition clarity
+        const handleLoginLinkClick = (e) => {
+            e.preventDefault();
+            console.log("Login link clicked"); // 로그 추가
+            window.showLoginModal();
+        };
+        // Use the same function reference for remove and add
+        loginLink.removeEventListener('click', handleLoginLinkClick);
+        loginLink.addEventListener('click', handleLoginLinkClick);
     } else {
-         // console.warn('Logout link not found.');
+        // console.warn("Login link not found");
     }
 
-    // --- Resize Listener ---
-    window.removeEventListener('resize', debouncedUpdateMargin);
-    window.addEventListener('resize', debouncedUpdateMargin);
+    if (signupLink) {
+        // Define handler locally for removal/addition clarity
+        const handleSignupLinkClick = (e) => {
+            e.preventDefault();
+            console.log("Signup link clicked"); // 로그 추가
+            window.showSignupModal();
+        };
+        // Use the same function reference for remove and add
+        signupLink.removeEventListener('click', handleSignupLinkClick);
+        signupLink.addEventListener('click', handleSignupLinkClick);
+    } else {
+        // console.warn("Signup link not found");
+    }
+
+     // --- Logout --- Ensure handleLogout is defined before this call
+     const logoutLink = document.getElementById('logoutLink');
+     if (logoutLink) {
+         // handleLogout must be defined in a scope accessible here
+         logoutLink.removeEventListener('click', handleLogout); // Assumes handleLogout is accessible
+         logoutLink.addEventListener('click', handleLogout);
+     }
 }
 
-// Make functions globally accessible if needed
-window.updateMainContentMargin = updateMainContentMargin;
+// Make functions globally accessible if needed (Remove updateMainContentMargin)
 window.addEventListeners = addEventListeners;
 
 
-// Simplified DOMContentLoaded - relies on initializePage in each HTML file
+// Simplified DOMContentLoaded - Remove initial margin update call
 document.addEventListener('DOMContentLoaded', () => {
-    requestAnimationFrame(() => {
-        updateMainContentMargin();
-    });
+    // No initial margin update needed here anymore
+    // Ensure the body class is not active on initial load
+    document.body.classList.remove('mobile-nav-active');
 });
 
 // --- NEW FUNCTION: Update Cart Count in Header ---

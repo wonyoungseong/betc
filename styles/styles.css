@@ -21,6 +21,8 @@ body {
     background-color: #f8f9fa; /* Light background */
     /* Prevent horizontal scroll caused by potential overflow */
     overflow-x: hidden; 
+    padding-top: 100px; /* Default header height estimation */
+    transition: padding-top 0.3s ease; /* Smooth transition */
 }
 
 img,
@@ -67,6 +69,7 @@ ol {
     max-width: 1200px; /* Example max width for larger screens */
     margin-left: auto;
     margin-right: auto;
+    margin-top: 0 !important; /* Override any inline styles if necessary */
 }
 
 /* Example Media Query for larger screens (adjust breakpoint as needed) */
@@ -94,10 +97,12 @@ body {
     font-family: 'Noto Sans KR', sans-serif;
     color: #333;
     margin: 0;
-    padding: 0;
+    padding: 0; /* Reset padding */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    padding-top: 100px; /* Default header height estimation */
+    transition: padding-top 0.3s ease; /* Smooth transition */
 }
 
 .header-container, .footer-container, main {
@@ -1625,10 +1630,8 @@ footer {
 }
 
 .cart-summary-column {
-    flex: 1; /* 요약 부분이 남은 공간 차지 */
-    min-width: 250px; /* 최소 너비 설정 */
-    position: sticky; /* 스크롤 시 요약 부분 고정 (선택 사항) */
-    top: 100px; /* GNB 높이 + 추가 간격 */
+    flex: 1;
+    min-width: 250px;
 }
 
 /* Cart items styling (adjust existing .cart-items if needed) */
@@ -1757,7 +1760,7 @@ footer {
     }
 }
 
-/* --- Header Responsive Refinements --- */
+/* === Header Responsive Refinements === */
 @media screen and (max-width: 768px) {
     .header-top {
         /* Keep styles for wrapping and alignment */
@@ -1924,7 +1927,7 @@ footer {
 }
 /* Search icon color is handled by inline style filter:invert(1) */
 
-/* --- Product List Responsive Refinements --- */
+/* === Product List Responsive Refinements === */
 /* Tablet and Smaller - Horizontal Scroll */
 @media screen and (max-width: 768px) {
     .product-list {
@@ -1999,4 +2002,39 @@ footer {
         }
     }
     /* No need for 768px grid rule here as it's handled by the <768px flex rule */
+}
+
+/* === 반응형 수정 === */
+@media screen and (max-width: 768px) {
+    body {
+        /* Adjust default padding for potentially different mobile header height */
+         padding-top: 80px; /* Example: Adjust if mobile header base height is different */
+    }
+
+    body.mobile-nav-active {
+        /* Increase padding-top when mobile nav is open */
+        /* Use the observed 170px or measure accurately */
+        padding-top: 170px; /* ADJUST THIS VALUE */
+    }
+
+    nav#mainNav {
+        /* Ensure absolute positioning relative to the fixed header */
+        position: absolute;
+        top: 100%; /* Position below the header-top content */
+        left: 0;
+        width: 100%;
+        background-color: #4a4a7d;
+        display: none; /* Keep hidden until active */
+        /* Other styles remain */
+    }
+
+    nav#mainNav.active {
+        display: block; /* Show when active */
+    }
+
+    /* Ensure main content respects padding */
+    .main-content {
+       /* No margin needed, body padding handles spacing */
+       margin-top: 0 !important; /* Reinforce */
+    }
 }
