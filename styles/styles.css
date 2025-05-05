@@ -1053,8 +1053,9 @@ footer {
     color: white;
     background: none;
     border: none;
-    padding: 0;
-    line-height: 1; /* Ensure proper vertical alignment */
+    padding: 0 5px; /* Add some padding */
+    line-height: 1;
+    margin-right: var(--space-sm); /* Space before login link */
 }
 
 /* === Checkout Page Styles === */
@@ -1396,14 +1397,15 @@ footer {
 
 /* Default state (Desktop): Hide hamburger */
 .hamburger-menu {
-    display: none !important; /* Ensure it's hidden by default, use !important for safety */
+    display: none !important; /* Keep hidden by default */
     font-size: 24px;
     cursor: pointer;
     color: white;
     background: none;
     border: none;
-    padding: 0;
-    line-height: 1; /* Ensure proper vertical alignment */
+    padding: 0 5px; /* Add some padding */
+    line-height: 1;
+    margin-right: var(--space-sm); /* Space before login link */
 }
 
 @media (max-width: 768px) {
@@ -1411,25 +1413,23 @@ footer {
 
     /* Mobile state: Show hamburger */
     .hamburger-menu {
-        display: block !important; /* Force display block */
-        order: 3;
-        position: static;
+        display: block !important; /* Show hamburger */
+        order: -1; /* Place hamburger first within user-menu */
+        position: static; /* Remove static positioning if set */
         transform: none;
-        margin-left: var(--space-sm);
+        margin-left: 0; /* Remove left margin */
+        margin-right: var(--space-sm); /* Add margin to the right */
     }
 
     /* Ensure search bar takes full width on the next line */
     .search-bar {
-        order: 4;
+        display: none; /* Hide original search bar */
+        order: 4; /* Keep order in case needed later */
         flex-basis: 100%;
-        margin-top: var(--space-sm);
-        /* Keep other styles for full width */
-        width: 100%; /* Explicitly set width */
-        min-width: unset;
-        max-width: none;
+        margin-top: 0; /* Remove top margin */
     }
      .search-bar input#searchInput {
-         max-width: none;
+         max-width: none; /* Allow full width */
      }
 
     /* ... other mobile header styles ... */
@@ -1761,156 +1761,177 @@ footer {
 /* --- Header Responsive Refinements --- */
 @media screen and (max-width: 768px) {
     .header-top {
+        /* Keep styles for wrapping and alignment */
         flex-wrap: wrap;
-        justify-content: space-between; /* Ensure space between items on the first line */
+        justify-content: space-between;
         padding: 10px 15px;
-        position: relative; /* For absolute positioning of nav */
+        position: relative;
     }
     .logo {
-        width: auto; /* Don't force full width */
-        flex-grow: 1; /* Allow logo to take space */
-        margin-bottom: 0; /* Remove bottom margin */
-        order: 1; /* Logo first */
-        text-align: left;
+        /* Keep logo styles */
+        order: 1;
+        flex-grow: 1;
     }
     .user-menu {
-        order: 2; /* User menu second */
+        order: 2;
         width: auto;
         margin-left: 0;
+        /* Ensure items are centered vertically */
+        align-items: center;
     }
      /* Keep hiding text links */
     .user-menu a:not(.icon-link) {
         display: none;
     }
+    /* Hide the original search bar */
     .search-bar {
-        order: 4; /* Search bar last on its own row */
-        flex-basis: 100%; /* Force full width */
-        margin-top: var(--space-sm); /* Add space above */
-        min-width: unset; /* Remove min-width */
-        max-width: none; /* Remove max-width limit */
+        display: none; /* Hide original search bar */
+        order: 4; /* Keep order in case needed later */
+        flex-basis: 100%;
+        margin-top: 0; /* Remove top margin */
     }
-     .search-bar input#searchInput {
-         max-width: none; /* Allow full width */
-     }
+    /* Show hamburger menu */
     .hamburger-menu {
-        display: block !important; /* Force display block */
-        order: 3;
-        position: static;
+        display: block !important; /* Show hamburger */
+        order: -1; /* Place hamburger first within user-menu */
+        position: static; /* Remove static positioning if set */
         transform: none;
-        margin-left: var(--space-sm);
+        margin-left: 0; /* Remove left margin */
+        margin-right: var(--space-sm); /* Add margin to the right */
     }
-    nav#mainNav { /* Ensure ID selector is used */
+    nav#mainNav { /* Keep nav styles */
         display: none;
-        order: 5; /* Nav comes after search bar */
+        order: 3; /* Nav now comes after header-top content */
         width: 100%;
         position: absolute;
-        top: 100%; /* Position below the header top */
+        top: 100%;
         left: 0;
         background-color: #4a4a7d;
         z-index: 999;
-        /* border-top: 1px solid #5a5a8d; */ /* Re-add border if desired */
     }
-     /* Keep other nav styles */
-     nav#mainNav.active { display: block; }
-     nav#mainNav ul { flex-direction: column; align-items: flex-start; padding: 10px 0; }
-     nav#mainNav li { width: 100%; text-align: left; }
-     nav#mainNav a { padding: 12px 20px; width: 100%; box-sizing: border-box; }
+    /* Keep other nav styles */
+    nav#mainNav.active { display: block; }
+    nav#mainNav ul { flex-direction: column; align-items: stretch; padding: 0; }
+    nav#mainNav li {
+         width: 100%;
+         text-align: left;
+         border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Separator lines */
+     }
+     nav#mainNav li:last-child {
+         border-bottom: none;
+     }
+    nav#mainNav a {
+         padding: 12px 20px;
+         width: 100%;
+         box-sizing: border-box;
+         display: block;
+     }
 }
 
-@media screen and (max-width: 480px) {
-    .logo a {
-        font-size: 18px; /* 로고 더 작게 */
-    }
-     .search-bar {
-         /* Ensure flex behavior */
-         display: flex;
-         align-items: center;
-     }
-     .search-bar input#searchInput {
-         /* Allow input to shrink */
-         flex-grow: 1;
-         min-width: 0; /* Important for shrinking */
-         /* Remove fixed max-width */
-         /* max-width: 120px; */
-         /* Adjust padding if needed */
-         padding: 8px 10px;
-         font-size: 13px;
-     }
-     .search-bar button {
-         /* Prevent button from shrinking */
-         flex-shrink: 0;
-         padding: 8px 12px;
-     }
-    .user-menu {
-        gap: var(--space-xs); /* 아이콘 간격 줄이기 */
-    }
-    .icon-link img, #logoutLink img {
-        width: 18px; /* 아이콘 크기 줄이기 */
-        height: 18px;
-    }
-     nav#mainNav a { /* 모바일 메뉴 패딩 추가 조정 */
-        padding: 10px 15px;
-    }
+/* Style for mobile search inside nav */
+.mobile-search-item {
+    padding: 10px 20px; /* Match nav item padding */
 }
+.mobile-search-form {
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent white */
+    border-radius: 15px; /* Rounded corners */
+    overflow: hidden;
+}
+#mobileSearchInput {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 14px;
+    min-width: 0;
+}
+#mobileSearchInput::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+#mobileSearchButton {
+    background: transparent;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+/* Search icon color is handled by inline style filter:invert(1) */
 
 /* --- Product List Responsive Refinements --- */
-/* 기본 Product List (Desktop) - 기존 .product-list 확인 필요 */
-.product-list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 기본 4 컬럼 */
-    gap: var(--space-lg); /* 카드 사이 간격 */
-    justify-content: center; /* 필요 시 */
-    /* 기존 스타일과 병합/확인 필요 */
-    align-items: stretch; /* 아이템 높이 맞춤 */
-}
-
-/* Tablet */
-@media screen and (max-width: 992px) { /* 4개 -> 3개 */
+/* Tablet and Smaller - Horizontal Scroll */
+@media screen and (max-width: 768px) {
     .product-list {
-        grid-template-columns: repeat(3, 1fr);
+        display: flex; /* Change to flex */
+        overflow-x: auto; /* Enable horizontal scroll */
+        padding-bottom: var(--space-md); /* Space for scrollbar */
+        /* Remove grid properties */
+        grid-template-columns: none;
+        gap: var(--space-md); /* Adjust gap for flex */
+        justify-content: flex-start; /* Align items to start */
+        align-items: stretch; /* Keep align-items */
+        /* Add scroll snap for better UX (optional) */
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     }
-}
-
-/* Mobile Landscape / Small Tablet */
-@media screen and (max-width: 768px) { /* 3개 -> 2개 */
-    .product-list {
-        grid-template-columns: repeat(2, 1fr);
-        gap: var(--space-md); /* 간격 줄이기 */
-    }
-}
-
-/* Mobile Portrait */
-@media screen and (max-width: 480px) { /* 2개 -> 2개 (또는 1개) */
-    .product-list {
-        grid-template-columns: repeat(2, 1fr); /* 모바일에서도 2개 유지 */
-        /* 또는 1개 컬럼으로 변경: grid-template-columns: 1fr; */
-        gap: var(--space-sm); /* 간격 더 줄이기 */
-    }
-    /* 모바일에서 상품 카드 내부 스타일 조정 */
     .product-item {
-        padding: var(--space-sm); /* 카드 내부 패딩 줄이기 */
+        flex: 0 0 auto; /* Prevent flex item resizing */
+        width: 180px; /* Set fixed width for each item */
+        /* Ensure vertical alignment if heights differ slightly */
+        display: flex;
+        flex-direction: column;
+        scroll-snap-align: start; /* Snap alignment (optional) */
     }
-    .product-item h3 {
-        font-size: 0.9em; /* 폰트 크기 줄이기 */
-        margin: var(--space-xs) 0; /* 마진 조정 */
+    .product-item img {
+        /* Styles for image within card - width: 100% should work correctly now */
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        margin-bottom: var(--space-sm); /* Adjust margin */
     }
-     .product-item .price, .product-item .original-price, .product-item .discount {
-        font-size: 0.85em; /* 가격 폰트 크기 줄이기 */
-    }
-     .product-item p { /* 일반 텍스트 마진 조정 */
+     .product-item h3 {
+         font-size: 0.9em;
+         margin: var(--space-xs) 0;
+         flex-grow: 1; /* Allow title to take space if needed */
+     }
+     .product-item .price,
+     .product-item .original-price,
+     .product-item .discount {
+         font-size: 0.85em;
+     }
+     .product-item p {
          margin: var(--space-xs) 0;
      }
 }
 
-/* Product Item Image (기존 규칙과 병합) */
-.product-item img {
-    display: block;
-    width: 100%; /* Revert back to width: 100% */
-    max-width: 100%; /* Keep max-width as a safeguard */
-    height: auto; /* 비율 유지 */
-    aspect-ratio: 1 / 1; /* 1:1 비율 유지 (선호에 따라 조정) */
-    object-fit: cover; /* 컨테이너에 맞춰 이미지 자르기 */
-    margin-bottom: var(--space-md); /* 이미지와 텍스트 사이 간격 */
-    border-radius: 4px; /* 이미지 모서리 둥글게 (선택 사항) */
-    box-sizing: border-box; /* Explicitly set box-sizing */
+/* Remove previous product-list grid changes for smaller screens */
+/* @media screen and (max-width: 480px) { ... product-list grid rules ... } */
+
+/* Ensure default product-list for wider screens is still grid */
+@media screen and (min-width: 769px) { /* Breakpoint slightly above 768 */
+    .product-list {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* Default 4 columns */
+        gap: var(--space-lg);
+        /* Reset potentially conflicting flex properties */
+        overflow-x: visible;
+        justify-content: center;
+        padding-bottom: 0;
+        scroll-snap-type: none;
+    }
+    /* Reset product item flex properties */
+    .product-item {
+        width: auto; /* Allow grid to control width */
+        flex: none;
+        display: block; /* Revert to block or default */
+        scroll-snap-align: none;
+    }
+    /* Media queries for 3 and 2 columns on wider screens */
+    @media screen and (max-width: 992px) {
+        .product-list {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    /* No need for 768px grid rule here as it's handled by the <768px flex rule */
 }

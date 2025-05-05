@@ -233,6 +233,38 @@ window.addEventListeners = function() {
     } else {
         console.warn("Element with ID 'loginUsername' not found when adding keypress listener.");
     }
+
+    // --- Mobile Search Event Listeners --- ADDED
+    const mobileSearchInput = document.getElementById('mobileSearchInput');
+    const mobileSearchButton = document.getElementById('mobileSearchButton');
+
+    if (mobileSearchInput) {
+        mobileSearchInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                if (typeof window.searchProduct === 'function') {
+                    window.searchProduct(mobileSearchInput.value);
+                    // Optionally close the nav menu after search
+                    document.getElementById('mainNav').classList.remove('active');
+                } else {
+                    console.error('searchProduct function is not defined.');
+                }
+            }
+        });
+    }
+
+    if (mobileSearchButton) {
+        mobileSearchButton.addEventListener('click', function() {
+            if (typeof window.searchProduct === 'function') {
+                 window.searchProduct(mobileSearchInput.value);
+                 // Optionally close the nav menu after search
+                 document.getElementById('mainNav').classList.remove('active');
+            } else {
+                console.error('searchProduct function is not defined.');
+            }
+        });
+    }
+    // --- End Mobile Search ---
 }
 
 function updateOrderCompleteCount() {

@@ -393,9 +393,17 @@ window.viewProduct = function(id, listName, index) {
     window.location.href = `product-detail.html?id=${id}&list_name=${encodedListName}&list_id=${encodedListId}`;
 }
 
-window.searchProduct = function() {
-    var query = document.getElementById('searchInput').value.trim();
+window.searchProduct = function(query = null) {
+    // If no query is passed, get it from the main search input
+    if (query === null) {
+        var searchInput = document.getElementById('searchInput');
+        query = searchInput ? searchInput.value.trim() : '';
+    } else {
+        query = query.trim();
+    }
+
     if (query) {
+        // Navigate to search results page
         window.location.href = `search-results.html?query=${encodeURIComponent(query)}`;
     } else {
         alert('검색어를 입력하세요.');

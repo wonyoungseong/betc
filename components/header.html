@@ -11,18 +11,26 @@
         </div>
 
         <div class="user-menu">
+            <button class="hamburger-menu" id="hamburgerMenu" aria-label="메뉴 열기/닫기">
+                ☰
+            </button>
             <a href="#" id="loginLink">로그인</a> |
             <a href="#" id="signupLink">회원가입</a>
             <a href="#" id="logoutLink" style="display:none;" class="icon-link">
-                <img src="images/icons/logout.png" alt="로그아웃" style="width: 20px; height: 20px;">
+                <img src="images/icons/user-icon.png" alt="로그아웃" style="width: 20px; height: 20px;">
             </a>
         </div>
     </div>
-    <div class="hamburger-menu" id="hamburgerMenu">
-        ☰
-    </div>
     <nav id="mainNav">
         <ul>
+            <li class="mobile-search-item">
+                <div class="mobile-search-form">
+                    <input type="text" id="mobileSearchInput" placeholder="검색...">
+                    <button id="mobileSearchButton" aria-label="검색">
+                        <img src="images/icons/search-icon.png" alt="검색" style="width:16px; height: 16px; filter: invert(1);">
+                    </button>
+                </div>
+            </li>
             <li><a href="product-list.html?category=all">전체상품</a></li>
             <li><a href="product-list.html?category=메이크업">메이크업</a></li>
             <li><a href="product-list.html?category=스킨케어">스킨케어</a></li>
