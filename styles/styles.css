@@ -17,8 +17,23 @@ body {
     line-height: 1.6;
     color: #333;
     background-color: #f8f9fa; /* Light background */
+    /* Default padding assumes nav is visible */
     padding-top: calc(80px + 50px + 30px); /* Default: Header + Nav + Buffer */
     transition: padding-top 0.3s ease-in-out; /* Smooth transition for padding */
+}
+
+/* When mobile nav is hidden (less than 768px and NOT active) */
+@media (max-width: 768px) {
+    body:not(.mobile-nav-active) {
+        padding-top: calc(80px + 30px); /* Header + Buffer only */
+    }
+}
+
+/* When mobile nav IS active (overrides the above rule) */
+body.mobile-nav-active {
+    /* Keep enough space for header + potentially expanded nav */
+    /* Let's use a reasonable fixed value or calculate with JS later if needed */
+     padding-top: calc(80px + 200px + 30px); /* Header + Estimated Nav Height + Buffer */
 }
 
 img,
@@ -652,19 +667,18 @@ button:hover {
 
 /* Featured Sections (Best Seller, New Arrivals) */
 /* Use .products style by default */
-.featured-products .products { /* Target #mainProductList */
-    display: flex; /* Use flexbox for horizontal layout */
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
-    justify-content: space-around; /* Distribute items evenly */
+.featured-products .products { /* Target #mainProductList - Increased Specificity */
+    display: flex !important; /* Override default grid with flex */
+    flex-wrap: wrap; /* Allow wrapping */
+    justify-content: space-around; /* Distribute items */
     gap: var(--space-lg); /* Consistent gap */
-    grid-template-columns: none; /* Disable grid */
-    margin-top: var(--space-lg); /* Space below "추천 제품" title */
+    grid-template-columns: none !important; /* Explicitly disable grid columns */
+    margin-top: var(--space-lg);
 }
 
-.featured-products .product-item {
-    flex-basis: calc(25% - var(--space-lg) * 3 / 4); /* 4 items per row on large screens, accounting for gap */
-    min-width: 200px; /* Prevent items from becoming too small */
-    /* Height is handled by existing .product-item styles */
+.featured-products .product-item { /* Keep responsive sizing */
+    flex-basis: calc(25% - var(--space-lg) * 3 / 4);
+    min-width: 200px;
 }
 
 .best-seller h2, .new-arrivals h2 {
@@ -1000,12 +1014,7 @@ footer {
 
 /* === Responsive Design Adjustments === */
 
-/* Body padding adjustment for mobile nav */
-body.mobile-nav-active {
-    /* Adjust padding based on dynamic header height calculation in JS if needed */
-    /* Or set a fixed increased padding if nav height is fixed */
-     padding-top: calc(80px + 200px + 30px); /* Example: Header + Estimated Nav Height + Buffer */
-}
+/* Body padding adjustment for mobile nav (already handled above) */
 
 /* Header Responsive */
 @media (max-width: 768px) {
@@ -1122,12 +1131,44 @@ body.mobile-nav-active {
     .user-menu {
         gap: var(--space-sm);
     }
-    .user-menu a {
-        font-size: 0.8em; /* Smaller text links */
-        /* Icons can remain the same size or adjust slightly */
+    /* Hide text links, show icons for login/signup/logout */
+    #loginLink,
+    #signupLink,
+    #logoutLink .logout-text { /* Target logout text specifically */
+        display: none; /* Hide text */
     }
+
+    /* Style the icons (assuming they exist in HTML) */
+    #loginLink .login-icon, /* Hypothetical class for login icon */
+    #signupLink .signup-icon, /* Hypothetical class for signup icon */
+    #logoutLink .logout-icon {
+        display: inline; /* Show icons */
+        width: 20px; /* Ensure consistent icon size */
+        height: 20px;
+        vertical-align: middle;
+        margin-left: 0; /* Remove left margin when only icon is shown */
+    }
+
+    #logoutLink .logout-icon {
+         filter: brightness(0) invert(1); /* Ensure logout icon is white */
+    }
+
 }
 
+/* Default Logout Icon Style */
+#logoutLink .logout-icon {
+    display: none; /* Hide icon by default */
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    filter: brightness(0) invert(1); /* Make icon white like other icons */
+}
+
+#logoutLink .logout-text {
+    display: inline; /* Show text by default */
+    vertical-align: middle;
+    margin-left: var(--space-xs); /* Space next to icon if it were shown */
+}
 
 /* Hero Section Responsive */
 @media (max-width: 768px) {
