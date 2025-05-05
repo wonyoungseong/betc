@@ -32,9 +32,29 @@ function insertGtmScript() {
     document.head.appendChild(gtmScript);
 }
 
+function insertCookiebotScript() {
+    // Cookiebot 스크립트가 이미 삽입되었는지 확인
+    if (document.getElementById('Cookiebot')) {
+        return;
+    }
+
+    // Cookiebot 스크립트 태그 생성
+    var cookiebotScript = document.createElement('script');
+    cookiebotScript.id = 'Cookiebot';
+    cookiebotScript.src = 'https://consent.cookiebot.com/uc.js';
+    cookiebotScript.setAttribute('data-cbid', '85be34eb-e45a-4f84-8c82-62f3e3578f89');
+    cookiebotScript.setAttribute('data-blockingmode', 'auto');
+    cookiebotScript.setAttribute('data-consentmode', 'disabled');
+    cookiebotScript.type = 'text/javascript';
+
+    // head에 스크립트 추가
+    document.head.appendChild(cookiebotScript);
+}
+
 function includeHTML(callback) {
-    // GTM 스크립트 삽입 함수를 먼저 호출
+    // GTM 및 Cookiebot 스크립트 삽입 함수 호출
     insertGtmScript();
+    insertCookiebotScript();
 
     var elements = document.querySelectorAll('[include-html]');
     var totalElements = elements.length;

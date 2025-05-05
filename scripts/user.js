@@ -3,22 +3,26 @@
 window.currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
 
 window.checkAuthStatus = function() {
-    var welcomeMessage = document.getElementById('welcomeMessage');
-    var loginLink = document.getElementById('loginLink');
-    var signupLink = document.getElementById('signupLink');
-    var logoutLink = document.getElementById('logoutLink');
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    // const welcomeMessage = document.getElementById('welcomeMessage'); // 제거된 요소 참조 제거
+    const loginLink = document.getElementById('loginLink');
+    const signupLink = document.getElementById('signupLink');
+    const logoutLink = document.getElementById('logoutLink');
 
-    if (window.currentUser) {
-        welcomeMessage.textContent = `${window.currentUser.username}님 환영합니다.`;
-        loginLink.style.display = 'none';
-        signupLink.style.display = 'none';
-        logoutLink.style.display = 'inline';
+    if (user) {
+        window.currentUser = user;
+        // welcomeMessage.textContent = `${user.username}님 환영합니다. |`; // 제거된 요소 참조 제거
+        if(loginLink) loginLink.style.display = 'none';
+        if(signupLink) signupLink.style.display = 'none';
+        if(logoutLink) logoutLink.style.display = 'inline'; // Use 'inline' or 'inline-block'
     } else {
-        welcomeMessage.textContent = '';
-        loginLink.style.display = 'inline';
-        signupLink.style.display = 'inline';
-        logoutLink.style.display = 'none';
+        window.currentUser = null;
+        // welcomeMessage.textContent = ''; // 제거된 요소 참조 제거
+        if(loginLink) loginLink.style.display = 'inline';
+        if(signupLink) signupLink.style.display = 'inline';
+        if(logoutLink) logoutLink.style.display = 'none';
     }
+    updateCartCount(); // Update cart count on auth status change
 }
 
 
