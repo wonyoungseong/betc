@@ -545,21 +545,23 @@ button:hover {
 }
 
 /* Featured Sections (Best Seller, New Arrivals) */
-.featured-products .products { /* Target #mainProductList explicitly */
-    display: flex !important; /* Force flex display */
-    flex-direction: row !important; /* Ensure row direction */
-    flex-wrap: wrap !important; /* Allow wrapping */
-    justify-content: space-around !important; /* Distribute items */
-    gap: var(--space-lg);
-    grid-template-columns: none !important; /* Disable grid */
-    margin-top: var(--space-lg);
+/* Ensure flex behavior for product listing within featured section */
+.featured-products .products {
+    display: flex; /* Use Flexbox */
+    flex-direction: row; /* Horizontal layout */
+    flex-wrap: wrap; /* Allow items to wrap */
+    justify-content: space-around; /* Distribute space */
+    gap: var(--space-lg); /* Space between items */
+    /* Override any conflicting grid styles if necessary */
+    grid-template-columns: none;
 }
 
-.featured-products .product-item { /* Adjust sizing for flex */
-    flex: 1 1 calc(25% - var(--space-lg)); /* Grow, shrink, basis considering gap */
-    min-width: 200px;
-    max-width: 300px; /* Add max-width */
-    /* height: auto; Ensure height adjusts */
+/* Style individual product items within the featured section */
+.featured-products .product-item {
+    flex: 0 1 calc(25% - var(--space-lg) * 3 / 4); /* Adjust basis for 4 columns with gap */
+    min-width: 200px; /* Minimum width before wrapping */
+    max-width: calc(25% - var(--space-lg) * 3 / 4); /* Ensure it doesn't exceed column width */
+    box-sizing: border-box; /* Include padding/border in width */
 }
 
 .best-seller h2, .new-arrivals h2 {
@@ -568,6 +570,69 @@ button:hover {
     margin-bottom: var(--space-lg);
     color: var(--color-primary);
 }
+
+/* Beauty Lab Section */
+.beauty-lab {
+    background-image: linear-gradient(rgba(74, 74, 125, 0.8), rgba(74, 74, 125, 0.8)), url('../images/campaign/sustainability/campaign.jpg'); /* Purple overlay */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Parallax effect */
+    padding: var(--space-xxl) var(--space-lg);
+    text-align: center;
+    color: white;
+    position: relative;
+    margin: var(--space-xl) calc(-1 * var(--space-lg)); /* Extend outside padding */
+    border-radius: var(--border-radius-md); /* Rounded corners */
+    overflow: hidden;
+    min-height: 400px; /* Ensure minimum height similar to hero */
+    display: flex; /* Use flex to center content vertically */
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+}
+
+.beauty-lab::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(74, 74, 125, 0.1); /* Slightly darken if needed */
+    z-index: 1;
+}
+
+.beauty-lab-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.beauty-lab h2 {
+    font-size: 2.2em;
+    margin-bottom: var(--space-md);
+    font-weight: 700;
+}
+.beauty-lab p {
+    font-size: 1.1em;
+    margin-bottom: var(--space-lg);
+    line-height: 1.7;
+}
+.beauty-lab .cta-button {
+    background-color: white; /* White button */
+    color: var(--color-primary); /* Primary text color */
+    padding: var(--space-md) var(--space-xl);
+    font-size: 1.1em;
+    font-weight: bold;
+    border-radius: var(--border-radius-md);
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+    border: none;
+}
+
+.beauty-lab .cta-button:hover {
+    background-color: #f0f0f0; /* Slightly off-white on hover */
+    transform: scale(1.05);
+}
+
 
 /* --- product-detail.html Specific Styles --- */
 .product-detail-container {
@@ -956,8 +1021,10 @@ button:hover {
     .featured-products .products {
         justify-content: space-evenly;
     }
+    /* Adjust flex-basis for 2 columns */
     .featured-products .product-item {
-        flex-basis: calc(50% - var(--space-lg));
+         flex: 1 1 calc(50% - var(--space-lg)); /* Basis for 2 columns */
+         max-width: calc(50% - var(--space-lg));
     }
 }
 @media (max-width: 576px) {
@@ -970,6 +1037,7 @@ button:hover {
     .product-item h3 { font-size: 1em; }
     .product-item .price { font-size: 1.1em; }
 
+    /* Adjust flex-basis for 1 column */
     .featured-products .product-item {
         flex-basis: 80%;
         max-width: 300px;
