@@ -85,165 +85,256 @@ window.loadMainProducts = function(category = 'all') {
     });
 }
 
-window.loadProductDetail = function() {
-    var params = new URLSearchParams(window.location.search);
-    var id = parseInt(params.get('id'));
-    var product = window.products.find(function(p) { return p.id === id; });
-    if (product) {
-        var detailDiv = document.getElementById('productDetail');
-        if (!detailDiv) return;
-        detailDiv.innerHTML = `
-            <div class="product-image-gallery">
-                <div class="main-image">
-                    <img id="mainProductImage" src="${product.image}" alt="${product.name}">
-                </div>
-                <div class="thumbnail-images" id="thumbnailContainer">
-                    ${product.images.map((img, index) => `
-                        <img src="${img}" alt="${product.name}" class="thumbnail" data-index="${index}">
-                    `).join('')}
-                </div>
-            </div>
-            <div class="product-info">
-                <h2>${product.name}</h2>
-                <p class="price">₩${product.price.toLocaleString()}</p>
-                <p class="description">${product.description || '상품 설명이 없습니다.'}</p>
-                <div class="quantity">
-                    <label for="quantity">수량:</label>
-                    <input type="number" id="quantity" name="quantity" value="1" min="1">
-                </div>
-                <button onclick="window.addToCartWithQuantity(${product.id})">장바구니 담기</button>
-                <button onclick="window.buyNowWithQuantity(${product.id})">바로 구매</button>
-            </div>
-        `;
-        
-        // 제품 특징 표시
-        var featuresDiv = document.getElementById('productFeatures');
-        if (featuresDiv) {
-            featuresDiv.innerHTML = product.features ? 
-                product.features.map(feature => `<li>${feature}</li>`).join('') : 
-                '<li>제품 특징 정보가 없습니다.</li>';
+// --- NEW FUNCTION ---
+function adjustThumbnailSizes() {
+    const mainImageElement = document.getElementById('mainProductImage');
+    const thumbnailContainer = document.getElementById('thumbnailContainer');
+
+    if (!mainImageElement || !thumbnailContainer) {
+        console.warn("Cannot adjust thumbnails: main image or container not found.");
+        return;
+    }
+
+    const thumbnails = thumbnailContainer.querySelectorAll('.thumbnail');
+    if (thumbnails.length === 0) {
+        // console.log("No thumbnails to adjust.");
+        return;
+    }
+
+    // Get the gap value dynamically from CSS (more robust)
+    let gap = 8; // Default value
+    try { // Use try-catch in case getComputedStyle fails
+        const containerStyle = window.getComputedStyle(thumbnailContainer);
+        // Check for gap property first, then fallback for older browsers if needed
+        const gapValue = containerStyle.getPropertyValue('gap') || containerStyle.getPropertyValue('column-gap');
+        if (gapValue && gapValue.endsWith('px')) {
+            gap = parseFloat(gapValue);
+        } else if (gapValue) {
+            console.warn(`Could not parse gap value '${gapValue}', using default ${gap}px.`);
         }
+    } catch (e) {
+         console.warn("Could not get computed style for gap, using default.", e);
+    }
 
-        // 제품 성분 표시
-        var ingredientsDiv = document.getElementById('productIngredients');
-        if (ingredientsDiv) {
-            ingredientsDiv.innerHTML = product.ingredients ? 
-                product.ingredients.map(ingredient => `<li>${ingredient}</li>`).join('') : 
-                '<li>성분 정보가 없습니다.</li>';
-        }
 
-        // 사용 방법 표시
-        var usageDiv = document.getElementById('productUsage');
-        if (usageDiv) {
-            usageDiv.textContent = product.usage || '사용 방법 정보가 없습니다.';
-        }
+    // Ensure main image has a width before calculating
+    // Use scrollWidth or offsetWidth - offsetWidth is usually better here
+    const mainWidth = mainImageElement.offsetWidth;
+    if (mainWidth <= 0) {
+        console.warn("Main image width is 0, trying again shortly...");
+        // Retry after a short delay to allow image rendering
+        setTimeout(adjustThumbnailSizes, 150); // Increased delay slightly
+        return;
+    }
 
-        // 제품 정보 테이블 표시
-        var infoTable = document.getElementById('productInfoTable');
-        if (infoTable) {
-            infoTable.innerHTML = `
-                <tr><td>브랜드</td><td>${product.brand || '-'}</td></tr>
-                <tr><td>카테고리</td><td>${product.category || '-'}</td></tr>
-                <tr><td>용량</td><td>${product.volume || '-'}</td></tr>
-            `;
-        }
 
-        // 이미지 갤러리 이벤트 리스너 추가
-        addImageGalleryListeners(product);
+    const numThumbnails = thumbnails.length;
+    const totalGapWidth = (numThumbnails > 1) ? (numThumbnails - 1) * gap : 0;
 
-        // 리뷰 로드 함수 호출
-        window.loadReviews(id);
+    // Calculate available width, ensure it's not negative
+    let totalThumbnailWidth = mainWidth - totalGapWidth;
+    if (totalThumbnailWidth <= 0) {
+         // If total width is still negative, maybe container has padding?
+         // Let's try using clientWidth of the container as fallback
+         const containerWidth = thumbnailContainer.clientWidth;
+         totalThumbnailWidth = containerWidth - totalGapWidth;
+         if (totalThumbnailWidth < 0) totalThumbnailWidth = 0; // Prevent negative width
+         console.warn(`Main image width calculation resulted in non-positive thumbnail space (${mainWidth} - ${totalGapWidth}). Using container width ${containerWidth} as fallback.`);
+    }
 
-        // --- GA4 view_item 이벤트 푸시 시작 ---
-        if (typeof pushEcommerceEvent === 'function') {
-            // URL에서 list_name과 list_id 가져오기 (select_item에서 전달됨)
-            const listName = params.get('list_name') || 'undefined'; // 목록 정보가 없을 경우 대비
-            const listId = params.get('list_id') || 'undefined';
 
-            const ecommerceData = {
-                currency: 'KRW',
-                value: product.price,
-                items: [{
-                    item_id: product.id.toString(),
-                    item_name: product.name,
-                    affiliation: product.affiliation || '뷰티 코스메틱 쇼핑몰',
-                    coupon: product.coupon || undefined,
-                    discount: product.originalPrice ? (product.originalPrice - product.price) : undefined,
-                    // index: ?? // 단일 아이템 뷰에서는 index가 의미 없을 수 있음
-                    item_brand: product.brand || undefined,
-                    item_category: product.category || undefined,
-                    item_list_id: listId, // 어떤 목록에서 왔는지 식별
-                    item_list_name: listName,
-                    price: product.price,
-                    quantity: 1 // 상세 보기 시 수량은 1
-                }]
-            };
-            pushEcommerceEvent('view_item', ecommerceData);
+    const thumbnailWidth = (numThumbnails > 0) ? totalThumbnailWidth / numThumbnails : 0;
+
+    // console.log(`Adjusting thumbnails: MainWidth=${mainWidth}, Thumbnails=${numThumbnails}, Gap=${gap}, ThumbWidth=${thumbnailWidth}`);
+
+    thumbnails.forEach(thumb => {
+        // Apply width only if calculated width is positive
+        if (thumbnailWidth > 0) {
+             thumb.style.width = `${thumbnailWidth}px`;
         } else {
-            console.warn('pushEcommerceEvent function is not defined. Cannot push view_item.');
+             // Fallback: let CSS handle it or set a default small size?
+             thumb.style.width = '60px'; // Example fallback width
         }
-        // --- GA4 view_item 이벤트 푸시 끝 ---
-
-        // 콘텐츠 로드 후 여백 조정
-        setTimeout(function() {
-            var gnbHeight = document.querySelector('.gnb').offsetHeight;
-            detailDiv.style.marginTop = (gnbHeight + 20) + 'px'; // 20px는 추가 여백
-        }, 100); // 약간의 지연을 줘서 콘텐츠가 완전히 로드되도록 함
-    }
-}
-
-// 이미지 갤러리 이벤트 리스너 함수 수정
-function addImageGalleryListeners(product) {
-    const mainImage = document.getElementById('mainProductImage');
-    const thumbnailContainer = document.getElementById('thumbnailContainer');
-
-    if (thumbnailContainer) {
-        thumbnailContainer.addEventListener('click', function(event) {
-            if (event.target.classList.contains('thumbnail')) {
-                const clickedIndex = parseInt(event.target.getAttribute('data-index'));
-                mainImage.src = product.images[clickedIndex];
-                mainImage.alt = `${product.name} - Image ${clickedIndex + 1}`;
-
-                // 활성 썸네일 표시
-                thumbnailContainer.querySelectorAll('.thumbnail').forEach(thumb => {
-                    thumb.classList.remove('active');
-                });
-                event.target.classList.add('active');
-            }
-        });
-    }
-}
-
-// 이미지 갤러리 생성 함수 추가
-function createImageGallery(product) {
-    const mainImage = document.getElementById('mainProductImage');
-    const thumbnailContainer = document.getElementById('thumbnailContainer');
-
-    // 이미지 리스트 가져오기
-    const imageList = product.images || [product.image]; // images 배열이 없으면 기본 이미지 사용
-
-    // 메인 이미지 설정
-    mainImage.src = imageList[0];
-    mainImage.alt = product.name;
-
-    // 썸네일 이미지 생성
-    thumbnailContainer.innerHTML = ''; // 기존 썸네일 초기화
-    imageList.forEach((imageSrc, index) => {
-        const thumbImg = document.createElement('img');
-        thumbImg.src = imageSrc;
-        thumbImg.classList.add('thumbnail');
-        if (index === 0) thumbImg.classList.add('active');
-        thumbImg.alt = `${product.name} Thumbnail ${index + 1}`;
-        thumbnailContainer.appendChild(thumbImg);
-
-        // 썸네일 클릭 이벤트
-        thumbImg.addEventListener('click', function() {
-            mainImage.src = imageSrc;
-            document.querySelectorAll('.thumbnail').forEach(thumb => thumb.classList.remove('active'));
-            this.classList.add('active');
-        });
+        // CSS handles height: auto
     });
+
+     // After setting widths, allow wrapping if needed and make visible again
+     thumbnailContainer.style.flexWrap = 'wrap'; // Allow wrapping after calculation
+     thumbnailContainer.style.overflow = 'visible';
 }
+
+// --- MODIFY loadProductDetail FUNCTION ---
+async function loadProductDetail() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = parseInt(urlParams.get('id')); // Ensure ID is number if needed
+
+    // Ensure product data is loaded (assuming window.products is populated)
+    if (!window.products || window.products.length === 0) {
+        console.error("Product data not loaded yet.");
+        // Optionally display an error message to the user
+        document.getElementById('productDetail').innerHTML = '<p>상품 데이터를 로드하는 중 오류가 발생했습니다.</p>';
+        return;
+    }
+
+    const product = window.products.find(p => p.id === productId);
+    const productInfoDiv = document.querySelector('.product-info'); // Target for name, price etc.
+    const productDetailDiv = document.getElementById('productDetail'); // Overall container
+
+
+    if (product && productInfoDiv && productDetailDiv) {
+        // Clear previous info if reusing the page dynamically
+        productInfoDiv.innerHTML = '';
+        // ... (potentially clear other sections like description, reviews) ...
+
+        // --- Populate Product Info ---
+         // (Assuming you have elements inside .product-info or create them here)
+         productInfoDiv.innerHTML = `
+            <h2>${product.name}</h2>
+            <div class="price">
+                ${product.discountRate ? `<span class="discount">${product.discountRate}%</span>` : ''}
+                <span class="current-price">${product.price.toLocaleString()}원</span>
+                ${product.originalPrice ? `<span class="original-price">${product.originalPrice.toLocaleString()}원</span>` : ''}
+            </div>
+            <div class="quantity">
+                <label for="quantityInput">수량:</label>
+                <input type="number" id="quantityInput" value="1" min="1">
+            </div>
+            <button onclick="window.addToCartWithQuantity(${product.id})">장바구니 담기</button>
+            <button onclick="window.buyNowWithQuantity(${product.id})">바로 구매</button>
+            <!-- Add other info like description summary if needed -->
+        `;
+
+
+        // --- Populate Image Gallery ---
+        const mainImage = document.getElementById('mainProductImage');
+        const thumbnailContainer = document.getElementById('thumbnailContainer');
+
+        if (mainImage && product.images && product.images.length > 0) {
+            mainImage.src = product.images[0];
+            mainImage.alt = product.name;
+
+             // Add onload listener to main image to trigger adjustment *after* it loads
+             mainImage.onload = () => {
+                // console.log("Main image loaded, adjusting thumbnails.");
+                adjustThumbnailSizes();
+             };
+             // If the image is already cached, onload might not fire, trigger manually too
+             if (mainImage.complete) {
+                 // console.log("Main image already complete, adjusting thumbnails.");
+                // Use timeout to ensure layout calculation is possible
+                 setTimeout(adjustThumbnailSizes, 0);
+             }
+
+        } else if (mainImage) {
+             mainImage.src = 'images/placeholder.png'; // Fallback image
+             mainImage.alt = 'Placeholder Image';
+        }
+
+
+        if (thumbnailContainer && product.images && product.images.length > 0) {
+            thumbnailContainer.innerHTML = ''; // Clear existing thumbnails
+            product.images.forEach((imgSrc, index) => {
+                const thumb = document.createElement('img');
+                thumb.src = imgSrc;
+                thumb.alt = `${product.name} thumbnail ${index + 1}`;
+                thumb.classList.add('thumbnail');
+                if (index === 0) {
+                    thumb.classList.add('active');
+                }
+                thumb.onclick = () => {
+                    if (mainImage) mainImage.src = imgSrc;
+                    thumbnailContainer.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                    thumb.classList.add('active');
+                     // Re-adjust sizes might be needed if main image aspect ratio changes significantly
+                     // setTimeout(adjustThumbnailSizes, 0);
+                };
+                thumbnailContainer.appendChild(thumb);
+            });
+        } else if (thumbnailContainer) {
+             thumbnailContainer.innerHTML = ''; // Clear if no images
+        }
+
+        // --- Populate Description/Details/Reviews ---
+        // (Your existing code to populate these sections)
+        const featuresList = document.getElementById('productFeatures');
+        if(featuresList && product.features) {
+            featuresList.innerHTML = product.features.map(f => `<li>${f}</li>`).join('');
+        }
+        const ingredientsList = document.getElementById('productIngredients');
+         if(ingredientsList && product.ingredients) {
+            ingredientsList.innerHTML = product.ingredients.map(i => `<li>${i}</li>`).join('');
+        }
+        const usageP = document.getElementById('productUsage');
+        if(usageP) usageP.textContent = product.usage || '';
+
+        const infoTable = document.getElementById('productInfoTable');
+        if(infoTable && product.infoTable) {
+             infoTable.innerHTML = Object.entries(product.infoTable).map(([key, value]) => `<tr><td>${key}</td><td>${value}</td></tr>`).join('');
+        }
+
+        // Load reviews (assuming function exists)
+        window.loadReviews(productId);
+
+
+        // --- GA4 view_item 이벤트 푸시 ---
+         if (typeof pushEcommerceEvent === 'function') {
+            const urlParams = new URLSearchParams(window.location.search);
+            const listName = urlParams.get('list_name') || 'Product Detail'; // Get list name from URL or default
+            const listId = urlParams.get('list_id') || 'detail_page';     // Get list id from URL or default
+
+             const itemData = {
+                item_id: product.id.toString(),
+                item_name: product.name,
+                // affiliation: "Google Merchandise Store", // Optional
+                // coupon: "", // Optional
+                currency: "KRW",
+                discount: product.originalPrice ? (product.originalPrice - product.price) : undefined,
+                // index: 0, // Optional: index in a list if applicable
+                item_brand: product.brand || "Unknown Brand",
+                item_category: product.category || "Unknown Category",
+                // item_category2: "Apparel",
+                // item_category3: "T-shirts",
+                // item_category4: "",
+                // item_category5: "",
+                item_list_id: listId, // From referring list if available
+                item_list_name: listName, // From referring list if available
+                // item_variant: "green", // Optional
+                // location_id: "ChIJIQBpAG2ahYAR_6128GcTUEo", // Optional
+                price: product.price,
+                quantity: 1 // Default quantity for view_item is 1
+            };
+            pushEcommerceEvent('view_item', {
+                currency: "KRW",
+                value: product.price,
+                items: [itemData]
+            });
+        } else {
+            console.warn('pushEcommerceEvent function is not defined. Cannot push view_item event.');
+        }
+        // --- End GA4 Event ---
+
+
+        // --- Adjust Thumbnails (Moved earlier to main image onload/complete) ---
+        // setTimeout(adjustThumbnailSizes, 0); // Removed from here
+
+
+    } else {
+        console.error(`Product with ID ${productId} not found.`);
+        if (productDetailDiv) {
+             productDetailDiv.innerHTML = '<p>상품 정보를 찾을 수 없습니다.</p>';
+        }
+    }
+}
+
+// --- ADD RESIZE LISTENER ---
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    // Only run adjustThumbnails if we are potentially on a product detail page
+    if (document.getElementById('thumbnailContainer')) {
+        resizeTimeout = setTimeout(adjustThumbnailSizes, 250); // Debounce resize events
+    }
+});
 
 window.createProductItem = function(product, listName, index) {
     var item = document.createElement('div');

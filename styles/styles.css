@@ -1419,3 +1419,48 @@ footer {
 }
 
 /* ... rest of the styles ... */
+
+/* === Product Detail Page Specific Styles (Revision for Dynamic Thumbnails) === */
+/* ... (.product-detail-container, .product-detail, .product-image-gallery, .main-image styles remain mostly the same) ... */
+
+.thumbnail-images {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping initially */
+    justify-content: flex-start; /* Align left */
+    gap: var(--space-sm, 8px); /* Use variable or default gap */
+    width: 100%; /* Match parent (gallery) width */
+    padding: 0; /* Remove previous padding if any */
+    overflow: hidden; /* Hide potential overflow during calculation */
+}
+
+/* More specific selector for thumbnails */
+.thumbnail-images .thumbnail {
+    display: block;
+    /* width: auto; /* Width will be set by JS */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 80px; /* Optional: Limit max height visually */
+    object-fit: contain; /* Show whole image, maintain ratio */
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: border-color 0.2s ease-in-out;
+    /* Override potential global img styles interfering */
+    max-width: none;
+    flex-shrink: 0; /* Prevent shrinking before JS resize */
+}
+
+.thumbnail-images .thumbnail.active,
+.thumbnail-images .thumbnail:hover {
+    border-color: #4a4a7d; /* Highlight */
+}
+
+/* --- Media Query for Desktop Layout (Revision) --- */
+@media (min-width: 768px) {
+     /* ... other desktop styles like .product-detail, .product-image-gallery, .product-info widths ... */
+
+    .thumbnail-images {
+        /* justify-content: flex-start; /* Already set */
+    }
+}
+
+/* ... other styles ... */
