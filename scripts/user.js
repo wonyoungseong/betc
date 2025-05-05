@@ -121,6 +121,18 @@ const globalHandleLogout = (e) => {
     window.logout(); // Call the actual logout logic function
 };
 
+// --- Named Event Handlers for Login/Signup Links ---
+const handleLoginLinkClick = (e) => {
+    e.preventDefault();
+    console.log("Login link clicked"); // 로그 추가
+    window.showLoginModal();
+};
+
+const handleSignupLinkClick = (e) => {
+    e.preventDefault();
+    console.log("Signup link clicked"); // 로그 추가
+    window.showSignupModal();
+};
 
 window.logout = function() {
     console.log("Entering logout function"); // 로그 추가
@@ -271,29 +283,19 @@ function addEventListeners() {
     const signupLink = document.getElementById('signupLink');
 
     if (loginLink) {
-        // Define handler locally for removal/addition clarity
-        const handleLoginLinkClick = (e) => {
-            e.preventDefault();
-            console.log("Login link clicked"); // 로그 추가
-            window.showLoginModal();
-        };
+        // Define handler locally for removal/addition clarity - REMOVED
         // Use the same function reference for remove and add
-        loginLink.removeEventListener('click', handleLoginLinkClick);
-        loginLink.addEventListener('click', handleLoginLinkClick);
+        loginLink.removeEventListener('click', handleLoginLinkClick); // Use named handler
+        loginLink.addEventListener('click', handleLoginLinkClick);  // Use named handler
     } else {
         // console.warn("Login link not found");
     }
 
     if (signupLink) {
-        // Define handler locally for removal/addition clarity
-        const handleSignupLinkClick = (e) => {
-            e.preventDefault();
-            console.log("Signup link clicked"); // 로그 추가
-            window.showSignupModal();
-        };
+        // Define handler locally for removal/addition clarity - REMOVED
         // Use the same function reference for remove and add
-        signupLink.removeEventListener('click', handleSignupLinkClick);
-        signupLink.addEventListener('click', handleSignupLinkClick);
+        signupLink.removeEventListener('click', handleSignupLinkClick); // Use named handler
+        signupLink.addEventListener('click', handleSignupLinkClick);  // Use named handler
     } else {
         // console.warn("Signup link not found");
     }
@@ -354,16 +356,31 @@ function addEventListeners() {
 }
 
 // Make functions globally accessible if needed (Remove updateMainContentMargin)
-window.addEventListeners = addEventListeners;
+// window.addEventListeners = addEventListeners; // No longer need to make global if called from DOMContentLoaded
 
 
 // Simplified DOMContentLoaded - Remove initial margin update call
 document.addEventListener('DOMContentLoaded', () => {
-    requestAnimationFrame(() => {
-        // Removed margin update call as it's handled by CSS now
-    });
-    // Ensure body class is reset on load
+    // Call checkAuthStatus to set initial button visibility and cart count
+    if (typeof window.checkAuthStatus === 'function') {
+        window.checkAuthStatus();
+    } else {
+         console.error("checkAuthStatus function not found on DOMContentLoaded");
+    }
+
+    // Add all event listeners after DOM is ready
+    addEventListeners(); // Call the setup function here
+
+    // Removed requestAnimationFrame for margin update
+
+    // Ensure body class is reset on load (moved from previous location)
     document.body.classList.remove('mobile-nav-active');
+
+    // Option 3: Call updateCartCount here if needed independently,
+    // but checkAuthStatus already calls it.
+    // if (typeof window.updateCartCount === 'function') {
+    //     window.updateCartCount();
+    // }
 });
 
 // --- NEW FUNCTION: Update Cart Count in Header ---

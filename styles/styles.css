@@ -411,9 +411,7 @@ button:hover {
 }
 
 /* === 메인 콘텐츠 영역 === */
-.main-content {
-    /* JS로 제어 예정 */
-}
+/* Removed empty .main-content rule formerly at Ln 414 */
 
 
 /* === 모달 스타일 === */
@@ -694,6 +692,7 @@ button:hover {
 /* Ensure product grid within this section uses the general .product-list styles */
 .product-grid-section .product-list {
     /* Styles are inherited from general .product-list */
+    /* Removed empty rule formerly at Ln 1411 */
 }
 
 /* === 히어로 섹션 스타일 === */
@@ -1020,9 +1019,7 @@ footer {
          min-width: 120px; /* Ensure space */
          margin-top: 0;
     }
-    .purchase-product {
-       /* Adjustments if needed */
-    }
+    /* Removed empty .purchase-product rule formerly at Ln 695 */
 
 }
 
@@ -1295,8 +1292,8 @@ footer {
         order: 1; /* Form on the left */
     }
     /* Remove bottom margin rules from inside media query if applied outside */
-    .checkout-form-column .checkout-section { margin-bottom: var(--space-xl); }
-    .checkout-form-column .checkout-section:last-child { margin-bottom: 0; }
+    /* .checkout-form-column .checkout-section { margin-bottom: var(--space-xl); } */
+    /* .checkout-form-column .checkout-section:last-child { margin-bottom: 0; } */
 
 
     .checkout-summary-column {
@@ -1307,8 +1304,8 @@ footer {
         top: calc(100px + 30px + var(--space-lg)); /* Adjust 100px if header height differs */
     }
     /* Remove bottom margin rules from inside media query if applied outside */
-    .checkout-summary-column .checkout-section { margin-bottom: var(--space-xl); }
-    .checkout-summary-column .checkout-section:last-child { margin-bottom: 0; }
+    /* .checkout-summary-column .checkout-section { margin-bottom: var(--space-xl); } */
+    /* .checkout-summary-column .checkout-section:last-child { margin-bottom: 0; } */
 
 
     /* REMOVE or comment out the old complex responsive rule for .checkout-container children */
@@ -1371,27 +1368,32 @@ footer {
 
 .thumbnail-images {
     display: flex;
-    flex-wrap: nowrap; /* Prevent wrapping initially */
-    justify-content: flex-start; /* Align left */
-    gap: var(--space-sm, 8px); /* Use variable or default gap */
-    width: 100%; /* Match parent (gallery) width */
-    padding: 0; /* Remove previous padding if any */
-    overflow: hidden; /* Hide potential overflow during calculation */
+    flex-wrap: nowrap; /* Explicitly prevent wrapping */
+    justify-content: flex-start;
+    gap: var(--space-sm, 8px); /* Use gap for spacing */
+    width: 100%;
+    padding: var(--space-sm) 0; /* Remove horizontal padding, keep vertical */
+    overflow-x: auto; /* Allow horizontal scroll if needed, instead of wrapping */
+    -webkit-overflow-scrolling: touch; /* Smooth scroll on touch devices */
+    /* Optionally hide scrollbar visually */
+     /* scrollbar-width: none; /* Firefox */ */
+     /* &::-webkit-scrollbar { display: none; } /* Chrome, Safari, Opera */ */
 }
 
-/* More specific selector for thumbnails (Aspect Ratio) */
+/* More specific selector for thumbnails */
 .thumbnail-images .thumbnail {
     display: block;
     /* width is set by JS */
-    height: auto; /* Maintain aspect ratio */
-    /* max-height: 80px; /* Remove or comment out max-height limit */
-    object-fit: contain; /* Show whole image within calculated width/auto height */
+    height: auto;
+    object-fit: contain;
     cursor: pointer;
     border: 2px solid transparent;
     border-radius: 4px;
     transition: border-color 0.2s ease-in-out;
-    max-width: none; /* Keep this override */
+    max-width: none;
     flex-shrink: 0;
+    margin: 0; /* Remove individual margins */
+    box-sizing: border-box; /* Ensure padding/border included in width */
 }
 
 .thumbnail-images .thumbnail.active,
@@ -1403,9 +1405,7 @@ footer {
 @media (min-width: 768px) {
      /* ... other desktop styles like .product-detail, .product-image-gallery, .product-info widths ... */
 
-    .thumbnail-images {
-        /* justify-content: flex-start; /* Already set */
-    }
+    /* Removed empty .thumbnail-images rule formerly at Ln 1023 */
 }
 
 /* ... other styles ... */
@@ -1503,12 +1503,11 @@ footer {
     padding-top: var(--space-xl); /* 섹션 내부 상단 패딩 */
     border-top: 1px solid #eee; /* 구분선 */
     width: 100%; /* 전체 너비 사용 */
+    /* Removed empty rule content/comment formerly at Ln 1035 */
 }
 
 /* 확인: 기존 .product-description, .product-details, .reviews 관련 스타일 중 */
 /* width, clear 속성이 있다면 제거하거나 이 규칙으로 덮어쓰기 */
-
-/* ... (기존에 상세 정보 섹션에 적용되던 다른 스타일 유지 또는 추가) ... */
 
 
 /* --- 데스크탑 레이아웃 재확인 및 적용 --- */
@@ -1531,8 +1530,7 @@ footer {
     .product-info {
         width: 60%; /* 또는 적절한 비율 */
         /* Optional: Sticky info section */
-        /* position: sticky; */
-        /* top: 100px; */
+        /* Removed empty rule content formerly at Ln 1030 */
     }
     /* 상세 정보 섹션은 미디어 쿼리 밖에 있어 자동으로 full-width가 됨 */
 }
@@ -1963,3 +1961,53 @@ footer {
        margin-top: 0 !important; /* Reinforce */
     }
 }
+
+/* --- Form Group Styles (Refined) --- */
+/* Apply specifically to shipping info for now */
+.checkout-page .shipping-info .form-group {
+    margin-bottom: var(--space-lg); /* Increase bottom margin */
+}
+
+.checkout-page .shipping-info .form-group label {
+    display: block;
+    margin-bottom: var(--space-sm); /* Space between label and input */
+    font-weight: 600; /* Slightly bolder label */
+    font-size: 0.95em;
+    color: #444; /* Slightly darker label color */
+}
+
+/* Consistent Input/Textarea Styling */
+.checkout-page .shipping-info .form-group input[type="text"],
+.checkout-page .shipping-info .form-group input[type="email"],
+.checkout-page .shipping-info .form-group input[type="tel"],
+.checkout-page .shipping-info .form-group textarea {
+    width: 100%;
+    padding: var(--space-md); /* Consistent padding (e.g., 16px) */
+    border: 1px solid #ccc; /* Standard border */
+    border-radius: 4px; /* Slightly rounded corners */
+    font-size: 1em;
+    line-height: 1.4; /* Improve text readability */
+    background-color: #fff; /* Ensure white background */
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition for focus */
+    box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+/* Focus State */
+.checkout-page .shipping-info .form-group input[type="text"]:focus,
+.checkout-page .shipping-info .form-group input[type="email"]:focus,
+.checkout-page .shipping-info .form-group input[type="tel"]:focus,
+.checkout-page .shipping-info .form-group textarea:focus {
+    outline: none; /* Remove default outline */
+    border-color: #4a4a7d; /* Highlight border with theme color */
+    box-shadow: 0 0 0 2px rgba(74, 74, 125, 0.2); /* Add subtle glow */
+}
+
+.checkout-page .shipping-info .form-group textarea {
+    min-height: 100px; /* Increase min-height */
+    resize: vertical;
+} /* <<< Added missing closing brace */
+
+/* Remove old general form styles if they conflict */
+/* Example: Check for existing .form-group input rules outside checkout */
+
+/* ... Rest of checkout and other styles ... */
