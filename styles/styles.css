@@ -342,10 +342,14 @@ div#productList {
 
 .product-item img {
     display: block;
-    max-width: 100%; /* Prevent image from exceeding parent width */
-    height: auto; /* Maintain aspect ratio */
-    margin-bottom: var(--space-md);
-    border-radius: 4px;
+    width: 100%; /* Revert back to width: 100% */
+    max-width: 100%; /* Keep max-width as a safeguard */
+    height: auto; /* 비율 유지 */
+    aspect-ratio: 1 / 1; /* 1:1 비율 유지 (선호에 따라 조정) */
+    object-fit: cover; /* 컨테이너에 맞춰 이미지 자르기 */
+    margin-bottom: var(--space-md); /* 이미지와 텍스트 사이 간격 */
+    border-radius: 4px; /* 이미지 모서리 둥글게 (선택 사항) */
+    box-sizing: border-box; /* Explicitly set box-sizing */
 }
 
 .product-item h3 {
@@ -1817,8 +1821,25 @@ footer {
     .logo a {
         font-size: 18px; /* 로고 더 작게 */
     }
+     .search-bar {
+         /* Ensure flex behavior */
+         display: flex;
+         align-items: center;
+     }
      .search-bar input#searchInput {
-         max-width: 120px; /* 더 좁은 화면에서 검색창 더 작게 */
+         /* Allow input to shrink */
+         flex-grow: 1;
+         min-width: 0; /* Important for shrinking */
+         /* Remove fixed max-width */
+         /* max-width: 120px; */
+         /* Adjust padding if needed */
+         padding: 8px 10px;
+         font-size: 13px;
+     }
+     .search-bar button {
+         /* Prevent button from shrinking */
+         flex-shrink: 0;
+         padding: 8px 12px;
      }
     .user-menu {
         gap: var(--space-xs); /* 아이콘 간격 줄이기 */
@@ -1884,8 +1905,12 @@ footer {
 /* Product Item Image (기존 규칙과 병합) */
 .product-item img {
     display: block;
-    max-width: 100%; /* Prevent image from exceeding parent width */
-    height: auto; /* Maintain aspect ratio */
-    margin-bottom: var(--space-md);
-    border-radius: 4px;
+    width: 100%; /* Revert back to width: 100% */
+    max-width: 100%; /* Keep max-width as a safeguard */
+    height: auto; /* 비율 유지 */
+    aspect-ratio: 1 / 1; /* 1:1 비율 유지 (선호에 따라 조정) */
+    object-fit: cover; /* 컨테이너에 맞춰 이미지 자르기 */
+    margin-bottom: var(--space-md); /* 이미지와 텍스트 사이 간격 */
+    border-radius: 4px; /* 이미지 모서리 둥글게 (선택 사항) */
+    box-sizing: border-box; /* Explicitly set box-sizing */
 }
