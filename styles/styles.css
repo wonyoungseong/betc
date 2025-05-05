@@ -1785,10 +1785,10 @@ footer {
     }
     /* Hide the original search bar */
     .search-bar {
-        display: none; /* Hide original search bar */
-        order: 4; /* Keep order in case needed later */
+        display: none !important; /* Hide original search bar */
+        order: 4;
         flex-basis: 100%;
-        margin-top: 0; /* Remove top margin */
+        margin-top: 0;
     }
     /* Show hamburger menu */
     .hamburger-menu {
@@ -1826,11 +1826,76 @@ footer {
          box-sizing: border-box;
          display: block;
      }
+
+    /* Show mobile search in nav */
+    .mobile-search-item {
+        display: list-item; /* Show as list item */
+    }
+}
+
+/* Reset styles for wider screens */
+@media screen and (min-width: 769px) {
+    /* Ensure original search bar is visible */
+    .search-bar {
+        display: flex !important; /* Show original search bar */
+        order: initial; /* Reset order */
+        flex-basis: auto; /* Reset basis */
+        margin-top: 0;
+        /* Restore other default styles if needed */
+        flex-grow: 1;
+        min-width: 150px;
+        max-width: 500px;
+    }
+
+    /* Ensure mobile search item is hidden */
+    .mobile-search-item {
+        display: none !important; /* Hide mobile search item */
+    }
+
+    /* Ensure hamburger is hidden */
+    .hamburger-menu {
+        display: none !important;
+    }
+
+    /* Ensure desktop nav is visible and styled correctly */
+    nav#mainNav {
+        display: block !important; /* Desktop nav should be visible */
+        order: initial;
+        width: auto;
+        position: static;
+        background-color: #3a3a6d; /* Or original desktop color */
+        z-index: auto;
+    }
+    nav#mainNav ul {
+        flex-direction: row; /* Horizontal nav */
+        align-items: center;
+        padding: 0;
+        justify-content: center; /* Center nav items */
+    }
+    nav#mainNav li {
+        width: auto;
+        text-align: left;
+        border-bottom: none; /* Remove mobile separator */
+    }
+     nav#mainNav li:last-child {
+         border-bottom: none;
+     }
+    nav#mainNav a {
+         padding: 15px 0; /* Desktop padding */
+         width: auto;
+         display: block;
+     }
+
+     /* Ensure desktop user menu text links are visible */
+     .user-menu a:not(.icon-link) {
+        display: inline; /* Show text links again */
+    }
 }
 
 /* Style for mobile search inside nav */
 .mobile-search-item {
-    padding: 10px 20px; /* Match nav item padding */
+    display: none; /* Hidden by default */
+    padding: 10px 20px;
 }
 .mobile-search-form {
     display: flex;
