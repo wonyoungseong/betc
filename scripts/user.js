@@ -27,44 +27,61 @@ window.checkAuthStatus = function() {
 
 
 window.showLoginModal = function() {
+    console.log("Entering showLoginModal"); // 로그 추가
     var loginModal = document.getElementById('loginModal');
-    loginModal.style.display = 'block';
-    document.getElementById('loginUsername').focus(); // 모달이 열릴 때 포커스 설정
+    if (loginModal) {
+        loginModal.style.display = 'block';
+        const usernameInput = document.getElementById('loginUsername');
+        if (usernameInput) usernameInput.focus(); // 모달이 열릴 때 포커스 설정
+    } else {
+        console.error("Login modal element not found!");
+    }
 }
 
 window.showSignupModal = function() {
+    console.log("Entering showSignupModal"); // 로그 추가
     var signupModal = document.getElementById('signupModal');
-    signupModal.style.display = 'block';
-    document.getElementById('signupUsername').focus(); // 모달이 열릴 때 포커스 설정
+    if (signupModal) {
+        signupModal.style.display = 'block';
+        const usernameInput = document.getElementById('signupUsername');
+        if (usernameInput) usernameInput.focus(); // 모달이 열릴 때 포커스 설정
+    } else {
+        console.error("Signup modal element not found!");
+    }
 }
 
 window.closeLoginModal = function() {
+    console.log("Entering closeLoginModal"); // 로그 추가
     var loginModal = document.getElementById('loginModal');
-    loginModal.style.display = 'none';
+    if(loginModal) loginModal.style.display = 'none';
 }
 
 window.closeSignupModal = function() {
+    console.log("Entering closeSignupModal"); // 로그 추가
     var signupModal = document.getElementById('signupModal');
-    signupModal.style.display = 'none';
+    if(signupModal) signupModal.style.display = 'none';
 }
 
 window.login = function() {
-    var username = document.getElementById('loginUsername').value.trim();
+    console.log("Entering login function"); // 로그 추가
+    var usernameInput = document.getElementById('loginUsername');
+    if (!usernameInput) return; // Prevent error if element not found
+    var username = usernameInput.value.trim();
     if (username) {
         window.currentUser = { username: username };
         localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
         window.checkAuthStatus();
-        
-        // --- GA4 login 이벤트 푸시 (pushGeneralEvent 사용) --- 
+
+        // --- GA4 login 이벤트 푸시 (pushGeneralEvent 사용) ---
         if (typeof pushGeneralEvent === 'function') {
              pushGeneralEvent('login');
         } else {
             console.warn('pushGeneralEvent function is not defined. Cannot push login event.');
         }
         // --- 이벤트 푸시 끝 ---
-        
+
         alert(`${username}님으로 로그인되었습니다.`);
-        window.closeLoginModal();
+        window.closeLoginModal(); // Ensure modal closes
     } else {
         alert('사용자 이름을 입력하세요.');
     }
@@ -72,33 +89,49 @@ window.login = function() {
 
 
 window.signup = function() {
-    var username = document.getElementById('signupUsername').value.trim();
-    if (username) {
+    console.log("Entering signup function"); // 로그 추가
+    var usernameInput = document.getElementById('signupUsername');
+    if (!usernameInput) return; // Prevent error if element not found
+    var username = usernameInput.value.trim();
+     if (username) {
         window.currentUser = { username: username };
         localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
         window.checkAuthStatus();
 
-        // --- GA4 sign_up 이벤트 푸시 (pushGeneralEvent 사용) --- 
+        // --- GA4 sign_up 이벤트 푸시 (pushGeneralEvent 사용) ---
         if (typeof pushGeneralEvent === 'function') {
              pushGeneralEvent('sign_up');
         } else {
             console.warn('pushGeneralEvent function is not defined. Cannot push sign_up event.');
         }
         // --- 이벤트 푸시 끝 ---
-        
+
         alert(`${username}님으로 회원가입 및 로그인되었습니다.`);
-        window.closeSignupModal();
+        window.closeSignupModal(); // Ensure modal closes
     } else {
         alert('사용자 이름을 입력하세요.');
     }
 }
 
+// Rename the globally defined handleLogout slightly to avoid confusion
+// with potential local variables if this file structure changes later.
+const globalHandleLogout = (e) => {
+    e.preventDefault();
+    console.log("Entering handleLogout (Logout link clicked)"); // 로그 위치 변경 및 함수 이름 명확화
+    window.logout(); // Call the actual logout logic function
+};
+
+
 window.logout = function() {
+    console.log("Entering logout function"); // 로그 추가
     if (confirm('로그아웃 하시겠습니까?')) {
+        console.log("Logout confirmed"); // 로그 추가
         window.currentUser = null;
         localStorage.removeItem('currentUser');
         window.checkAuthStatus();
         alert('로그아웃되었습니다.');
+    } else {
+        console.log("Logout cancelled"); // 로그 추가
     }
 }
 
@@ -201,13 +234,6 @@ const handleMobileSearchInputKeypress = (event) => {
     }
 };
 
-const handleLogout = (e) => {
-    e.preventDefault();
-    console.log("Logout link clicked"); // 로그 추가
-    window.logout();
-};
-
-
 // Event listeners setup function
 function addEventListeners() {
     // --- Hamburger Menu ---
@@ -276,8 +302,54 @@ function addEventListeners() {
      const logoutLink = document.getElementById('logoutLink');
      if (logoutLink) {
          // handleLogout must be defined in a scope accessible here
-         logoutLink.removeEventListener('click', handleLogout); // Assumes handleLogout is accessible
-         logoutLink.addEventListener('click', handleLogout);
+         logoutLink.removeEventListener('click', globalHandleLogout); // Assumes handleLogout is accessible
+         logoutLink.addEventListener('click', globalHandleLogout);
+     }
+
+    // --- Modal Close Buttons --- ADDED/VERIFIED
+    const closeLoginModalBtn = document.getElementById('closeLoginModal');
+    const closeSignupModalBtn = document.getElementById('closeSignupModal');
+
+    if(closeLoginModalBtn) {
+        closeLoginModalBtn.removeEventListener('click', window.closeLoginModal);
+        closeLoginModalBtn.addEventListener('click', window.closeLoginModal);
+    }
+     if(closeSignupModalBtn) {
+        closeSignupModalBtn.removeEventListener('click', window.closeSignupModal);
+        closeSignupModalBtn.addEventListener('click', window.closeSignupModal);
+    }
+
+    // --- Modal Submit Buttons --- ADDED/VERIFIED (though login has inline onclick)
+    const loginSubmitBtn = document.getElementById('loginSubmit');
+    const signupSubmitBtn = document.getElementById('signupSubmit');
+
+    if(loginSubmitBtn){
+        // Remove existing inline listener if migrating fully to JS listeners
+        if (loginSubmitBtn.hasAttribute('onclick')) {
+             console.log("Removing inline onclick from login submit");
+             loginSubmitBtn.removeAttribute('onclick');
+        }
+        loginSubmitBtn.removeEventListener('click', window.login);
+        loginSubmitBtn.addEventListener('click', window.login);
+    }
+     if(signupSubmitBtn){
+        signupSubmitBtn.removeEventListener('click', window.signup);
+        signupSubmitBtn.addEventListener('click', window.signup);
+    }
+
+     // --- Modal Enter Key Listeners --- ADDED/VERIFIED
+     const loginUsernameInput = document.getElementById('loginUsername');
+     const signupUsernameInput = document.getElementById('signupUsername');
+
+     if(loginUsernameInput){
+         const handleLoginEnter = (event) => { if (event.key === 'Enter') { event.preventDefault(); window.login(); }};
+         loginUsernameInput.removeEventListener('keypress', handleLoginEnter);
+         loginUsernameInput.addEventListener('keypress', handleLoginEnter);
+     }
+     if(signupUsernameInput){
+         const handleSignupEnter = (event) => { if (event.key === 'Enter') { event.preventDefault(); window.signup(); }};
+         signupUsernameInput.removeEventListener('keypress', handleSignupEnter);
+         signupUsernameInput.addEventListener('keypress', handleSignupEnter);
      }
 }
 
@@ -287,8 +359,10 @@ window.addEventListeners = addEventListeners;
 
 // Simplified DOMContentLoaded - Remove initial margin update call
 document.addEventListener('DOMContentLoaded', () => {
-    // No initial margin update needed here anymore
-    // Ensure the body class is not active on initial load
+    requestAnimationFrame(() => {
+        // Removed margin update call as it's handled by CSS now
+    });
+    // Ensure body class is reset on load
     document.body.classList.remove('mobile-nav-active');
 });
 

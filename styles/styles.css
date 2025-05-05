@@ -21,7 +21,7 @@ body {
     background-color: #f8f9fa; /* Light background */
     /* Prevent horizontal scroll caused by potential overflow */
     overflow-x: hidden; 
-    padding-top: 100px; /* Default header height estimation */
+    padding-top: calc(100px + 30px); /* Default header height + 30px buffer */
     transition: padding-top 0.3s ease; /* Smooth transition */
 }
 
@@ -101,7 +101,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    padding-top: 100px; /* Default header height estimation */
+    padding-top: calc(100px + 30px); /* Default header height + 30px buffer */
     transition: padding-top 0.3s ease; /* Smooth transition */
 }
 
@@ -2008,13 +2008,13 @@ footer {
 @media screen and (max-width: 768px) {
     body {
         /* Adjust default padding for potentially different mobile header height */
-         padding-top: 80px; /* Example: Adjust if mobile header base height is different */
+         padding-top: calc(80px + 30px); /* Mobile header height + 30px buffer */
     }
 
     body.mobile-nav-active {
         /* Increase padding-top when mobile nav is open */
         /* Use the observed 170px or measure accurately */
-        padding-top: 170px; /* ADJUST THIS VALUE */
+        padding-top: calc(170px + 30px); /* Header + Nav height + 30px buffer */
     }
 
     nav#mainNav {
