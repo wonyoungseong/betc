@@ -1594,3 +1594,189 @@ footer {
 }
 
 /* existing styles ... */
+
+/* === Cart Page Layout & Item Refinement === */
+
+/* New Layout Container (Desktop First) */
+.cart-layout-container {
+    display: flex;
+    flex-direction: column; /* Mobile first: stack */
+    gap: var(--space-xl);
+}
+
+.cart-items-column {
+    width: 100%; /* Full width on mobile */
+}
+
+.cart-summary-column {
+    width: 100%; /* Full width on mobile */
+}
+
+/* Cart items styling (adjust existing .cart-items if needed) */
+.cart-items {
+    border: none; /* Remove previous border if using column wrapper */
+    border-radius: 0;
+    overflow: visible; /* Reset overflow */
+    margin-bottom: 0; /* Remove margin if using column wrapper */
+}
+
+/* Cart Item Refinement */
+.cart-item {
+    /* display: flex; */ /* Already set */
+    /* align-items: center; */ /* Already set */
+    padding: var(--space-md);
+    border-bottom: 1px solid #eee;
+    gap: var(--space-md);
+    /* flex-wrap: wrap; */ /* Already set */
+    position: relative; /* For potential absolute positioning inside */
+}
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.cart-item-image {
+    width: 80px; /* Reduced size */
+    height: 80px; /* Reduced size */
+    object-fit: contain; /* Changed to contain to see full image */
+    flex-shrink: 0; /* Prevent image from shrinking */
+    border-radius: 4px;
+    border: 1px solid #eee; /* Add subtle border */
+}
+
+.item-details {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    min-width: 120px; /* Adjust min-width */
+}
+
+.item-name {
+    font-weight: bold;
+    font-size: 1em; /* Adjust size if needed */
+    margin-bottom: var(--space-xs); /* Add space below name */
+}
+
+.item-price {
+    color: #555;
+    font-size: 0.9em; /* Adjust size */
+}
+
+.item-quantity {
+    display: flex;
+    align-items: center;
+    min-width: 100px; /* Adjust size */
+    justify-content: center; /* Center quantity control */
+    gap: var(--space-sm);
+}
+.item-quantity input {
+     width: 45px; /* Adjust size */
+     padding: var(--space-xs);
+     text-align: center;
+     border: 1px solid #ccc;
+     border-radius: 4px;
+}
+
+.item-total {
+    font-weight: bold;
+    min-width: 90px; /* Adjust size */
+    text-align: right;
+    font-size: 1em;
+}
+
+.remove-button {
+    /* Styles already set */
+    /* Optional: Make it smaller/icon */
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.9em;
+    margin-left: auto;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color .2s ease;
+}
+.remove-button:hover {
+    background-color: #c0392b;
+}
+
+/* Summary Column Styling (Desktop) */
+.cart-summary {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: var(--space-lg);
+    background-color: #f8f9fa;
+}
+
+.cart-summary h3 {
+    font-size: 1.4em;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-md);
+    font-size: 1em;
+    color: #555;
+}
+.summary-row.total-row {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #333;
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
+    border-top: 1px solid #ddd;
+}
+.cart-summary hr {
+    border: none;
+    border-top: 1px dashed #ddd;
+    margin: var(--space-lg) 0;
+}
+
+.cart-summary .checkout-button {
+    /* Inherits general button styles */
+    margin-top: var(--space-lg);
+}
+
+
+/* --- Media Query for Cart Desktop Layout --- */
+@media (min-width: 992px) { /* Adjust breakpoint for two columns */
+    .cart-layout-container {
+        flex-direction: row;
+        align-items: flex-start; /* Align columns to top */
+        gap: var(--space-xl);
+    }
+
+    .cart-items-column {
+        flex: 2; /* Example ratio */
+        min-width: 0; /* Allow shrinking */
+    }
+
+    .cart-summary-column {
+        flex: 1; /* Example ratio */
+        min-width: 280px; /* Minimum width for summary */
+        position: sticky; /* Make summary sticky */
+        top: 100px; /* Adjust based on header height + desired gap */
+    }
+}
+
+/* --- Media Query adjustment for smaller mobiles if needed --- */
+@media (max-width: 480px) {
+     .cart-item {
+         /* Further stack elements if needed */
+         /* Example: */
+         /* flex-direction: column; */
+         /* align-items: flex-start; */
+     }
+     /* Adjust other elements like button size */
+     .remove-button {
+         align-self: flex-end;
+     }
+}
+
+/* existing styles ... */
