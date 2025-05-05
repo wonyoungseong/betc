@@ -52,10 +52,12 @@
     <script src="scripts/cart.js"></script>
     <script src="scripts/review.js"></script>
     <script>
-        function initializePage() {
+        async function initializePage() {
+            await window.loadProductData();
             checkAuthStatus();
+            window.addEventListeners();
+            window.updateCartCount();
             loadPurchaseHistory();
-            addEventListeners();
         }
         includeHTML(initializePage);
     </script>

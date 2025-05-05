@@ -30,6 +30,7 @@
             await window.loadProductData();
             window.checkAuthStatus();
             window.addEventListeners();
+            window.updateCartCount();
             const urlParams = new URLSearchParams(window.location.search);
             const query = urlParams.get('query');
             if (query) {

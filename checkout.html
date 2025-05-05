@@ -68,6 +68,7 @@
         async function initializePage() {
             await window.loadProductData();
             checkAuthStatus();
+            window.updateCartCount();
 
             // --- GA4 begin_checkout 이벤트 푸시 (페이지 로드 시) ---
             const currentUserId = window.currentUser ? window.currentUser.username : 'guest';
@@ -111,6 +112,10 @@
             // --- End GA4 Event ---
 
             loadOrderSummary();
+            const form = document.getElementById('checkoutForm');
+            if (form) {
+                form.addEventListener('submit', window.completePurchase);
+            }
         }
         
         function loadOrderSummary() {

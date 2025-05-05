@@ -296,3 +296,41 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+// --- NEW FUNCTION: Update Cart Count in Header ---
+window.updateCartCount = function() {
+    const cartCountElement = document.getElementById('cartCount'); // 헤더의 카트 수량 표시 요소 ID
+    if (!cartCountElement) {
+        // console.warn("Cart count element (#cartCount) not found in header.");
+        return; // 요소가 없으면 중단
+    }
+
+    const currentUserId = window.currentUser ? window.currentUser.username : 'guest';
+    const cartData = JSON.parse(localStorage.getItem('cart')) || [];
+    const userCart = cartData.filter(item => item.userId === currentUserId);
+
+    // Calculate total quantity
+    const totalQuantity = userCart.reduce((sum, item) => sum + item.quantity, 0);
+
+    // Update the cart count display
+    if (totalQuantity > 0) {
+        cartCountElement.textContent = totalQuantity;
+        cartCountElement.style.display = 'block'; // Show the count
+    } else {
+        cartCountElement.textContent = '0';
+        cartCountElement.style.display = 'none'; // Hide count if cart is empty
+    }
+};
+
+// --- Consider calling updateCartCount on initial page load ---
+// Option 1: Add window.updateCartCount(); to each page's initializePage function (Recommended)
+// Option 2: Modify checkAuthStatus (Less direct)
+/*
+window.checkAuthStatus = function() {
+    // ... (existing login/logout link logic) ...
+    window.updateCartCount(); // Call cart count update here as well
+};
+*/
+
+// Option 3: Call on DOMContentLoaded (might be too early if cart depends on other async ops)
+// document.addEventListener('DOMContentLoaded', window.updateCartCount);

@@ -108,12 +108,12 @@
     <script src="scripts/subscribe.js"></script>
     <script src="scripts/user.js"></script>
     <script>
-        // Function to run after includes
-        function initializePage() {
-            // Assume subscribe.js and user.js setup their own listeners or expose init functions
-            window.checkAuthStatus(); 
-            window.addEventListeners(); // From user.js?
-            // If subscribe.js has an init function, call it here.
+        async function initializePage() {
+            await window.loadProductData();
+            checkAuthStatus();
+            window.updateCartCount();
+            window.addEventListeners();
+            window.initializeSubscribeForm();
         }
         includeHTML(initializePage);
     </script>
