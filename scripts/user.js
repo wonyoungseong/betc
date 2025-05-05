@@ -155,34 +155,29 @@ function cancelPurchase(index) {
     }
 }
 
-// Function to update main content margin based on header/nav bottom position
+// Function to update main content margin based on header/nav height
 function updateMainContentMargin() {
     const header = document.querySelector('header.gnb');
     const mainContent = document.querySelector('main.main-content');
     const mainNav = document.getElementById('mainNav');
 
-    if (header && mainContent) {
-        let marginTop = 0;
-        const headerBottom = header.getBoundingClientRect().bottom;
-
-        // Check if mobile nav is active AND displayed
-        if (mainNav && mainNav.classList.contains('active') && window.getComputedStyle(mainNav).display !== 'none') {
-            // If nav is active and displayed, use its bottom position relative to the viewport top
-            const navBottom = mainNav.getBoundingClientRect().bottom;
-            // Use the larger of the two bottom positions
-            marginTop = Math.max(headerBottom, navBottom);
-        } else {
-            // Otherwise, use the header's bottom position
-            marginTop = headerBottom;
-        }
-
-        // Ensure margin is not negative (e.g., if header is off-screen) and apply
-        mainContent.style.marginTop = `${Math.max(0, marginTop)}px`;
-        // console.log('Updated main margin-top:', Math.max(0, marginTop)); // Debugging log
-
-    } else {
-        // console.warn('Header or Main Content not found for margin update.'); // Debugging log
+    if (!header || !mainContent) {
+        // console.warn('Header or Main Content element not found for margin update.');
+        return;
     }
+
+    let marginTop = header.offsetHeight; // Start with header height
+
+    // Check if mobile nav is active AND displayed
+    if (mainNav && mainNav.classList.contains('active') && window.getComputedStyle(mainNav).display !== 'none') {
+        // If nav is active, add its height to the margin
+        // Use offsetHeight as it includes padding and borders
+        marginTop += mainNav.offsetHeight;
+    }
+
+    // Ensure margin is not negative and apply
+    mainContent.style.marginTop = `${Math.max(0, marginTop)}px`;
+    // console.log(`Calculated marginTop: ${marginTop}px`); // Debugging log
 }
 
 // Debounce function
@@ -199,14 +194,16 @@ const debounce = (func, wait) => {
 };
 
 // --- Named Event Handlers ---
-// Use named functions to allow easy removal of listeners
 
+// Refined hamburger click handler with potential double requestAnimationFrame for timing
 const handleHamburgerClick = () => {
     const mainNav = document.getElementById('mainNav');
     if (mainNav) {
         mainNav.classList.toggle('active');
-        // Update margin AFTER style change has likely rendered
-        requestAnimationFrame(updateMainContentMargin);
+        // Double rAF for potentially better timing after style toggle
+        requestAnimationFrame(() => {
+             requestAnimationFrame(updateMainContentMargin);
+        });
     }
 };
 
@@ -258,7 +255,6 @@ function addEventListeners() {
     // --- Hamburger Menu ---
     const hamburgerMenu = document.getElementById('hamburgerMenu');
     if (hamburgerMenu) {
-        // Remove first to prevent duplicates if this runs multiple times
         hamburgerMenu.removeEventListener('click', handleHamburgerClick);
         hamburgerMenu.addEventListener('click', handleHamburgerClick);
     } else {
@@ -298,7 +294,6 @@ function addEventListeners() {
     }
 
     // --- Resize Listener ---
-    // Ensure only one resize listener for margin updates exists
     window.removeEventListener('resize', debouncedUpdateMargin);
     window.addEventListener('resize', debouncedUpdateMargin);
 }
@@ -310,15 +305,9 @@ window.addEventListeners = addEventListeners;
 
 // Simplified DOMContentLoaded - relies on initializePage in each HTML file
 document.addEventListener('DOMContentLoaded', () => {
-    // The initial call to updateMainContentMargin is crucial here,
-    // possibly after a slight delay or using requestAnimationFrame
-    // to ensure the header (potentially included) is rendered.
     requestAnimationFrame(() => {
         updateMainContentMargin();
     });
-
-    // Note: checkAuthStatus, updateCartCount etc. should be called within
-    // the initializePage function specific to each HTML file, *after* includeHTML.
 });
 
 // --- NEW FUNCTION: Update Cart Count in Header ---
