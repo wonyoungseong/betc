@@ -372,20 +372,51 @@ function loadOrderSummary() {
 }
 
 window.addToCartWithQuantity = function(productId) {
+    var quantityInput = document.getElementById('quantityInput'); // Correct ID used in product-detail.html
+    var quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+
+    if (isNaN(quantity) || quantity < 1) {
+        alert('올바른 수량을 입력해주세요.');
+        return;
+    }
+
     const product = window.products.find(p => p.id === productId);
     if (!product) return;
-    
-    const quantity = parseInt(document.getElementById('quantity').value) || 1;
-    
+
+    // --- GA4 add_to_cart 이벤트 푸시 시작 ---
+    const ecommerceData = {
+        currency: 'KRW', // 통화 코드
+        value: (product.price * quantity), // 아이템 가격 * 수량
+        items: [{
+            item_id: product.id.toString(),
+            item_name: product.name,
+            affiliation: product.affiliation || '뷰티 코스메틱 쇼핑몰',
+            coupon: product.coupon || undefined,
+            discount: product.originalPrice ? (product.originalPrice - product.price) : undefined, // Per item discount
+            // index: ???, // Should probably get index if available in context
+            item_brand: product.brand || undefined,
+            item_category: product.category || undefined,
+            price: product.price,
+            quantity: quantity
+        }]
+    };
+    if (typeof pushEcommerceEvent === 'function') {
+        pushEcommerceEvent('add_to_cart', ecommerceData);
+    } else {
+        console.warn('pushEcommerceEvent function is not defined. Cannot push add_to_cart.');
+    }
+    // --- GA4 add_to_cart 이벤트 푸시 끝 ---
+
     const cartItem = {
         userId: window.currentUser ? window.currentUser.username : 'guest',
         productId: product.id,
         productName: product.name,
         price: product.price,
-        quantity: quantity
+        quantity: quantity,
+         image: product.image // Add image URL to cart item
     };
 
-    const existingItemIndex = cart.findIndex(item => 
+    const existingItemIndex = cart.findIndex(item =>
         item.userId === cartItem.userId && item.productId === cartItem.productId
     );
 
@@ -396,23 +427,11 @@ window.addToCartWithQuantity = function(productId) {
     }
 
     localStorage.setItem('cart', JSON.stringify(cart));
-    
+    window.updateCartCount(); // Update header cart count
+
     if (confirm('장바구니에 추가되었습니다. 장바구니 페이지로 이동하시겠습니까?')) {
         window.location.href = 'cart.html';
     }
-
-    // GTM 이벤트 전송
-    dataLayer.push({
-        'event': 'add_to_cart',
-        'ecommerce': {
-            'items': [{
-                'item_id': product.id,
-                'item_name': product.name,
-                'price': product.price,
-                'quantity': quantity
-            }]
-        }
-    });
 }
 
 window.buyNowWithQuantity = function(productId) {
