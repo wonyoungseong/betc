@@ -84,80 +84,129 @@
     <script src="scripts/cart.js"></script>
     <script src="scripts/review.js"></script>
     <script>
-        async function initializePage() {
-            await window.loadProductData();
-            checkAuthStatus();
-            window.updateCartCount();
-
-            // --- GA4 begin_checkout 이벤트 푸시 (페이지 로드 시) ---
-            const currentUserId = window.currentUser ? window.currentUser.username : 'guest';
-            console.log('[Checkout Debug] Current User ID:', currentUserId);
-            
-            const globalCartString = localStorage.getItem('cart');
-            const globalCart = globalCartString ? JSON.parse(globalCartString) : [];
-            console.log('[Checkout Debug] Cart from localStorage:', JSON.stringify(globalCart));
-            
-            const userCart = globalCart.filter(item => item.userId === currentUserId);
-            console.log('[Checkout Debug] Filtered User Cart:', JSON.stringify(userCart));
-
-            if (userCart.length > 0 && typeof pushEcommerceEvent === 'function') {
-                const ecommerceData = {
-                    currency: 'KRW',
-                    value: userCart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-                    coupon: undefined, // 필요 시 쿠폰 정보 추가
-                    items: userCart.map((item, index) => {
-                        const itemDetails = window.products.find(p => p.id === item.productId);
-                        return {
-                            item_id: item.productId.toString(),
-                            item_name: item.productName,
-                            affiliation: itemDetails?.affiliation || '뷰티 코스메틱 쇼핑몰',
-                            coupon: itemDetails?.coupon || undefined,
-                            discount: itemDetails?.originalPrice ? (itemDetails.originalPrice - item.price) * item.quantity : undefined,
-                            index: index + 1,
-                            item_brand: itemDetails?.brand || undefined,
-                            item_category: itemDetails?.category || undefined,
-                            price: item.price,
-                            quantity: item.quantity
-                        };
-                    })
-                };
-                console.log('[Checkout Debug] Pushing begin_checkout event.');
-                pushEcommerceEvent('begin_checkout', ecommerceData);
-            } else if (userCart.length === 0) {
-                console.log('[Checkout Debug] Cart is considered empty (from localStorage), skipping begin_checkout.');
-            } else {
-                console.warn('[Checkout Debug] pushEcommerceEvent function is not defined.');
-            }
-            // --- End GA4 Event ---
-
-            loadOrderSummary();
-            const form = document.getElementById('checkoutForm');
-            if (form) {
-                form.addEventListener('submit', window.completePurchase);
-            }
-        }
-        
         function loadOrderSummary() {
             const summaryDiv = document.getElementById('orderSummary');
-            const totalPriceDiv = document.getElementById('totalPrice');
-            if (!summaryDiv || !totalPriceDiv) return;
+            const subtotalAmountSpan = document.getElementById('subtotalAmount');
+            const shippingAmountSpan = document.getElementById('shippingAmount');
+            const finalTotalAmountSpan = document.getElementById('finalTotalAmount');
+            const checkoutButton = document.querySelector('.checkout-button');
 
-            const currentUserId = window.currentUser ? window.currentUser.username : 'guest';
-            const globalCartString = localStorage.getItem('cart');
-            const globalCart = globalCartString ? JSON.parse(globalCartString) : [];
-            const userCart = globalCart.filter(item => item.userId === currentUserId);
-            
-            if (userCart.length === 0) {
-                summaryDiv.innerHTML = '<p>주문할 상품이 없습니다.</p>';
-                totalPriceDiv.innerHTML = '0원';
-                const checkoutButton = document.querySelector('.checkout-button');
-                if (checkoutButton) { checkoutButton.disabled = true; }
+            // Check if all elements exist
+            if (!summaryDiv || !subtotalAmountSpan || !shippingAmountSpan || !finalTotalAmountSpan || !checkoutButton) {
+                console.error("One or more summary elements not found in checkout.html");
                 return;
             }
 
-            // ... (rest of loadOrderSummary logic) ...
+            const currentUserId = window.currentUser ? window.currentUser.username : 'guest';
+            const globalCartString = localStorage.getItem('cart');
+            const globalCart = globalCartString ? JSON.parse(globalCartString) : [];
+            const userCart = globalCart.filter(item => item.userId === currentUserId);
+
+            summaryDiv.innerHTML = ''; // Clear previous summary
+            let calculatedSubtotal = 0;
+
+            if (userCart.length === 0) {
+                summaryDiv.innerHTML = '<p>주문할 상품이 없습니다.</p>';
+                subtotalAmountSpan.textContent = '0원';
+                shippingAmountSpan.textContent = '0원'; // Assume 0 shipping if cart is empty
+                finalTotalAmountSpan.textContent = '0원';
+                checkoutButton.textContent = '0원 결제하기';
+                checkoutButton.disabled = true;
+                return;
+            }
+
+            // --- Populate Order Summary Items ---
+            userCart.forEach(item => {
+                const productInfo = window.products.find(p => p.id === item.productId);
+                const imageUrl = productInfo?.image || 'images/placeholder.png';
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'order-item'; // Use existing class if suitable
+
+                itemDiv.innerHTML = `
+                    <img src="${imageUrl}" alt="${item.productName}" class="summary-item-image">
+                    <div class="summary-item-details">
+                        <span class="summary-item-name">${item.productName}</span>
+                        <span class="summary-item-quantity">수량: ${item.quantity}</span>
+                    </div>
+                    <span class="summary-item-total">₩${(item.price * item.quantity).toLocaleString()}</span>
+                `;
+                summaryDiv.appendChild(itemDiv);
+                calculatedSubtotal += item.price * item.quantity;
+            });
+
+            // --- Update Totals ---
+            const shippingCost = 0; // Example: Set shipping cost (can be dynamic)
+            const finalTotal = calculatedSubtotal + shippingCost;
+
+            subtotalAmountSpan.textContent = `₩${calculatedSubtotal.toLocaleString()}`;
+            shippingAmountSpan.textContent = `₩${shippingCost.toLocaleString()}`;
+            finalTotalAmountSpan.textContent = `₩${finalTotal.toLocaleString()}`;
+            checkoutButton.textContent = `₩${finalTotal.toLocaleString()} 결제하기`;
+            checkoutButton.disabled = false;
         }
-        
+
+        // Ensure initializePage correctly calls loadOrderSummary
+        async function initializePage() {
+            await window.loadProductData(); // Ensure product data is loaded first
+            checkAuthStatus();
+            window.addEventListeners(); // Add this line if it was missing
+            window.updateCartCount(); // Ensure this is defined/imported if needed
+
+            // --- GA4 begin_checkout event push logic (Copy from previous version, ensure correct data) ---
+             const currentUserId = window.currentUser ? window.currentUser.username : 'guest';
+             console.log('[Checkout Debug] Current User ID:', currentUserId);
+
+             const globalCartString = localStorage.getItem('cart');
+             const globalCart = globalCartString ? JSON.parse(globalCartString) : [];
+             console.log('[Checkout Debug] Cart from localStorage:', JSON.stringify(globalCart));
+
+             const userCart = globalCart.filter(item => item.userId === currentUserId);
+             console.log('[Checkout Debug] Filtered User Cart:', JSON.stringify(userCart));
+
+             if (userCart.length > 0 && typeof pushEcommerceEvent === 'function') {
+                 const ecommerceData = {
+                     currency: 'KRW',
+                     value: userCart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                     coupon: undefined, // 필요 시 쿠폰 정보 추가
+                     items: userCart.map((item, index) => {
+                         const itemDetails = window.products.find(p => p.id === item.productId);
+                         return {
+                             item_id: item.productId.toString(),
+                             item_name: item.productName,
+                             affiliation: itemDetails?.affiliation || '뷰티 코스메틱 쇼핑몰',
+                             coupon: itemDetails?.coupon || undefined,
+                             // discount: itemDetails?.originalPrice ? (itemDetails.originalPrice - item.price) * item.quantity : undefined, // Recalculate discount correctly if needed
+                             discount: itemDetails?.originalPrice ? (itemDetails.originalPrice - item.price) : undefined, // Discount per item
+                             index: index + 1,
+                             item_brand: itemDetails?.brand || undefined,
+                             item_category: itemDetails?.category || undefined,
+                             price: item.price,
+                             quantity: item.quantity
+                         };
+                     })
+                 };
+                 console.log('[Checkout Debug] Pushing begin_checkout event.');
+                 pushEcommerceEvent('begin_checkout', ecommerceData);
+             } else if (userCart.length === 0) {
+                 console.log('[Checkout Debug] Cart is considered empty (from localStorage), skipping begin_checkout.');
+             } else {
+                 console.warn('[Checkout Debug] pushEcommerceEvent function is not defined.');
+             }
+            // --- End GA4 Event ---
+
+            loadOrderSummary(); // Call the updated function
+
+            // Ensure checkout form submit listener is correctly attached
+            const form = document.getElementById('checkoutForm');
+            if (form) {
+                 // The onsubmit attribute in HTML handles the call to completePurchase
+                 // Ensure window.completePurchase is globally accessible (likely defined in cart.js)
+            } else {
+                 console.error("Checkout form not found");
+            }
+        }
+
+        // includeHTML call remains the same
         includeHTML(initializePage);
     </script>
 </body>
