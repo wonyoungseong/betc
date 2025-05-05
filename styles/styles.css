@@ -1599,10 +1599,10 @@ footer {
 
 /* New Layout Container (Desktop First) */
 .cart-layout-container {
-    display: flex;
-    flex-wrap: wrap; /* 화면이 좁을 때 아래로 떨어지도록 */
-    gap: var(--space-lg); /* 컬럼 사이 간격 */
-    align-items: flex-start; /* 상단 정렬 */
+    display: flex !important; /* 임시 테스트용 */
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+    align-items: flex-start;
 }
 
 .cart-items-column {
