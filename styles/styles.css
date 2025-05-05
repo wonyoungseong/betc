@@ -1,4 +1,5 @@
-/* === CSS Reset & Basic Defaults === */
+\
+/* General Reset & Base Styles */
 *,
 *::before,
 *::after {
@@ -8,424 +9,439 @@
 }
 
 html {
-    /* Improves scroll behavior */
+    font-size: 16px; /* Base font size */
     scroll-behavior: smooth;
-    /* Base font size for rem units */
-    font-size: 16px; 
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Example font stack */
+    font-family: 'Arial', sans-serif; /* Simple, readable font */
     line-height: 1.6;
     color: #333;
     background-color: #f8f9fa; /* Light background */
-    /* Prevent horizontal scroll caused by potential overflow */
-    overflow-x: hidden; 
-    padding-top: calc(100px + 30px); /* Default header height + 30px buffer */
-    transition: padding-top 0.3s ease; /* Smooth transition */
+    padding-top: calc(80px + 30px); /* Default header height + buffer */
+    transition: padding-top 0.3s ease-in-out; /* Smooth transition for padding */
 }
 
 img,
-picture,
-video,
-canvas,
-svg {
-    display: block; /* Remove extra space below images */
+video {
     max-width: 100%;
     height: auto;
+    display: block;
 }
 
 input,
 button,
-textarea,
-select {
-    font: inherit; /* Inherit font styles */
+select,
+textarea {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
 }
 
 a {
-    color: inherit; /* Inherit text color */
-    text-decoration: none; /* Remove underline */
+    text-decoration: none;
+    color: inherit;
 }
 
 ul,
 ol {
-    list-style: none; /* Remove default list styles */
+    list-style: none;
 }
 
-/* === Spacing System (CSS Variables) === */
+/* Variables */
 :root {
+    --color-primary: #4a4a7d; /* Deep purple */
+    --color-secondary: #7a7abf; /* Lighter purple */
+    --color-accent: #f7b731; /* Yellow accent */
+    --color-text: #333333;
+    --color-text-light: #777777;
+    --color-border: #dddddd;
+    --color-border-light: #eeeeee;
+    --color-background: #ffffff;
+    --color-background-alt: #f8f9fa;
     --space-xs: 4px;
     --space-sm: 8px;
     --space-md: 16px;
     --space-lg: 24px;
     --space-xl: 32px;
     --space-xxl: 48px;
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
 }
 
-/* === Basic Layout Container === */
+/* Main Content Area */
 .main-content {
-    /* Add padding for mobile first */
-    padding: var(--space-md);
-    max-width: 1200px; /* Example max width for larger screens */
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 0 !important; /* Override any inline styles if necessary */
+    max-width: 1200px; /* Limit content width */
+    margin: 0 auto;    /* Center content */
+    padding: var(--space-lg);
+    min-height: calc(100vh - 150px); /* Ensure content fills space above footer */
+    /* margin-top is removed, use body padding-top instead */
 }
 
-/* Example Media Query for larger screens (adjust breakpoint as needed) */
 @media (min-width: 768px) {
     .main-content {
-        padding: var(--space-lg);
+        padding: var(--space-xl);
     }
 }
 
-/* === GNB 고정 및 스크롤 설정 === */
+
+/* Global Navigation Bar (GNB) */
 .gnb {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    height: 80px; /* GNB의 실제 높이에 맞게 조정하세요 */
-    background-color: #4a4a7d;
-    color: white;
-    padding: 10px 0;
+    /* GNB styles */
 }
 
-/* === 기본 스타일 === */
+/* Body padding adjustment for mobile nav */
 body {
-    font-family: 'Noto Sans KR', sans-serif;
-    color: #333;
-    margin: 0;
-    padding: 0; /* Reset padding */
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    padding-top: calc(100px + 30px); /* Default header height + 30px buffer */
-    transition: padding-top 0.3s ease; /* Smooth transition */
+    /* Default padding-top is set above */
 }
 
+body.mobile-nav-active {
+    /* Padding adjusted by JS if needed, or set fixed if nav height is fixed */
+     padding-top: calc(80px + 70px + 30px); /* Example: header + nav + buffer */
+}
+
+
+/* Header & Footer Containers */
 .header-container, .footer-container, main {
-    max-width: 1400px; /* 1200px에서 1400px로 증가 */
-    margin: 0 auto;
-    padding: 0 20px;
     width: 100%;
-    box-sizing: border-box;
+    margin: 0 auto;
 }
 
-/* === 헤더 스타일 === */
-header {
-    background-color: #4a4a7d;
+.header-container {
+    background-color: var(--color-primary);
     color: white;
-    padding: 10px 0;
-    font-family: Arial, sans-serif;
-    position: fixed; /* Make header fixed */
+    padding: var(--space-sm) 0; /* Reduced vertical padding */
+}
+
+
+/* Header Styles */
+header {
+    display: flex;
+    flex-direction: column; /* Stack header-top and nav vertically */
+    width: 100%;
+    background-color: var(--color-primary);
+    color: white;
+    position: fixed; /* Fixed header */
     top: 0;
     left: 0;
-    right: 0;
-    z-index: 1001; /* Ensure header is above GNB if GNB exists */
-    height: 100px; /* Explicit height for header */
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .header-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: var(--space-sm) var(--space-lg); /* Adjusted padding */
     max-width: 1200px;
-    margin: 0 auto;
-    gap: var(--space-md); /* 요소 사이 간격 추가 */
+    margin: 0 auto; /* Center content */
+    width: 100%;
+    height: 80px; /* Fixed height for header top */
+    box-sizing: border-box;
 }
 
+
+/* Logo Styles */
 .logo a {
+    font-size: 1.5em;
+    font-weight: bold;
     color: white;
     text-decoration: none;
-    font-size: 24px; /* 기본 크기 */
-    font-weight: bold;
-    white-space: nowrap; /* 줄바꿈 방지 */
-    overflow: hidden; /* 넘칠 경우 숨김 */
-    text-overflow: ellipsis; /* 넘칠 경우 ... 표시 */
-    display: block; /* overflow 적용 위해 */
-    /* 반응형 폰트 크기는 @media 쿼리에서 조정 가능 */
 }
 
+.logo img {
+    max-height: 40px; /* Adjust logo size */
+    width: auto;
+}
+
+/* Search Bar Styles */
 .search-bar {
     display: flex;
     align-items: center;
-    /* width: 40%; 제거 */
-    flex-grow: 1; /* 남은 공간 차지 */
-    min-width: 150px; /* 최소 너비 설정 (조정 가능) */
-    max-width: 500px; /* 최대 너비 설정 (선택 사항) */
     background-color: white;
-    border-radius: 20px;
-    overflow: hidden;
+    border-radius: var(--border-radius-md);
+    padding: var(--space-xs) var(--space-sm);
+    flex-grow: 0.5; /* Allow search bar to grow but not too much */
+    max-width: 400px; /* Limit max width */
 }
 
+
 .search-bar input {
-    width: 100%;
-    padding: 10px 15px;
     border: none;
-    font-size: 14px;
-    min-width: 0; /* flex 아이템이 작아질 수 있도록 */
+    outline: none;
+    padding: var(--space-sm);
+    flex-grow: 1; /* Input takes available space */
+    min-width: 100px; /* Prevent input from becoming too small */
 }
 
 .search-bar button {
-    background-color: transparent;
+    background: none;
     border: none;
-    padding: 10px 15px;
     cursor: pointer;
-    flex-shrink: 0; /* 버튼 크기 유지 */
+    padding: var(--space-xs);
 }
 
 .search-bar button img {
     width: 20px;
     height: 20px;
-    display: block; /* 이미지 정렬 */
+    display: block; /* Ensure image behaves well */
 }
 
+/* User Menu Styles */
 .user-menu {
     display: flex;
     align-items: center;
-    flex-shrink: 0; /* 사용자 메뉴 크기 유지 */
-    gap: var(--space-sm); /* 아이템 간 간격 */
+    gap: var(--space-md); /* Space between menu items */
 }
 
 .user-menu a {
     color: white;
     text-decoration: none;
-    /* margin-left: 15px; 제거 (gap 사용) */
-    font-size: 14px;
-    white-space: nowrap; /* 링크 내 줄바꿈 방지 */
+    font-size: 0.9em;
+    display: flex; /* Align icon and text */
+    align-items: center;
+    gap: var(--space-xs); /* Space between icon and text */
 }
 
-/* Icon link specific styles (reusing existing .icon-link) */
 .icon-link img {
-    width: 24px; /* 기본 아이콘 크기 */
+    width: 24px; /* Icon size */
     height: 24px;
-    filter: invert(1); /* 흰색 아이콘 */
-    display: block;
+    filter: brightness(0) invert(1); /* Make icons white */
 }
 
-/* Logout icon specific style adjustment if needed */
+
 #logoutLink img {
-     width: 20px; /* 로그아웃 아이콘 크기 조정 */
-     height: 20px;
+    /* Specific styles for logout icon if needed */
 }
 
 .cart-count {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background-color: #ff4d4d;
-    color: white;
-    font-size: 12px;
-    padding: 2px 6px;
+    background-color: var(--color-accent);
+    color: var(--color-primary);
     border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.7em;
+    font-weight: bold;
+    margin-left: -8px; /* Position count relative to icon */
+    margin-top: -10px;
+    display: inline-block; /* Make it inline */
+    min-width: 18px; /* Ensure it's somewhat circular */
+    text-align: center;
 }
 
-/* === 네비게이션 스타일 (mainNav) === */
+
+/* Main Navigation Styles */
 nav#mainNav { /* More specific selector */
-    background-color: #3a3a6d;
-    border-top: 1px solid #5a5a8d;
+    background-color: #ffffff; /* White background for nav */
+    width: 100%; /* Full width */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow */
+    height: 50px; /* Fixed nav height */
+    display: flex; /* Use flex for alignment */
+    justify-content: center; /* Center the nav items container */
 }
 
 nav#mainNav ul {
-    display: flex;
-    justify-content: center;
-    list-style-type: none;
+    list-style: none;
     padding: 0;
     margin: 0;
-    max-width: 1200px;
-    margin: 0 auto;
+    display: flex; /* Horizontal layout */
+    height: 100%; /* Match nav height */
+    /* Removed justify-content: center; center in parent */
 }
 
 nav#mainNav li {
-    margin: 0 10px; /* Adjusted margin */
+    position: relative; /* For submenu positioning */
+    display: flex; /* Align items vertically */
+    align-items: center;
 }
 
 nav#mainNav a {
-    display: block;
-    padding: 15px 0; /* Adjusted padding */
-    color: white;
+    color: var(--color-primary); /* Use primary color for text */
     text-decoration: none;
-    font-size: 16px;
+    padding: 0 var(--space-lg); /* Horizontal padding */
+    font-weight: 500;
+    line-height: 50px; /* Vertically center text in nav */
+    display: block; /* Make link fill the space */
+    transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 nav#mainNav a:hover {
-    color: #ff4d4d;
+    color: var(--color-secondary); /* Lighter purple on hover */
+    background-color: var(--color-background-alt); /* Subtle background */
 }
 
 nav#mainNav ul li:hover > ul.submenu {
-    display: block;
+    display: block; /* Show submenu on hover */
 }
 
 nav#mainNav ul.submenu {
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
-    min-width: 150px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+    top: 100%; /* Position below parent */
+    left: 0;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 0 0 var(--border-radius-md) var(--border-radius-md); /* Rounded bottom corners */
+    z-index: 1001;
+    min-width: 180px; /* Ensure submenu has enough width */
+    padding: var(--space-sm) 0; /* Padding top/bottom */
 }
 
 nav#mainNav ul.submenu li {
-    display: block;
-    margin: 0; /* Reset margin */
+    width: 100%; /* Submenu items take full width */
+    display: block; /* Stack items vertically */
 }
 
 nav#mainNav ul.submenu li a {
-    padding: 10px 15px;
-    color: #333; /* Submenu text color */
+    color: var(--color-primary);
+    padding: var(--space-sm) var(--space-md); /* Padding for submenu items */
+    line-height: normal; /* Reset line height */
+    display: block; /* Make links block level */
+    white-space: nowrap; /* Prevent text wrapping */
 }
 
 nav#mainNav ul.submenu li a:hover {
-    background-color: #f1f1f1;
+    background-color: var(--color-background-alt);
+    color: var(--color-secondary);
 }
 
-/* === 메인 콘텐츠 스타일 === */
+/* Main Content General Styles */
 main {
-    flex-grow: 1;
-    padding: 20px 0;
+    /* padding-top ensures content starts below fixed header */
+    /* padding-top is handled by body padding */
 }
 
-/* === 제품 목록 스타일 === */
-/* Default layout: Grid */
+
+/* Product List Styles */
 .products { 
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Default 4 columns */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid */
     gap: var(--space-lg);
-    justify-content: center; 
-    align-items: stretch; 
+    padding: 0; /* Remove padding if container handles it */
+    margin-top: var(--space-lg); /* Add space above product list */
+    width: 100%; /* Ensure it takes full width */
 }
 
-/* Adjust columns for medium screens */
-@media screen and (max-width: 992px) {
-    .products { 
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
+/* No media queries needed if default is grid */
 
-/* Adjust columns for small-medium screens */
-@media screen and (max-width: 768px) {
-    .products { 
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-/* Adjust columns for very small screens */
-@media screen and (max-width: 480px) {
-    .products { 
-        grid-template-columns: repeat(1, 1fr); /* Single column */
-        gap: var(--space-md); /* Reduce gap */
-    }
-}
 
 div#productList { /* Style for the ID if needed */
-    /* Now handled by .products */
+    /* Specific styles for the product list container */
 }
 
 .product-item {
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 15px;
-    background-color: #fff;
-    text-align: left; /* Reset text alignment */
-    display: block; /* Default display for grid layout */
-    width: auto; /* Allow grid to control width */
-    margin-bottom: 0; /* Use gap from parent grid */
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-md);
+    padding: var(--space-md);
+    text-align: center;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Space out content vertically */
+    overflow: hidden; /* Prevent content overflow */
+    height: 100%; /* Make items fill grid cell height */
 }
 
 .product-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .product-item img {
+    max-width: 100%;
+    height: 200px; /* Fixed height for product images */
+    object-fit: contain; /* Changed from cover to show full image */
+    margin: 0 auto var(--space-md) auto; /* Center image and add bottom margin */
     display: block;
-    width: 100%; /* Revert back to width: 100% */
-    max-width: 100%; /* Keep max-width as a safeguard */
-    height: auto; /* 비율 유지 */
-    aspect-ratio: 1 / 1; /* 1:1 비율 유지 (선호에 따라 조정) */
-    object-fit: cover; /* 컨테이너에 맞춰 이미지 자르기 */
-    margin-bottom: var(--space-md); /* 이미지와 텍스트 사이 간격 */
-    border-radius: 4px; /* 이미지 모서리 둥글게 (선택 사항) */
-    box-sizing: border-box; /* Explicitly set box-sizing */
+    border-radius: var(--border-radius-sm); /* Slight rounding */
+    transition: opacity 0.3s ease;
+}
+.product-item:hover img {
+    opacity: 0.9;
 }
 
 .product-item h3 {
-    margin: 10px 0;
-    color: #333;
-    font-size: 16px; /* Adjusted font size */
+    font-size: 1.1em;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+    overflow: hidden; /* Prevent long titles from breaking layout */
+    text-overflow: ellipsis;
+    white-space: nowrap; /* Keep title on one line */
 }
 
-.product-item p {
-    margin: 5px 0;
-    color: #666;
+.product-item p { /* General paragraph style within item */
+    font-size: 0.9em;
+    color: var(--color-text-light);
+    margin-bottom: var(--space-sm);
 }
 
 .product-item .price {
+    font-size: 1.2em;
     font-weight: bold;
-    color: #4a4a7d;
+    color: var(--color-primary);
+    margin-top: auto; /* Push price to the bottom */
+    padding-top: var(--space-sm); /* Add space above price */
 }
 
 .product-item .discount {
-    color: #e74c3c;
-    margin-right: 5px;
+    color: #e74c3c; /* Discount color */
+    font-size: 0.9em;
+    margin-right: var(--space-xs);
 }
 
 .product-item .original-price {
+    font-size: 0.8em;
+    color: var(--color-text-light);
     text-decoration: line-through;
-    color: #999;
-    font-size: 0.9em;
+    margin-left: var(--space-xs);
 }
 
-/* 기존 링크 스타일 제거 */
+
 .product-item a {
     text-decoration: none;
-    color: inherit;
+    color: inherit; /* Inherit color from parent */
+    display: block; /* Make link cover the item content area */
+    flex-grow: 1; /* Allow link to fill space */
 }
 
-/* Removed redundant .product-list rule */
-
-/* === 버튼 스타일 === */
+/* General Button Styles (if not defined elsewhere) */
 button {
-    background-color: #333;
-    color: #fff;
+    background-color: var(--color-primary);
+    color: white;
     border: none;
-    padding: 10px;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--border-radius-sm);
     cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #555;
+    background-color: var(--color-secondary);
 }
 
-/* === 메인 콘텐츠 영역 === */
-/* Removed empty .main-content rule formerly at Ln 414 */
-
-
-/* === 모달 스타일 === */
+/* Modal Styles */
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1001; /* Sit on top */
     left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: var(--space-xl);
     border: 1px solid #888;
-    width: 80%;
-    max-width: 400px;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 500px; /* Maximum width */
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .close {
@@ -445,958 +461,1045 @@ button:hover {
 
 .modal input {
     width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    box-sizing: border-box; /* 패딩과 보더를 포함한 크기를 계산 */
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
 }
 
 .modal button {
     width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
+    padding: var(--space-md);
+    font-size: 1.1em; /* Slightly larger font for modal buttons */
 }
 
-/* === 반응형 디자인 === */
-/* Removed outdated product-item width rules */
-
-/* === 카테고리 탭 스타일 === */
+/* Category Tabs */
 .category-tabs {
-    margin-bottom: 20px;
+    margin-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
 }
-
 .category-tab {
-    padding: 10px 20px;
-    margin-right: 10px;
-    background-color: #f0f0f0;
-    border: none;
+    display: inline-block;
+    padding: var(--space-sm) var(--space-md);
+    margin-right: var(--space-sm);
     cursor: pointer;
-    transition: background-color 0.3s;
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .category-tab:hover {
-    background-color: #e0e0e0;
+    background-color: var(--color-background-alt);
+    border-color: var(--color-border-light);
 }
-
 .category-tab.active {
-    background-color: #007bff;
-    color: white;
+    background-color: var(--color-background);
+    border-color: var(--color-border);
+    border-bottom: 1px solid var(--color-background); /* Blend with content area */
+    font-weight: bold;
 }
 
+/* Product Grid (Alternative display if needed) */
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+    gap: var(--space-lg);
 }
 
-/* Removed duplicated product-item rules */
 
-
+/* Product List Page Specific Layout */
 .product-list-container {
     display: flex;
-    flex-direction: column; /* Mobile first: stack */
     gap: var(--space-lg);
-    /* Inherits padding and max-width from .main-content if wrapped */
-    max-width: 1200px; /* Or adjust as needed */
-    margin: 0 auto;    /* Center the container */
-    padding: var(--space-md); /* Add padding for mobile */
+    margin-top: var(--space-lg);
 }
 
+/* Sidebar Styles */
 .category-sidebar {
-    width: 100%; /* Full width on mobile */
-    /* Add some styling for the sidebar */
+    width: 200px; /* Fixed width for sidebar */
+    flex-shrink: 0; /* Prevent sidebar from shrinking */
+    background-color: var(--color-background);
     padding: var(--space-md);
-    background-color: #fff; /* White background */
-    border: 1px solid #eee;
-    border-radius: 4px;
-    margin-bottom: var(--space-lg); /* Space below sidebar on mobile */
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--color-border-light);
+    align-self: flex-start; /* Align to top */
+    position: sticky; /* Make sidebar sticky */
+    top: calc(80px + 50px + 30px + var(--space-lg)); /* Adjust based on header/nav height + buffer */
 }
 
 .category-sidebar h3 {
-    margin-bottom: var(--space-md);
-    padding-bottom: var(--space-sm);
-    border-bottom: 1px solid #eee;
     font-size: 1.2em;
+    margin-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border-light);
+    padding-bottom: var(--space-sm);
 }
 
 .category-list li {
     margin-bottom: var(--space-sm);
 }
-
 .category-list a {
-    padding: var(--space-xs) 0;
-    display: block;
+    color: var(--color-text);
     transition: color 0.2s ease;
+    display: block; /* Ensure full width clickable */
+    padding: var(--space-xs) 0; /* Add some padding */
 }
 
 .category-list a:hover,
-.category-list a.active {
-    color: #4a4a7d; /* Theme color */
-    font-weight: bold;
+.category-list a.active { /* Style for active category */
+    color: var(--color-primary);
+    font-weight: 500;
 }
 
+/* Main Product Grid Section */
 .product-grid-section {
-    width: 100%; /* Full width on mobile */
+    flex-grow: 1; /* Takes remaining space */
 }
 
 .sort-options {
-    margin-bottom: var(--space-md);
-    text-align: right; /* Align sort dropdown/buttons to the right */
+    margin-bottom: var(--space-lg);
+    display: flex;
+    justify-content: flex-end; /* Align sort to the right */
+    align-items: center;
 }
-
 .sort-options label {
     margin-right: var(--space-sm);
+    font-size: 0.9em;
+}
+.sort-options select {
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--color-border);
 }
 
-/* --- Media Query for Desktop Product List Container --- */
-@media (min-width: 768px) { /* Adjust breakpoint as needed */
-    .product-list-container {
-        flex-direction: row; /* Side-by-side layout */
-        align-items: flex-start; /* Align items to top */
-        gap: var(--space-xl);
-        padding: var(--space-lg); /* Increase padding */
-    }
+/* Media Query for Desktop Layout (Product List Page) */
+/* No longer needed if sidebar is always present */
 
-    .category-sidebar {
-        width: 250px; /* Fixed width for sidebar */
-        flex-shrink: 0; /* Prevent sidebar from shrinking */
-        margin-bottom: 0; /* Remove bottom margin */
-        /* Optional: Make sidebar sticky */
-        /* position: sticky; */
-        /* top: 100px; */ /* Adjust based on header height */
-    }
-
-    .product-grid-section {
-        flex-grow: 1; /* Allow grid to take remaining space */
-    }
+.product-grid-section .products { /* Ensure products grid within section uses correct styles */
+    /* Inherits from global .products style */
+    margin-top: 0; /* Remove top margin if sort options provide spacing */
 }
 
-/* Ensure product grid within this section uses the general .products styles */
-.product-grid-section .products { /* Changed from .product-list */
-    /* Styles are inherited from general .products */
-}
 
-/* === 히어로 섹션 스타일 === */
+/* --- index.html Specific Styles --- */
+
+/* Hero Section */
 .hero {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../images/cosmetic-bg.jpg'); /* Add overlay */
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    height: 600px; /* 또는 원하는 높이 */
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 0 50px;
-    position: relative;
+    padding: var(--space-xxl) var(--space-lg);
+    text-align: center;
+    color: white;
+    position: relative; /* For pseudo-element overlay */
+    border-radius: 0 0 var(--border-radius-md) var(--border-radius-md); /* Rounded bottom */
+    margin: calc(-1 * var(--space-lg)) calc(-1 * var(--space-lg)) var(--space-lg) calc(-1 * var(--space-lg)); /* Extend slightly outside main-content padding */
+    overflow: hidden; /* Ensure pseudo-element stays within bounds */
 }
 
-.hero::before {
+.hero::before { /* Optional: darker overlay */
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.3); /* 어두운 오버레이 추가 */
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.1); /* Adjust darkness */
     z-index: 1;
 }
 
 .hero-content {
-    position: relative;
+    position: relative; /* Ensure content is above pseudo-element */
     z-index: 2;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    max-width: 700px; /* Limit content width */
+    margin: 0 auto; /* Center content */
 }
 
 .hero h1 {
-    font-size: 3em;
-    margin-bottom: 20px;
+    font-size: 2.8em;
+    margin-bottom: var(--space-md);
+    font-weight: 700;
 }
-
 .hero p {
     font-size: 1.2em;
-    margin-bottom: 30px;
+    margin-bottom: var(--space-lg);
+    line-height: 1.7;
 }
 
 .cta-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #4a4a7d;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
+    background-color: var(--color-accent);
+    color: var(--color-primary);
+    padding: var(--space-md) var(--space-xl);
+    font-size: 1.1em;
     font-weight: bold;
-    transition: background-color 0.3s ease;
+    border-radius: var(--border-radius-md);
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    display: inline-block; /* Allow padding and margin */
+    border: none; /* Remove default border */
 }
 
 .cta-button:hover {
-    background-color: #3a3a6d;
+    background-color: #f8c84b; /* Lighter accent color */
+    transform: scale(1.05);
 }
 
-/* === 카테고리 네비게이션 스타일 === */
+/* Category Navigation (Homepage specific) */
 .category-nav {
-    margin-bottom: 40px;
+    margin: var(--space-xl) 0;
+    text-align: center;
 }
-
 .category-nav ul {
-    display: flex;
-    justify-content: center;
-    list-style-type: none;
+    list-style: none;
     padding: 0;
+    margin: 0;
+    display: inline-flex; /* Use inline-flex for centering */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    justify-content: center;
+    gap: var(--space-sm); /* Gap between items */
 }
-
 .category-nav li {
-    margin: 0 10px;
+    /* No specific style needed */
 }
-
 .category-nav a {
-    text-decoration: none;
-    color: white    ;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-bottom: 2px solid transparent;
-    transition: border-color 0.3s;
+    display: block;
+    padding: var(--space-sm) var(--space-lg);
+    background-color: var(--color-background);
+    color: var(--color-primary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-md);
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    font-weight: 500;
 }
 
 .category-nav a.active,
 .category-nav a:hover {
-    border-color: #333;
+    background-color: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* === 베스트셀러 및 신제품 섹션 스타일 === */
+
+/* Featured Sections (Best Seller, New Arrivals) */
 .best-seller, .new-arrivals {
-    margin-bottom: 60px;
+    margin-bottom: var(--space-xl);
+}
+.best-seller h2, .new-arrivals h2 {
+    text-align: center;
+    font-size: 1.8em;
+    margin-bottom: var(--space-lg);
+    color: var(--color-primary);
 }
 
-/* === 뷰티 랩 섹션 스타일 === */
+
+/* Beauty Lab Section */
 .beauty-lab {
+    background-image: linear-gradient(rgba(74, 74, 125, 0.8), rgba(74, 74, 125, 0.8)), url('../images/lab-bg.jpg'); /* Purple overlay */
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    height: 400px; /* 또는 원하는 높이 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background-attachment: fixed; /* Parallax effect */
+    padding: var(--space-xxl) var(--space-lg);
+    text-align: center;
+    color: white;
     position: relative;
-    margin-top: 40px;
+    margin: var(--space-xl) calc(-1 * var(--space-lg)); /* Extend outside padding */
+    border-radius: var(--border-radius-md); /* Rounded corners */
+    overflow: hidden;
 }
 
 .beauty-lab::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5); /* 어두운 오버레이 추가 */
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(74, 74, 125, 0.1); /* Slightly darken if needed */
     z-index: 1;
 }
 
 .beauty-lab-content {
     position: relative;
     z-index: 2;
-    color: white;
-    text-align: center;
-    padding: 20px;
+    max-width: 700px;
+    margin: 0 auto;
 }
 
 .beauty-lab h2 {
-    font-size: 2.5em;
-    margin-bottom: 20px;
+    font-size: 2.2em;
+    margin-bottom: var(--space-md);
+    font-weight: 700;
 }
-
 .beauty-lab p {
-    font-size: 1.2em;
-    margin-bottom: 30px;
+    font-size: 1.1em;
+    margin-bottom: var(--space-lg);
+    line-height: 1.7;
 }
-
 .beauty-lab .cta-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #4a4a7d;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
+    background-color: white; /* White button */
+    color: var(--color-primary); /* Primary text color */
+    padding: var(--space-md) var(--space-xl);
+    font-size: 1.1em;
     font-weight: bold;
-    transition: background-color 0.3s ease;
+    border-radius: var(--border-radius-md);
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+    border: none;
 }
 
 .beauty-lab .cta-button:hover {
-    background-color: #3a3a6d;
+    background-color: #f0f0f0; /* Slightly off-white on hover */
+    transform: scale(1.05);
 }
 
-/* === 푸터 스타일 === */
+/* Footer Styles */
 footer {
-    background-color: #f8f8f8;
-    padding: 20px 0;
-    margin-top: auto;
+    background-color: #333; /* Dark background */
+    color: #ccc; /* Light text */
+    padding: var(--space-xl) 0;
+    margin-top: var(--space-xl); /* Space above footer */
 }
 
 .footer-content {
-    text-align: center;
-}
-
-.footer-links {
-    margin-bottom: 20px;
-}
-
-.footer-links a {
-    margin-right: 15px;
-    text-decoration: none;
-    color: #333;
-}
-
-.footer-info p {
-    margin: 5px 0;
-}
-
-.footer-social {
-    margin-top: 20px;
-}
-
-.footer-social a {
-    margin-right: 15px;
-    color: #333;
-    font-size: 18px;
-}
-
-/* === 마이페이지 스타일 === */
-.mypage-container {
-    /* Inherits padding and max-width from .main-content if wrapped */
     max-width: 1200px;
     margin: 0 auto;
-    padding: var(--space-md);
+    padding: 0 var(--space-lg);
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping */
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+}
+.footer-links {
+    display: flex;
+    gap: var(--space-lg);
+}
+.footer-links a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: color 0.3s ease;
+}
+.footer-links a:hover {
+    color: white;
+}
+.footer-info p {
+    font-size: 0.8em;
+    margin: 0;
+    text-align: center; /* Center text */
+}
+.footer-social {
+    display: flex;
+    gap: var(--space-md);
+}
+.footer-social a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+.footer-social a img { /* Assuming icons are images */
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(0.8); /* Make icons light gray */
+}
+.footer-social a:hover {
+    color: white;
+}
+.footer-social a:hover img {
+    filter: brightness(0) invert(1); /* Make icons white on hover */
+}
+
+
+/* --- My Page (mypage.html) Specific Styles --- */
+.mypage-container {
+    background-color: var(--color-background);
+    padding: var(--space-xl);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 .mypage-container h2,
 .mypage-container h3 {
+    color: var(--color-primary);
     margin-bottom: var(--space-lg);
-    color: #4a4a7d;
+    border-bottom: 1px solid var(--color-border-light);
+    padding-bottom: var(--space-sm);
 }
 
-/* --- Order Status Section --- */
+/* Order Status Section */
 .order-status {
     display: flex;
-    flex-wrap: wrap; /* Allow wrapping */
-    justify-content: space-around; /* Distribute items */
-    background-color: #f8f9fa; /* Lighter background */
-    padding: var(--space-lg);
-    border: 1px solid #eee;
-    border-radius: 8px; /* Rounded corners */
+    justify-content: space-around; /* Evenly distribute status items */
+    background-color: var(--color-background-alt);
+    padding: var(--space-md);
+    border-radius: var(--border-radius-sm);
     margin-bottom: var(--space-xl);
-    gap: var(--space-md); /* Gap between items */
+    text-align: center;
 }
 
 .status-item {
-    text-align: center;
-    color: #333; /* Darker text color */
-    flex: 1; /* Allow items to grow/shrink */
-    min-width: 100px; /* Minimum width for each item */
-    padding: var(--space-sm);
+    /* No specific style needed, flex handles layout */
+}
+
+.status-item a { /* Make status items clickable */
+    text-decoration: none;
+    color: inherit;
+    display: block; /* Make whole area clickable */
 }
 
 .status-number {
-    font-size: 2em; /* Larger number */
+    font-size: 1.8em;
     font-weight: bold;
-    display: block;
+    color: var(--color-primary);
+    display: block; /* Ensure number is on its own line */
     margin-bottom: var(--space-xs);
-    color: #4a4a7d; /* Theme color */
 }
 
 .status-label {
-    font-size: 0.9em; /* Slightly smaller label */
-    color: #555;
+    font-size: 0.9em;
+    color: var(--color-text-light);
 }
 
-/* --- Order History Section --- */
+
+/* Order History Section */
 #orderHistory h3 {
-     padding-bottom: var(--space-md);
-     border-bottom: 1px solid #eee;
+    margin-bottom: var(--space-md);
 }
 
 #purchaseList {
-    list-style-type: none;
-    padding: 0;
+    /* Container for purchase items */
 }
 
 .purchase-item { /* Assuming this class or similar structure exists */
-    border: 1px solid #eee;
-    border-radius: 8px;
-    padding: var(--space-lg);
+    background-color: var(--color-background-alt);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-sm);
     margin-bottom: var(--space-lg);
-    background-color: #fff;
-    display: flex;
-    flex-direction: column; /* Stack info vertically by default */
-    gap: var(--space-md);
+    padding: var(--space-md);
+    transition: box-shadow 0.2s ease-in-out;
+}
+.purchase-item:hover {
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
 
 .purchase-header {
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap; /* Wrap date and order number */
-    gap: var(--space-sm);
-    padding-bottom: var(--space-md);
-    border-bottom: 1px dashed #eee; /* Dashed separator */
+    align-items: center;
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px dashed var(--color-border-light);
     font-size: 0.9em;
-    color: #555;
+    color: var(--color-text-light);
 }
 
+.purchase-header .order-date {
+    /* Style for order date */
+}
 .purchase-header .order-number {
-    font-weight: bold;
+    font-weight: 500;
+    color: var(--color-text);
 }
 
 .purchase-details {
-    display: flex;
-    flex-direction: column; /* Stack product and total */
-    gap: var(--space-md);
+    /* Container for product details within an order */
 }
 
 .purchase-product { /* Assuming a structure for each product */
     display: flex;
     align-items: center;
     gap: var(--space-md);
+    margin-bottom: var(--space-sm); /* Space between products */
 }
 
 .purchase-product img {
-    width: 60px; /* Adjust image size */
+    width: 60px; /* Small image */
     height: 60px;
     object-fit: cover;
-    border-radius: 4px;
-    flex-shrink: 0;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--color-border-light);
 }
 
 .purchase-product-info {
-    flex-grow: 1;
+    flex-grow: 1; /* Take remaining space */
 }
-
 .purchase-product-name {
-    font-weight: bold;
+    font-weight: 500;
     margin-bottom: var(--space-xs);
+    display: block; /* Ensure it takes full width */
 }
-
 .purchase-product-details {
-    font-size: 0.9em;
-    color: #666;
+    font-size: 0.85em;
+    color: var(--color-text-light);
 }
 
 .purchase-total {
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-border-light);
     text-align: right;
+    font-size: 1.1em;
     font-weight: bold;
-    margin-top: var(--space-sm); /* Space above total */
 }
 
-/* --- Media Queries for My Page --- */
+/* Responsive Adjustments for My Page */
 @media (min-width: 768px) {
     .purchase-item {
-        flex-direction: row; /* Side-by-side layout for item */
-        align-items: flex-start;
+        /* Potentially adjust padding or layout for larger screens */
     }
     .purchase-details {
-        flex-direction: column; /* Keep details stacked */
-        flex-grow: 1;
+        /* Could use grid or flex for better alignment */
     }
     .purchase-total {
-         margin-left: auto; /* Push total to the right */
-         text-align: right;
-         min-width: 120px; /* Ensure space */
-         margin-top: 0;
+        /* Align total more clearly if needed */
     }
-    /* Removed empty .purchase-product rule formerly at Ln 695 */
-
+    /* Add other desktop-specific styles here */
 }
+
 
 @media (max-width: 480px) {
     .order-status {
-        /* Stack in 2x2 grid or single column */
-        /* Example: Force single column */
-         /* display: block; */
+        flex-direction: column; /* Stack status items vertically */
+        gap: var(--space-md);
+        align-items: stretch; /* Stretch items to full width */
     }
      .status-item {
-        /* Example: Full width for single column */
-        /* width: 100%; */
-        /* min-width: unset; */
+        border-bottom: 1px solid var(--color-border-light);
+        padding-bottom: var(--space-sm);
      }
+     .status-item:last-child { border-bottom: none; }
      .purchase-header {
-         flex-direction: column; /* Stack date/order number */
-         align-items: flex-start;
+        flex-direction: column; /* Stack header info */
+        align-items: flex-start;
      }
      .purchase-product {
-         flex-direction: column; /* Stack image and info */
-         align-items: flex-start;
+        flex-direction: column; /* Stack image and info */
+        align-items: flex-start;
      }
      .purchase-product img {
-         margin-bottom: var(--space-sm);
+        width: 80px; /* Slightly larger image on small screens */
+        height: 80px;
      }
 }
 
-/* === Checkout Page Styles === */
+/* === Order Summary Component (Used in Cart & Checkout) === */
+
+/* Assuming .summary-item structure within an order summary container */
 .summary-item-image {
-    width: 50px;
+    width: 50px; /* Small image for summary */
     height: 50px;
     object-fit: cover;
-    margin-right: 10px;
-    vertical-align: middle;
-    border: 1px solid #eee;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
+    margin-right: var(--space-md);
+    border: 1px solid var(--color-border-light);
 }
 
 .summary-item-name {
-    vertical-align: middle;
-    display: inline-block;
-    max-width: calc(100% - 150px);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-weight: 500;
+    flex-grow: 1; /* Take available space */
+    margin-right: var(--space-md); /* Space before price */
 }
 
+/* Styles for order items (e.g., Subtotal, Shipping, Total) */
 .order-item {
     display: flex;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #f0f0f0;
+    justify-content: space-between;
+    margin-bottom: var(--space-sm);
+    font-size: 0.95em;
 }
 
 .order-item span {
-    margin-right: 10px;
+    /* Span elements within order item */
 }
-
 .order-item span:last-child {
-    margin-right: 0;
-    margin-left: auto;
+    font-weight: 500; /* Make value slightly bolder */
 }
 
-/* === Search Results Page Specific Styles === */
+
+/* === Search Results Page (search-results.html) === */
+
 .search-results-section,
 .recommendations-section {
-    margin-top: 40px;
-    padding-top: 30px;
-    border-top: 2px solid #f0f0f0;
+    margin-bottom: var(--space-xl);
+    background-color: var(--color-background);
+    padding: var(--space-lg);
+    border-radius: var(--border-radius-md);
 }
 
-#searchResults > div:first-child {
-    margin-top: 0;
-    padding-top: 0;
-    border-top: none;
+#searchResults > div:first-child { /* Target the 'Results for...' div */
+    margin-bottom: var(--space-md); /* Add space below the heading */
+    font-size: 1.2em;
+    font-weight: 500;
 }
 
 #searchResults h2, 
-#searchResults h3 {
-    font-size: 1.6em;
-    margin-bottom: 25px;
-    color: #4a4a7d;
-    text-align: left;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+#recommendations h2 {
+    font-size: 1.5em;
+    color: var(--color-primary);
+    margin-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--color-border-light);
+    padding-bottom: var(--space-sm);
 }
 
 .no-results-message {
-    font-size: 1.2em;
-    color: #666;
-    padding: 20px 0;
     text-align: center;
+    color: var(--color-text-light);
+    padding: var(--space-xl) 0;
+    font-style: italic;
 }
 
 .no-recommendations-message {
-    font-size: 1em;
-    color: #999;
-    padding: 10px 0;
+    text-align: center;
+    color: var(--color-text-light);
+    padding: var(--space-md) 0; /* Less padding than no results */
 }
 
+/* Use existing .products grid for results and recommendations */
 .search-results-items,
-.recommendations-items {
-    justify-content: flex-start;
+.recommendation-items {
+    /* These containers might not be needed if using .products directly */
 }
 
+
+/* === Responsive Design Adjustments === */
+
+/* Example: Adjust Hero section on smaller screens */
 @media (max-width: 768px) {
     .hero {
-        height: 450px;
-        padding: 0 var(--space-lg);
+        padding: var(--space-xl) var(--space-md);
+        margin: calc(-1 * var(--space-md)) calc(-1 * var(--space-md)) var(--space-lg) calc(-1 * var(--space-md));
     }
-    .hero h1 {
-        font-size: 2.2em;
-    }
-    .hero p {
-        font-size: 1em;
-    }
+    .hero h1 { font-size: 2.2em; }
+    .hero p { font-size: 1.1em; }
 }
 
 @media (max-width: 480px) {
     .hero {
-        height: 350px;
-        padding: 0 var(--space-md);
+        padding: var(--space-lg) var(--space-sm);
+        margin: calc(-1 * var(--space-sm)) calc(-1 * var(--space-sm)) var(--space-lg) calc(-1 * var(--space-sm));
     }
-    .hero h1 {
-        font-size: 1.8em;
-    }
-    .hero p {
-        font-size: 0.9em;
-    }
-    .cta-button {
-        padding: 8px 16px;
-        font-size: 0.9em;
-    }
+    .hero h1 { font-size: 1.8em; }
+    .hero p { font-size: 1em; }
+    .cta-button { font-size: 1em; padding: var(--space-sm) var(--space-md); }
 }
 
+
+/* Adjust category nav on smaller screens */
 .category-nav ul {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-sm);
+     /* flex-wrap: wrap; already set */
+     gap: var(--space-xs); /* Reduce gap */
+     justify-content: center;
 }
 
+/* Make category nav links smaller on mobile */
 @media (max-width: 768px) {
     .category-nav {
-         margin-bottom: var(--space-lg);
+        margin: var(--space-lg) 0;
     }
     .category-nav a {
         padding: var(--space-xs) var(--space-sm);
         font-size: 0.9em;
     }
+    /* Reduce gap further? */
+    .category-nav ul { gap: 2px; }
 }
 
-/* Removed duplicated .product-list rule */
+/* Adjust product grid on very small screens if needed (already handled by auto-fill) */
+/* @media (max-width: 576px) { */
+    /* Styles for very small screens */
+    /* Example: adjust minmax width */
+    /* .products { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); } */
+/* } */
 
 @media (max-width: 576px) {
-    /* Adjusted products rule for smaller screens */
-    .products { /* Changed from .product-list */
-        /* Keep flex properties for horizontal scroll below 768px */
-        /* If sticking with Grid, adjust columns */
-        grid-template-columns: repeat(2, 1fr); /* 2 columns for smaller */
-        gap: var(--space-md);
-    }
+    /* Ensure product items are usable on small screens */
+    .products { /* Inherits grid */ }
     .product-item {
-        /* Adjust width if needed for < 576px */
-        /* width: 160px; */
+         padding: var(--space-sm);
     }
-    .product-item h3 {
-        font-size: 0.9em; /* Adjusted from 1em */
-    }
-    .product-item .price {
-        font-size: 0.9em; /* Adjusted from 1em */
-    }
+    .product-item h3 { font-size: 1em; }
+    .product-item .price { font-size: 1.1em; }
 }
 
+
+/* Adjust Beauty Lab on smaller screens */
 @media (max-width: 768px) {
     .beauty-lab {
-        height: 300px;
+        padding: var(--space-xl) var(--space-md);
+        margin: var(--space-lg) calc(-1 * var(--space-md));
     }
-    .beauty-lab h2 {
-        font-size: 2em;
-    }
-    .beauty-lab p {
-        font-size: 1em;
-    }
+    .beauty-lab h2 { font-size: 1.8em; }
+    .beauty-lab p { font-size: 1em; }
 }
 
 @media (max-width: 480px) {
     .beauty-lab {
-        height: 250px;
+        padding: var(--space-lg) var(--space-sm);
+        margin: var(--space-lg) calc(-1 * var(--space-sm));
     }
-    .beauty-lab h2 {
-        font-size: 1.6em;
-    }
-    .beauty-lab p {
-        font-size: 0.9em;
-    }
+    .beauty-lab h2 { font-size: 1.6em; }
+    .beauty-lab p { font-size: 0.9em; }
+    .beauty-lab .cta-button { font-size: 1em; padding: var(--space-sm) var(--space-md); }
 }
 
+
 /* === Checkout Page Specific Styles === */
+
 .checkout-page {
-    /* Inherits padding and max-width from .main-content if wrapped */
-    max-width: 1200px; /* Adjust max-width */
+    max-width: 1000px; /* Slightly narrower for checkout focus */
     margin: 0 auto;
-    padding: var(--space-md);
+    background-color: var(--color-background);
+    padding: var(--space-xl);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 .checkout-title {
-    text-align: center;
-    margin-bottom: var(--space-xl);
     font-size: 1.8em;
+    color: var(--color-primary);
+    margin-bottom: var(--space-xl);
+    text-align: center;
+    border-bottom: 1px solid var(--color-border-light);
+    padding-bottom: var(--space-md);
 }
 
-/* Default Layout Container (Stack columns by default) */
 .checkout-layout-container {
     display: flex;
-    flex-direction: column; /* Mobile first: stack */
+    flex-wrap: wrap; /* Allow wrapping */
     gap: var(--space-xl);
+    align-items: flex-start; /* Align columns at the top */
 }
 
 .checkout-form-column {
-    order: 1; /* Ensure form comes first on mobile if needed */
+    flex: 2; /* Form takes more space */
+    min-width: 300px; /* Minimum width */
 }
 
 .checkout-summary-column {
-    order: 2; /* Ensure summary comes second on mobile */
+    flex: 1;
+    min-width: 250px;
+    position: sticky;
+    top: calc(80px + 50px + 30px + var(--space-lg)); /* Header + Nav + Buffer + Space */
+    background-color: var(--color-background-alt); /* Slightly different background */
+    padding: var(--space-lg);
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--color-border-light);
 }
 
-/* Styles common to sections within columns */
 .checkout-section {
-    background-color: #fff;
-    padding: var(--space-lg);
-    border: 1px solid #eee;
-    border-radius: 4px;
-    margin-bottom: var(--space-xl); /* Space between sections in mobile */
+    margin-bottom: var(--space-xl);
 }
+
 .checkout-form-column .checkout-section:last-child,
 .checkout-summary-column .checkout-section:last-child {
-     margin-bottom: 0; /* Remove bottom margin for last item in column */
+     margin-bottom: 0; /* Remove bottom margin from last section in each column */
 }
-
 
 .checkout-section h3 {
-    font-size: 1.4em;
+    font-size: 1.3em;
     margin-bottom: var(--space-lg);
-    padding-bottom: var(--space-md);
-    border-bottom: 1px solid #eee;
+    color: var(--color-primary);
+    border-bottom: 1px solid var(--color-border-light);
+    padding-bottom: var(--space-sm);
 }
 
-/* Ensure button inside summary column has bottom margin */
 .checkout-summary-column .checkout-button {
+    width: 100%; /* Full width button in summary */
     margin-top: var(--space-lg); /* Space above button */
 }
 
 
-/* --- Media Query for Checkout Desktop Layout --- */
-@media (min-width: 992px) { /* Use desired breakpoint */
+/* Adjust checkout layout for smaller screens */
+@media (min-width: 992px) { /* Use desired breakpoint for 2-column sticky layout */
     .checkout-layout-container {
-        flex-direction: row; /* Side-by-side layout */
-        align-items: flex-start; /* Align columns to top */
+        flex-wrap: nowrap; /* Prevent wrapping on large screens */
     }
-
     .checkout-form-column {
-        flex: 2; /* Form takes more space */
-        order: 1; /* Form on the left */
+        /* Styles already set */
+    }
+    .checkout-summary-column {
+         position: sticky; /* Ensure sticky */
+         top: calc(80px + 50px + 30px + var(--space-xl)); /* Adjust top positioning */
     }
 
-    .checkout-summary-column {
-        flex: 1; /* Summary takes less space */
-        order: 2; /* Summary on the right */
-        position: sticky; /* Make summary sticky */
-        /* Calculate top based on fixed header height + buffer + initial padding */
-        top: calc(100px + 30px + var(--space-lg)); /* Adjust 100px if header height differs */
+    /* Apple-inspired Form Styles - Apply only on larger screens or globally if desired */
+    .checkout-page .shipping-info .form-group label,
+    .checkout-page .payment-info .form-group label { /* More specific selector */
+        display: block;
+        font-size: 0.85em;
+        color: #666;
+        margin-bottom: 6px; /* Space below label */
+        font-weight: 500; /* Slightly bolder label */
+        transition: color 0.3s ease;
     }
-    /* REMOVE or comment out the old complex responsive rule for .checkout-container children */
-    /*
-    .checkout-container > .shipping-info { order: 1; flex-basis: 60%; }
-    .checkout-container > .payment-info { order: 2; flex-basis: 60%; }
-    .checkout-container > .order-summary { order: 3; flex-basis: 35%; }
-    .checkout-container > .order-total { order: 4; flex-basis: 35%; }
-    */
+
+    .checkout-page .shipping-info .form-group input[type="text"],
+    .checkout-page .shipping-info .form-group input[type="email"],
+    .checkout-page .shipping-info .form-group input[type="tel"],
+    .checkout-page .shipping-info .form-group select,
+    .checkout-page .payment-info .form-group input[type="text"],
+    .checkout-page .payment-info .form-group input[type="number"],
+    .checkout-page .payment-info .form-group select { /* Specificity */
+        width: 100%;
+        padding: 12px 15px; /* Generous padding */
+        border: 1px solid #d1d1d1; /* Lighter border */
+        border-radius: 8px; /* More rounded corners */
+        font-size: 1em;
+        background-color: #fff;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Subtle shadow */
+    }
+
+    .checkout-page .shipping-info .form-group input[type="text"]:focus,
+    .checkout-page .shipping-info .form-group input[type="email"]:focus,
+    .checkout-page .shipping-info .form-group input[type="tel"]:focus,
+    .checkout-page .shipping-info .form-group select:focus,
+    .checkout-page .payment-info .form-group input[type="text"]:focus,
+    .checkout-page .payment-info .form-group input[type="number"]:focus,
+    .checkout-page .payment-info .form-group select:focus { /* Specificity */
+        outline: none;
+        border-color: var(--color-primary); /* Highlight border on focus */
+        box-shadow: 0 0 0 3px rgba(74, 74, 125, 0.15); /* Focus ring */
+    }
+
+    .checkout-page .shipping-info .form-group textarea { /* Specificity */
+        /* Similar styles for textarea if needed */
+        resize: vertical; /* Allow vertical resize */
+        min-height: 80px;
+    }
+
 }
 
-/* ... (Ensure other checkout-related styles like forms, summary items, total details are present/correct) ... */
 
-/* === Header Responsive Refinements === */
+/* Hamburger Menu Icon */
 .hamburger-menu {
-    display: none !important; /* Ensure it's hidden by default */
-    font-size: 24px;
+    display: none; /* Hidden by default on larger screens */
     cursor: pointer;
-    color: white;
+    padding: var(--space-sm);
     background: none;
     border: none;
-    padding: 0 5px; /* Add some padding */
-    line-height: 1;
-    margin-right: var(--space-sm); /* Space before login link */
+}
+.hamburger-menu span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 5px 0;
+    transition: all 0.3s ease-in-out;
 }
 
+
+/* Responsive Header & Nav */
 @media (max-width: 768px) {
     .header-top {
-        flex-wrap: wrap;
-        justify-content: space-between;
-        padding: 10px 15px; /* Adjusted padding */
-        position: relative; /* Ensure relative positioning for absolute nav */
-        height: 80px; /* Explicit height for mobile header top */
+        padding: var(--space-sm) var(--space-md); /* Reduce padding */
+        height: 80px; /* Maintain height */
+        /* Removed justify-content: space-between; hamburger handles nav */
+        /* Let items naturally space or use flex properties if needed */
     }
+
     header {
-        height: auto; /* Allow header height to adjust */
+        /* Header itself remains fixed */
     }
+
     .logo {
-        order: 1;
-        flex-grow: 1; /* Allow logo to grow */
+        flex-grow: 1; /* Allow logo to take space */
+        text-align: left; /* Align logo left */
     }
+
     .user-menu {
-        order: 2;
-        width: auto; /* Reset width */
-        margin-left: 0; /* Reset margin */
-        align-items: center; /* Vertically align items */
+        /* Icons might be hidden in hamburger or kept visible */
+        gap: var(--space-sm); /* Reduce gap */
     }
-    .user-menu a:not(.icon-link) {
-        display: none; /* Hide text links */
+    .user-menu a:not(.icon-link) { /* Hide text links like "My Page" */
+        display: none;
     }
+
     .search-bar {
-        display: none !important; /* Hide original search bar */
-        order: 4; /* Ensure it comes last if somehow visible */
-        flex-basis: 100%; /* Full width if visible */
-        margin-top: 0;
+        /* Search bar is removed from header top, moved to mobile menu */
+        display: none;
     }
+
     .hamburger-menu {
-        display: block !important; /* Show hamburger */
-        order: -1; /* Place hamburger first in user-menu */
-        position: static;
-        transform: none;
-        margin-left: 0;
-        margin-right: var(--space-sm);
+        display: block; /* Show hamburger */
+        order: 3; /* Place hamburger last potentially */
+        margin-left: auto; /* Push hamburger to the right if needed after logo */
     }
+
+
+    /* Mobile Navigation Panel */
     nav#mainNav {
-        display: none; /* Hidden by default */
-        order: 3; /* Nav comes after header-top content */
-        width: 100%;
-        position: absolute; /* Position relative to header */
-        top: 100%; /* Position below header-top */
+        display: block; /* Change to block for vertical layout */
+        position: absolute;
+        top: 80px; /* Position below header top */
         left: 0;
-        background-color: #4a4a7d; /* Match header color */
-        z-index: 999; /* Below header but above content */
-        border-top: 1px solid #5a5a8d; /* Add border */
+        width: 100%;
+        background-color: #333; /* Dark background for mobile nav */
+        max-height: 0; /* Hidden by default */
+        overflow: hidden;
+        transition: max-height 0.5s cubic-bezier(0, 1, 0, 1); /* Smooth slide down */
+        box-shadow: none; /* Remove desktop shadow */
+        height: auto; /* Override fixed height */
+        padding-bottom: var(--space-md); /* Add padding at the bottom */
     }
+
     nav#mainNav.active {
-        display: block; /* Show when active */
+        max-height: 100vh; /* Allow full height */
+        transition: max-height 1s ease-in-out; /* Slower transition */
     }
+
     nav#mainNav ul {
-        flex-direction: column;
-        align-items: stretch; /* Stretch items */
-        padding: 0;
+        flex-direction: column; /* Stack items vertically */
+        width: 100%;
+        height: auto; /* Reset height */
+        padding: var(--space-md) 0; /* Padding top/bottom */
     }
+
     nav#mainNav li {
-         width: 100%;
-         text-align: left;
-         border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Separator lines */
-         margin: 0; /* Reset margin */
-     }
+        width: 100%;
+        border-bottom: 1px solid #444; /* Separator lines */
+        display: block; /* Ensure full width */
+    }
+
      nav#mainNav li:last-child {
          border-bottom: none;
      }
+
     nav#mainNav a {
-         padding: 12px 20px;
-         width: 100%;
-         box-sizing: border-box;
-         display: block;
-     }
+        padding: var(--space-md) var(--space-lg); /* Adjust padding */
+        color: white; /* White text */
+        line-height: normal; /* Reset line height */
+        display: block; /* Full width links */
+    }
+    nav#mainNav a:hover {
+        background-color: #444; /* Darker hover */
+    }
+
+    /* Mobile Search Item (inside mobile nav) */
     .mobile-search-item {
-        display: block !important; /* Ensure visibility */
+        display: block; /* Show in mobile nav */
+        padding: var(--space-md) var(--space-lg);
+        border-top: 1px solid #444; /* Separator above search */
     }
 }
 
-/* Reset styles for wider screens (min-width: 769px) */
+
+/* Styles for screens larger than mobile breakpoint */
 @media screen and (min-width: 769px) {
     header {
-         height: 100px; /* Restore fixed height */
+         /* Keep header styles */
     }
     .header-top {
-        height: auto; /* Reset height */
+         /* Keep header-top styles */
     }
-    /* Ensure original search bar is visible */
     .search-bar {
-        display: flex !important; /* Show original search bar */
-        order: initial; /* Reset order */
-        flex-basis: auto; /* Reset basis */
-        margin-top: 0;
-        /* Restore other default styles if needed */
-        flex-grow: 1;
-        min-width: 150px;
-        max-width: 500px;
+        display: flex; /* Show search bar */
+        flex-grow: 0.5; /* Adjust as needed */
+        max-width: 400px;
+        /* Restore other desktop search bar styles */
+        margin-left: auto; /* Push towards center/right */
+        margin-right: var(--space-lg); /* Space before user menu */
     }
-    /* Ensure mobile search item is hidden */
+
+    /* Hide mobile-specific elements */
     .mobile-search-item {
-        display: none !important; /* Hide mobile search item */
+        display: none;
     }
-    /* Ensure hamburger is hidden */
     .hamburger-menu {
-        display: none !important;
+        display: none;
     }
-    /* Ensure desktop nav is visible and styled correctly */
+
+    /* Restore desktop navigation */
     nav#mainNav {
-        display: block !important; /* Desktop nav should be visible */
-        order: initial;
-        width: auto;
-        position: static; /* Static positioning */
-        background-color: #3a3a6d; /* Or original desktop color */
-        z-index: auto;
-        border-top: 1px solid #5a5a8d; /* Keep border */
+        display: flex; /* Horizontal flex layout */
+        position: static; /* Not absolute */
+        max-height: none; /* Remove height limit */
+        background-color: white; /* White background */
+        height: 50px; /* Fixed height */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        padding-bottom: 0; /* Remove mobile padding */
+        justify-content: center;
     }
     nav#mainNav ul {
-        flex-direction: row; /* Horizontal nav */
-        align-items: center;
-        padding: 0;
-        justify-content: center; /* Center nav items */
+        flex-direction: row; /* Horizontal layout */
+        padding: 0; /* Remove mobile padding */
+        height: 100%;
     }
     nav#mainNav li {
-        width: auto;
-        text-align: left;
-        border-bottom: none; /* Remove mobile separator */
-        margin: 0 10px; /* Restore margin */
+        border-bottom: none; /* Remove mobile border */
+        display: flex;
+        align-items: center;
     }
-    nav#mainNav li:last-child {
-         border-bottom: none;
-    }
-    nav#mainNav a {
-         padding: 15px 0; /* Desktop padding */
-         width: auto;
-         display: block;
+     nav#mainNav li:last-child {
+         /* No special style needed */
      }
-     /* Ensure desktop user menu text links are visible */
-     .user-menu a:not(.icon-link) {
-        display: inline; /* Show text links again */
+    nav#mainNav a {
+        padding: 0 var(--space-lg); /* Restore desktop padding */
+        color: var(--color-primary); /* Restore desktop color */
+        line-height: 50px; /* Restore line height */
     }
+     .user-menu a:not(.icon-link) {
+         display: flex; /* Show text links again */
+     }
 }
 
-/* Style for mobile search inside nav */
+/* Mobile Search Form Styles (within mobile nav) */
 .mobile-search-item {
-    display: none; /* Hidden by default */
-    padding: 10px 20px;
+     /* display: block; set in media query */
 }
 .mobile-search-form {
     display: flex;
-    background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent white */
-    border-radius: 15px; /* Rounded corners */
-    overflow: hidden;
+    background-color: #444; /* Slightly lighter than nav background */
+    border-radius: var(--border-radius-sm);
+    padding: var(--space-xs);
 }
 #mobileSearchInput {
     flex-grow: 1;
-    padding: 8px 12px;
+    padding: var(--space-sm);
     border: none;
-    background: transparent;
+    background: none;
     color: white;
-    font-size: 14px;
-    min-width: 0;
+    outline: none;
+    font-size: 0.9em;
 }
 #mobileSearchInput::placeholder {
-    color: rgba(255, 255, 255, 0.7);
+    color: #aaa;
 }
 #mobileSearchButton {
-    background: transparent;
+    background: none;
     border: none;
-    padding: 8px 12px;
     cursor: pointer;
-    flex-shrink: 0;
+    padding: var(--space-xs);
 }
-/* Search icon color is handled by inline style filter:invert(1) */
+#mobileSearchButton img {
+    width: 18px;
+    height: 18px;
+    filter: brightness(0) invert(1); /* White icon */
+}
 
-/* === Product List Responsive Refinements === */
-/* Removed the media query for max-width 768px that used flex */
-/* Removed the media query for min-width 769px that reset to grid */
 
+/* --- Product Detail Page (product-detail.html) --- */
 
-/* === Product Detail Page Specific Styles === */
 .product-detail-container {
-    /* Container styles if needed */
+    /* Container for the entire product detail section */
 }
-
 .product-detail {
-    /* Mobile first: stack image and info */
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Stack image/info and description vertically by default */
     gap: var(--space-lg);
-    margin-bottom: var(--space-xl); /* Space before description */
+    background-color: var(--color-background);
+    padding: var(--space-xl);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 .product-image-gallery {
-    width: 100%;
+    width: 100%; /* Full width on mobile */
+    margin-bottom: var(--space-lg); /* Space below gallery on mobile */
 }
-
 .main-image img {
     width: 100%;
-    height: auto;
-    aspect-ratio: 1 / 1; /* Maintain square aspect ratio */
-    object-fit: cover;
-    border: 1px solid #eee;
-    border-radius: 4px;
+    height: auto; /* Maintain aspect ratio */
+    max-height: 450px; /* Limit max height */
+    object-fit: contain; /* Ensure whole image is visible */
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-md);
     margin-bottom: var(--space-md);
 }
 
@@ -1404,38 +1507,52 @@ footer {
     display: flex;
     flex-wrap: nowrap; /* Explicitly prevent wrapping */
     justify-content: flex-start;
-    gap: var(--space-sm, 8px); /* Use gap for spacing */
+    gap: var(--space-sm); /* Use gap for spacing */
     width: 100%;
     padding: var(--space-sm) 0; /* Remove horizontal padding, keep vertical */
-    overflow-x: auto; /* Allow horizontal scroll if needed, instead of wrapping */
+    overflow-x: auto; /* Allow horizontal scroll if needed */
     -webkit-overflow-scrolling: touch; /* Smooth scroll on touch devices */
-    /* Optionally hide scrollbar visually */
-    /* scrollbar-width: none; /* Firefox */ */
-    /* &::-webkit-scrollbar { display: none; } /* Chrome, Safari, Opera */ */
-} 
+    /* Optionally hide scrollbar visually if desired */
+    /* scrollbar-width: none; */ 
+    /* &::-webkit-scrollbar { display: none; } */
+}
 
-.thumbnail-images .thumbnail {
+/* Ensure thumbnail images themselves don't shrink and have fixed size */
+.thumbnail-images .thumbnail { /* Use .thumbnail if it's the wrapper div */
+    /* Re-applying and slightly adjusting from earlier definition */
     display: block;
-    /* width is set by JS or fixed */
-    height: auto;
     width: 70px; /* Fixed thumbnail width */
-    object-fit: cover; /* Changed from contain */
+    height: 70px; /* Fixed thumbnail height */
+    object-fit: cover; /* Cover the area */
     cursor: pointer;
     border: 2px solid transparent;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     transition: border-color 0.2s ease-in-out;
-    flex-shrink: 0;
-    margin: 0; /* Remove individual margins */
-    box-sizing: border-box; /* Ensure padding/border included in width */
+    flex-shrink: 0; /* <<< Crucial: Prevent shrinking */
+    margin: 0; /* Remove individual margins if gap is used */
+    box-sizing: border-box;
+}
+.thumbnail-images img { /* If using img directly without .thumbnail wrapper */
+    display: block;
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: var(--border-radius-sm);
+    transition: border-color 0.2s ease-in-out;
+    flex-shrink: 0; /* <<< Crucial: Prevent shrinking */
 }
 
 .thumbnail-images .thumbnail.active,
-.thumbnail-images .thumbnail:hover {
-    border-color: #4a4a7d; /* Highlight */
+.thumbnail-images .thumbnail:hover,
+.thumbnail-images img.active,
+.thumbnail-images img:hover {
+    border-color: var(--color-primary); /* Highlight */
 }
 
 .product-info {
-    width: 100%;
+    width: 100%; /* Full width on mobile */
 }
 
 /* Product Info Internal Styling */
@@ -1450,11 +1567,12 @@ footer {
     font-weight: bold;
     margin-bottom: var(--space-lg);
     display: block; /* 블록 요소로 만들어 마진 적용 */
+    color: var(--color-text); /* Default price color */
 }
 .product-info .price .discount {
      font-size: 0.8em; /* 할인율 크기 조정 */
      margin-right: var(--space-sm);
-     color: #e74c3c;
+     color: #e74c3c; /* Discount color */
 }
  .product-info .price .original-price {
      font-size: 0.7em; /* 원래 가격 크기 조정 */
@@ -1463,7 +1581,7 @@ footer {
      margin-left: var(--space-sm);
  }
 .product-info .current-price {
-    color: #333; /* 현재 가격 색상 */
+    /* This class might not be needed if default price color is set */
 }
 
 
@@ -1476,14 +1594,15 @@ footer {
 
 .product-info .quantity label {
     font-weight: bold;
+    margin-right: var(--space-xs); /* Space after label */
 }
 
 .product-info .quantity input[type="number"] {
     width: 70px; /* 수량 입력 필드 너비 */
     padding: var(--space-sm);
     text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
 }
 
 .product-info button {
@@ -1491,47 +1610,56 @@ footer {
     width: 100%;     /* 버튼 너비를 100%로 */
     padding: var(--space-md); /* 버튼 패딩 */
     font-size: 1.1em; /* 버튼 폰트 크기 */
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     cursor: pointer;
     transition: background-color 0.2s ease, border-color 0.2s ease;
     margin-bottom: var(--space-md); /* 버튼 사이 간격 */
     text-align: center;
+    border: 1px solid transparent; /* Add base border */
 }
  .product-info button:last-of-type {
      margin-bottom: 0; /* 마지막 버튼 하단 마진 제거 */
  }
 
 /* 장바구니 버튼 스타일 */
-.product-info button:nth-of-type(1) { /* 첫번째 버튼 (장바구니 가정) */
+.product-info button#addToCartBtn { /* Use ID for specificity if available */
     background-color: #fff;
-    color: #4a4a7d;
-    border: 1px solid #4a4a7d;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
 }
- .product-info button:nth-of-type(1):hover {
-    background-color: #f0f0f8;
+ .product-info button#addToCartBtn:hover {
+    background-color: var(--color-background-alt);
  }
 
 
 /* 바로 구매 버튼 스타일 */
-.product-info button:nth-of-type(2) { /* 두번째 버튼 (바로구매 가정) */
-    background-color: #4a4a7d;
+.product-info button#buyNowBtn { /* Use ID for specificity if available */
+    background-color: var(--color-primary);
     color: white;
-    border: 1px solid #4a4a7d;
+    border-color: var(--color-primary);
 }
-.product-info button:nth-of-type(2):hover {
-    background-color: #3a3a6d;
-    border-color: #3a3a6d;
+.product-info button#buyNowBtn:hover {
+    background-color: var(--color-secondary);
+    border-color: var(--color-secondary);
  }
 
-/* --- 상세 정보 섹션 스타일링 (아래 배치) --- */
+/* --- 상세 정보 섹션 스타일링 (상품 설명, 상세 정보, 리뷰) --- */
 .product-description,
 .product-details,
 .reviews {
     margin-top: var(--space-xl); /* 상단 섹션과의 간격 */
     padding-top: var(--space-xl); /* 섹션 내부 상단 패딩 */
-    border-top: 1px solid #eee; /* 구분선 */
+    border-top: 1px solid var(--color-border-light); /* 구분선 */
     width: 100%; /* 전체 너비 사용 */
 }
+.product-description h3,
+.product-details h3,
+.reviews h3 {
+    font-size: 1.4em;
+    margin-bottom: var(--space-lg);
+    color: var(--color-primary);
+}
+
 
 /* --- 데스크탑 레이아웃 (product-detail) --- */
 @media (min-width: 768px) {
@@ -1539,297 +1667,365 @@ footer {
         display: flex;
         flex-direction: row; /* Side-by-side */
         align-items: flex-start; /* Align top */
-        gap: var(--space-xxl); /* Gap between columns */
+        gap: var(--space-xxl); /* Wider gap between columns */
+        flex-wrap: wrap; /* Allow description/reviews to wrap below */
     }
 
     .product-image-gallery {
-        width: 40%; /* Image gallery width */
+        width: 45%; /* Adjust width distribution */
         flex-shrink: 0;
+        margin-bottom: 0; /* Remove bottom margin */
+        position: sticky; /* Make gallery sticky */
+        top: calc(80px + 50px + 30px + var(--space-xl)); /* Adjust top position */
+        align-self: flex-start; /* Ensure sticky respects top alignment */
     }
 
     .product-info {
-        width: 60%; /* Product info width */
-        flex-grow: 1; /* Allow info to grow if needed */
+        width: 50%; /* Adjust width distribution */
+        flex-grow: 1; /* Allow info to grow */
     }
-    /* Description and reviews remain full width below */
+
+    /* Description, Details, Reviews take full width below the two columns */
+    .product-description,
+    .product-details,
+    .reviews {
+        width: 100%;
+        flex-basis: 100%; /* Ensure they take full width when wrapping */
+        margin-top: var(--space-lg); /* Adjust top margin */
+        padding-top: var(--space-lg); /* Adjust padding */
+    }
 }
 
 
-/* === 반응형 수정 (body padding) === */
+/* === 반응형 수정 (body padding - simplified) === */
 @media screen and (max-width: 768px) {
-    body {
-         padding-top: calc(80px + 30px); /* Mobile header height + 30px buffer */
-    }
-
-    body.mobile-nav-active {
-        padding-top: calc(80px + 70px + 30px); /* Example: header + nav + buffer */
-    }
-
-    /* Removed duplicated nav#mainNav rules */
-
+    /* body padding is handled globally */
     .main-content {
-       margin-top: 0 !important; /* Reinforce */
+       /* margin-top: 0 !important; Reinforce if needed, but body padding should handle it */
     }
 }
 
 /* === Cart Page Layout & Item Refinement === */
 .cart-page {
     /* Add specific styles if needed, often inherits from .main-content */
+    max-width: 1000px; /* Limit width for cart focus */
+    margin: 0 auto;
 }
 
-/* Default Layout Container (2 columns) */
+/* Default Layout Container (2 columns) - Kept for consistency, maybe overridden */
 .cart-layout-container {
-    display: flex; /* Keep flex for desktop */
-    flex-wrap: wrap; /* Allow wrapping on very small screens if needed */
-    gap: var(--space-lg);
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping */
+    gap: var(--space-xl); /* Consistent gap */
     align-items: flex-start;
 }
 
 .cart-items-column {
-    flex: 2; /* 아이템 목록이 더 넓은 공간 차지 (비율 조정 가능) */
-    min-width: 300px; /* 최소 너비 설정 */
+    flex: 2; /* Items list takes more space */
+    min-width: 300px;
+    background-color: var(--color-background);
+    padding: var(--space-lg);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
 }
 
 .cart-summary-column {
     flex: 1;
     min-width: 250px;
-    position: sticky; /* Make summary sticky by default */
-    top: calc(100px + 30px + var(--space-lg)); /* Adjust top position */
+    position: sticky; /* Make summary sticky */
+    top: calc(80px + 50px + 30px + var(--space-lg)); /* Adjust top position based on fixed elements */
+    background-color: var(--color-background-alt);
+    padding: var(--space-lg);
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--color-border-light);
 }
 
-/* Cart items styling (adjust existing .cart-items if needed) */
+/* Cart Items List */
 .cart-items {
-    border: none; /* Remove previous border if using column wrapper */
-    border-radius: 0;
-    overflow: visible; /* Reset overflow */
-    margin-bottom: 0; /* Remove margin if using column wrapper */
+    /* Container for individual cart items */
 }
 
-/* Cart Item Refinement */
+.cart-items h2 { /* Heading for the items list */
+    font-size: 1.4em;
+    margin-bottom: var(--space-lg);
+    color: var(--color-primary);
+    border-bottom: 1px solid var(--color-border-light);
+    padding-bottom: var(--space-sm);
+}
+
 .cart-item {
     display: flex;
-    align-items: center; /* 아이템 내부 요소 수직 정렬 */
+    align-items: center;
     gap: var(--space-md);
-    border-bottom: 1px solid #eee;
-    padding-bottom: var(--space-md);
-    margin-bottom: var(--space-md);
+    padding: var(--space-md) 0; /* Vertical padding, no horizontal */
+    border-bottom: 1px solid var(--color-border-light);
 }
+
 .cart-item:last-child {
     border-bottom: none;
 }
 
 .cart-item-image {
-    flex-shrink: 0; /* 이미지가 줄어들지 않도록 */
-    width: 80px; /* 이미지 크기 조정 */
+    width: 80px; /* Slightly larger image in cart */
     height: 80px;
     object-fit: cover;
+    border-radius: var(--border-radius-sm);
+    flex-shrink: 0; /* Prevent image shrinking */
 }
 
 .item-details {
-    flex-grow: 1; /* 이름/가격 부분이 남은 공간 차지 */
+    flex-grow: 1; /* Take remaining space */
+    display: flex;
+    flex-direction: column; /* Stack name and price */
+    gap: var(--space-xs);
+}
+.item-details a { /* Make product name clickable */
+    color: var(--color-primary);
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+.item-details a:hover { color: var(--color-secondary); }
+.item-details .item-price {
+    font-size: 0.9em;
+    color: var(--color-text-light);
 }
 
 .item-controls {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
-    margin-left: auto; /* 컨트롤��� 오른쪽으로 밀기 */
+    gap: var(--space-md);
 }
 
 .item-quantity input {
-    width: 60px; /* 수량 입력 필드 너비 */
+    width: 50px; /* Smaller quantity input */
     text-align: center;
+    padding: var(--space-xs);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
 }
 
 .item-total {
-    min-width: 80px; /* 합계 표시 너비 확보 */
+    font-weight: 500;
+    min-width: 80px; /* Ensure space for total price */
     text-align: right;
-    font-weight: bold;
 }
 
 .remove-button {
-    /* 기존 스타일 유지 또는 조정 */
-    padding: var(--space-sm) var(--space-md);
-    background-color: #dc3545; /* 빨간색 배경 */
-    color: white;
+    background: none;
     border: none;
-    border-radius: 4px;
+    color: #e74c3c; /* Red color for removal */
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    padding: var(--space-xs);
+    font-size: 1.1em; /* Slightly larger icon/text */
+    line-height: 1; /* Prevent extra space */
+    transition: color 0.2s ease;
 }
+
 .remove-button:hover {
-    background-color: #c82333; /* 어두운 빨간색 */
+    color: #c0392b; /* Darker red on hover */
 }
 
-/* Summary Column Styling (Desktop) */
+/* Cart Summary Box */
 .cart-summary {
-    background-color: #f8f9fa; /* 약간 다른 배경색 */
-    padding: var(--space-lg);
-    border: 1px solid #eee;
-    border-radius: 4px;
+    /* Styles for the summary box itself are in .cart-summary-column */
 }
 
-.cart-summary p {
+.cart-summary h3 { /* Summary Title */
+    font-size: 1.4em;
+    margin-bottom: var(--space-lg);
+    color: var(--color-primary);
+    border-bottom: 1px solid var(--color-border-light);
+    padding-bottom: var(--space-sm);
+}
+
+.cart-summary p { /* Use for subtotal, shipping, etc. */
     display: flex;
     justify-content: space-between;
     margin-bottom: var(--space-md);
-    font-size: 1.1em;
+    font-size: 0.95em;
+}
+.cart-summary p span:last-child {
+    font-weight: 500;
 }
 
-.cart-summary #totalPrice {
+.cart-summary #totalPrice { /* Style for the final total */
+    font-size: 1.3em;
     font-weight: bold;
+    color: var(--color-primary);
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-border);
 }
 
-.checkout-button { /* 이미 스타일이 있을 수 있으므로 확인 */
-    display: block; /* 버튼을 블록 요소로 */
+.checkout-button { /* Checkout button style */
+    display: block;
     width: 100%;
     padding: var(--space-md);
-    background-color: #4a4a7d; /* 기본 버튼 색상 */
+    background-color: var(--color-primary);
     color: white;
     text-align: center;
-    border: none;
-    border-radius: 4px;
     font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    border-radius: var(--border-radius-sm);
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-top: var(--space-lg); /* Space above button */
 }
 
 .checkout-button:hover {
-    background-color: #3a3a6d; /* 호버 색상 */
+    background-color: var(--color-secondary);
 }
-
 .checkout-button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
 }
 
-/* Removed the media query (max-width: 768px) for cart layout */
 
+/* --- Apple-Inspired Form Styles (Checkout Page - Global Application) --- */
+/* Apply these styles globally within the checkout page, not just large screens */
 
-/* --- Form Group Styles (Apple Inspired) --- */
-/* Apply specifically to shipping info */
-.checkout-page .shipping-info .form-group {
-    margin-bottom: var(--space-lg); /* 그룹 간 간격 유지 */
-    position: relative; /* 포커스 효과 기준점 */
+.checkout-page .shipping-info .form-group,
+.checkout-page .payment-info .form-group {
+    margin-bottom: var(--space-lg); /* Consistent spacing */
 }
 
-.checkout-page .shipping-info .form-group label {
+.checkout-page .shipping-info .form-group label,
+.checkout-page .payment-info .form-group label {
     display: block;
-    margin-bottom: var(--space-xs); /* 레이블과 입력 필드 간격 약간 줄임 */
-    font-weight: 500; /* 약간 얇은 레이블 */
-    font-size: 0.85em; /* 레이블 크기 줄임 */
-    color: #666; /* 부드러운 회색 레이블 */
-    padding-left: var(--space-sm); /* 레이블 왼쪽 패딩 추가 (선택적) */
+    font-size: 0.85em; /* Slightly smaller label */
+    color: #555; /* Darker gray */
+    margin-bottom: 8px; /* Increased space below label */
+    font-weight: 500;
 }
 
-/* Consistent Input/Textarea Styling (Apple Inspired) */
 .checkout-page .shipping-info .form-group input[type="text"],
 .checkout-page .shipping-info .form-group input[type="email"],
 .checkout-page .shipping-info .form-group input[type="tel"],
-.checkout-page .shipping-info .form-group textarea {
+.checkout-page .shipping-info .form-group select,
+.checkout-page .payment-info .form-group input[type="text"],
+.checkout-page .payment-info .form-group input[type="number"],
+.checkout-page .payment-info .form-group select {
     width: 100%;
-    padding: var(--space-sm) var(--space-sm); /* 패딩 조정 (상하: 8px, 좌우: 8px) */
-    border: none; /* 모든 테두리 제거 */
-    border-bottom: 1px solid #ccc; /* 하단 테두리만 추가 */
-    border-radius: 0; /* 각진 모서리 */
+    padding: 14px 16px; /* Slightly taller padding */
+    border: 1px solid #ccc; /* Standard border */
+    border-radius: 6px; /* Less pronounced rounding */
     font-size: 1em;
-    line-height: 1.5; /* 줄 간격 조정 */
-    background-color: transparent; /* 배경 투명하게 */
-    transition: border-color 0.2s ease-in-out, border-bottom-width 0.2s ease-in-out; /* 부드러운 전환 효과 */
-    box-sizing: border-box;
-    -webkit-appearance: none; /* iOS 기본 스타일 제거 */
-    -moz-appearance: none;
-    appearance: none;
+    background-color: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    /* box-shadow: 0 1px 2px rgba(0,0,0,0.04); /* Very subtle shadow */ */
 }
 
-/* Focus State (Apple Inspired) */
 .checkout-page .shipping-info .form-group input[type="text"]:focus,
 .checkout-page .shipping-info .form-group input[type="email"]:focus,
 .checkout-page .shipping-info .form-group input[type="tel"]:focus,
-.checkout-page .shipping-info .form-group textarea:focus {
-    outline: none; /* 기본 아웃라인 제거 */
-    border-color: #007aff; /* Apple 파란색으로 하단 테두리 색상 변경 */
-    border-bottom-width: 2px; /* 포커스 시 하단 테두리 두껍게 */
-    /* box-shadow: none; /* 그림자 제거 (선택적) */
+.checkout-page .shipping-info .form-group select:focus,
+.checkout-page .payment-info .form-group input[type="text"]:focus,
+.checkout-page .payment-info .form-group input[type="number"]:focus,
+.checkout-page .payment-info .form-group select:focus {
+    outline: none;
+    border-color: var(--color-secondary); /* Use secondary color for focus */
+    box-shadow: 0 0 0 3px rgba(122, 122, 191, 0.2); /* Lighter focus ring */
 }
 
 .checkout-page .shipping-info .form-group textarea {
-    min-height: 100px;
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    background-color: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
     resize: vertical;
+    min-height: 100px; /* Taller textarea */
+}
+.checkout-page .shipping-info .form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 3px rgba(122, 122, 191, 0.2);
 }
 
-/* 기존 스타일 덮어쓰기 (필요시 !important 사용 고려) */
-/* 예: .checkout-page .shipping-info .form-group input */
 
-/* Removed the previous refined form group styles */
-
-/* === 리뷰 섹션 스타일 === */
+/* --- Reviews Section --- */
 .reviews {
-    /* Keep existing styles */
+    /* General container styles already set */
 }
-
 .review-summary {
-    /* Keep existing styles */
+    margin-bottom: var(--space-lg);
+    /* Add styles for average rating, star display if needed */
 }
-
 #reviewList {
-    /* Keep existing styles */
+    /* Container for individual reviews */
+    border-top: 1px solid var(--color-border-light);
+    padding-top: var(--space-lg);
 }
+/* Individual review item styling needed here */
 
 .review-input {
-    margin-top: var(--space-lg);
-display: flex; /* Flexbox 레이아웃 사용 */
-flex-wrap: wrap; /* 요소가 넘칠 경우 줄바꿈 허용 */
-align-items: flex-start; /* 상단 정렬 */
-gap: var(--space-md); /* 요소 간 간격 */
+    margin-top: var(--space-xl);
+    padding: var(--space-lg);
+    background-color: var(--color-background-alt);
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--color-border-light);
+    display: flex; /* Use flexbox for layout */
+    flex-wrap: wrap; /* Allow wrapping */
+    gap: var(--space-md);
 }
 
+.review-input label { /* Style labels if needed */
+    display: block;
+    margin-bottom: var(--space-xs);
+    font-weight: 500;
+}
 .review-input select#ratingInput {
-    flex-basis: 100px; /* 별점 선택 너비 고정 (조정 가능) */
-    padding: var(--space-sm);
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    min-width: 100px; /* Give select some width */
+    flex-basis: 150px; /* Base width for rating */
 }
 
 .review-input textarea#reviewInput {
-    flex-grow: 1; /* 남은 공간을 모두 차지하도록 설정 */
-    min-height: 80px; /* 최소 높이 설정 */
-    padding: var(--space-sm);
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    resize: vertical; /* 수직 크기 조절만 허용 */
-    box-sizing: border-box; /* 패딩/테두리 포함 */
-    /* Remove fixed width if previously set */
-    width: auto; /* Override potential fixed width */
+    width: 100%; /* Textarea takes full width */
+    padding: var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    min-height: 100px;
+    resize: vertical;
+    flex-basis: 100%; /* Ensure textarea takes full line */
+    box-sizing: border-box; /* Include padding/border in width */
+    font-size: 0.95em; /* Slightly smaller font for review */
 }
 
 .review-input button {
-    /* 기존 버튼 스타일 활용 또는 재정의 */
-    background-color: #4a4a7d;
+    padding: var(--space-sm) var(--space-xl); /* Adjust padding */
+    font-size: 1em;
+    background-color: var(--color-primary);
     color: white;
-    padding: var(--space-sm) var(--space-lg);
     border: none;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    flex-shrink: 0; /* 버튼 크기 유지 */
+    transition: background-color 0.2s ease;
+    margin-left: auto; /* Push button to the right */
+    flex-basis: content; /* Let button size itself */
 }
 
 .review-input button:hover {
-    background-color: #3a3a6d;
+    background-color: var(--color-secondary);
 }
 
-/* 반응형 조정 (예: 작은 화면에서 버튼 너비 조정) */
+/* Responsive adjustments for review input */
 @media (max-width: 576px) {
     .review-input {
-        gap: var(--space-sm); /* 간격 약간 줄임 */
+        flex-direction: column; /* Stack elements vertically */
     }
     .review-input select#ratingInput {
-        flex-basis: 80px; /* 더 작은 화면에서 선택 너비 줄임 */
+        width: 100%; /* Full width on small screens */
+        flex-basis: auto;
     }
     .review-input button {
-        /* Optionally make button full width or adjust padding */
-        /* width: 100%; */
-        padding: var(--space-sm) var(--space-md);
+        width: 100%; /* Full width button */
+        margin-left: 0;
+        flex-basis: auto;
     }
-} /* <<< Correct closing brace for media query */
+}
