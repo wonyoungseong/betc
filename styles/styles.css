@@ -344,8 +344,6 @@ div#productList {
     display: block;
     max-width: 100%; /* Prevent image from exceeding parent width */
     height: auto; /* Maintain aspect ratio */
-    margin-left: auto;
-    margin-right: auto;
     margin-bottom: var(--space-md);
     border-radius: 4px;
 }
@@ -1901,12 +1899,8 @@ footer {
 /* Product Item Image (기존 규칙과 병합) */
 .product-item img {
     display: block;
-    width: 100%; /* 너비 100% */
-    max-width: 100%; /* 부모 너비 초과 방지 */
-    height: auto; /* 비율 유지 */
-    aspect-ratio: 1 / 1; /* 1:1 비율 유지 (선호에 따라 조정) */
-    object-fit: cover; /* 컨테이너에 맞춰 이미지 자르기 */
-    margin-bottom: var(--space-md); /* 이미지와 텍스트 사이 간격 */
-    border-radius: 4px; /* 이미지 모서리 둥글게 (선택 사항) */
-    /* 기존 object-fit, max-width, height 등과 병합/수정 */
+    max-width: 100%; /* Prevent image from exceeding parent width */
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: var(--space-md);
+    border-radius: 4px;
 }
