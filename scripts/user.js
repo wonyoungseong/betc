@@ -155,6 +155,36 @@ function cancelPurchase(index) {
     }
 }
 
+// Function to update main content margin based on header height
+function updateMainContentMargin() {
+    const header = document.querySelector('header.gnb');
+    const mainContent = document.querySelector('main.main-content'); // Ensure selector matches your main content area
+
+    if (header && mainContent) {
+        const headerHeight = header.offsetHeight;
+        mainContent.style.marginTop = `${headerHeight}px`;
+        // console.log(`Header height: ${headerHeight}px, Main margin-top set.`);
+    } else {
+        console.warn('Header or main content element not found for margin adjustment.');
+    }
+}
+
+// Debounce function for resize events
+function debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+        var context = this, args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+};
+
 // 이벤트 리스너 설정 함수
 window.addEventListeners = function() {
     var loginLink = document.getElementById('loginLink');
@@ -265,6 +295,28 @@ window.addEventListeners = function() {
         });
     }
     // --- End Mobile Search ---
+
+    // --- Hamburger Menu Listener (Modify if exists, or add) ---
+    const hamburgerMenu = document.getElementById('hamburgerMenu');
+    const mainNav = document.getElementById('mainNav');
+
+    if (hamburgerMenu && mainNav) {
+        hamburgerMenu.addEventListener('click', function() {
+            mainNav.classList.toggle('active');
+            // Update margin AFTER the nav state changes and renders
+            // Use requestAnimationFrame or setTimeout for better accuracy
+            requestAnimationFrame(updateMainContentMargin);
+            // Or: setTimeout(updateMainContentMargin, 0);
+        });
+    } else {
+        console.warn('Hamburger menu or main nav not found for click listener.');
+    }
+
+    // --- Initial and Resize Listener for Margin Update --- ADDED
+    // Initial call
+    updateMainContentMargin();
+    // Call on resize (debounced)
+    window.addEventListener('resize', debounce(updateMainContentMargin, 100));
 }
 
 function updateOrderCompleteCount() {
@@ -370,3 +422,6 @@ window.checkAuthStatus = function() {
 
 // Option 3: Call on DOMContentLoaded (might be too early if cart depends on other async ops)
 // document.addEventListener('DOMContentLoaded', window.updateCartCount);
+
+// Make sure the update function is globally accessible if needed elsewhere
+window.updateMainContentMargin = updateMainContentMargin;
