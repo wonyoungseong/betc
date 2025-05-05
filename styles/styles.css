@@ -289,21 +289,39 @@ main {
 }
 
 /* === 제품 목록 스타일 === */
-.products { /* Changed from .product-list to match HTML */
+/* Default layout: Grid */
+.products { 
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* Default 4 columns */
     gap: var(--space-lg);
-    /* Reset potentially conflicting flex properties */
-    overflow-x: visible;
-    justify-content: center; /* Changed from center */
-    align-items: stretch; /* Changed from center */
-    padding-bottom: 0;
-    scroll-snap-type: none;
+    justify-content: center; 
+    align-items: stretch; 
 }
 
-div#productList { /* Style for the ID if needed, though .products should cover it */
-    /* justify-content: center; */ /* Now handled by .products */
-    /* align-items: center; */   /* Now handled by .products */
+/* Adjust columns for medium screens */
+@media screen and (max-width: 992px) {
+    .products { 
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Adjust columns for small-medium screens */
+@media screen and (max-width: 768px) {
+    .products { 
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Adjust columns for very small screens */
+@media screen and (max-width: 480px) {
+    .products { 
+        grid-template-columns: repeat(1, 1fr); /* Single column */
+        gap: var(--space-md); /* Reduce gap */
+    }
+}
+
+div#productList { /* Style for the ID if needed */
+    /* Now handled by .products */
 }
 
 .product-item {
@@ -316,8 +334,6 @@ div#productList { /* Style for the ID if needed, though .products should cover i
     text-align: left; /* Reset text alignment */
     display: block; /* Default display for grid layout */
     width: auto; /* Allow grid to control width */
-    flex: none; /* Remove flex settings */
-    scroll-snap-align: none;
     margin-bottom: 0; /* Use gap from parent grid */
 }
 
@@ -1041,6 +1057,8 @@ footer {
     /* Adjusted products rule for smaller screens */
     .products { /* Changed from .product-list */
         /* Keep flex properties for horizontal scroll below 768px */
+        /* If sticking with Grid, adjust columns */
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for smaller */
         gap: var(--space-md);
     }
     .product-item {
@@ -1093,7 +1111,7 @@ footer {
     font-size: 1.8em;
 }
 
-/* New Layout Container (Applies only on wider screens) */
+/* Default Layout Container (Stack columns by default) */
 .checkout-layout-container {
     display: flex;
     flex-direction: column; /* Mobile first: stack */
@@ -1146,10 +1164,6 @@ footer {
         flex: 2; /* Form takes more space */
         order: 1; /* Form on the left */
     }
-    /* Remove bottom margin rules from inside media query if applied outside */
-    /* .checkout-form-column .checkout-section { margin-bottom: var(--space-xl); } */
-    /* .checkout-form-column .checkout-section:last-child { margin-bottom: 0; } */
-
 
     .checkout-summary-column {
         flex: 1; /* Summary takes less space */
@@ -1158,11 +1172,6 @@ footer {
         /* Calculate top based on fixed header height + buffer + initial padding */
         top: calc(100px + 30px + var(--space-lg)); /* Adjust 100px if header height differs */
     }
-    /* Remove bottom margin rules from inside media query if applied outside */
-    /* .checkout-summary-column .checkout-section { margin-bottom: var(--space-xl); } */
-    /* .checkout-summary-column .checkout-section:last-child { margin-bottom: 0; } */
-
-
     /* REMOVE or comment out the old complex responsive rule for .checkout-container children */
     /*
     .checkout-container > .shipping-info { order: 1; flex-basis: 60%; }
@@ -1360,81 +1369,8 @@ footer {
 /* Search icon color is handled by inline style filter:invert(1) */
 
 /* === Product List Responsive Refinements === */
-/* Tablet and Smaller - Horizontal Scroll */
-@media screen and (max-width: 768px) {
-    .products { /* Changed from .product-list */
-        display: flex; /* Change to flex */
-        overflow-x: auto; /* Enable horizontal scroll */
-        padding-bottom: var(--space-md); /* Space for scrollbar */
-        /* Remove grid properties */
-        grid-template-columns: none;
-        gap: var(--space-md); /* Adjust gap for flex */
-        justify-content: flex-start; /* Align items to start */
-        align-items: stretch; /* Keep align-items */
-        /* Add scroll snap for better UX (optional) */
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    }
-    .product-item {
-        flex: 0 0 auto; /* Prevent flex item resizing */
-        width: 180px; /* Set fixed width for each item */
-        /* Ensure vertical alignment if heights differ slightly */
-        display: flex; /* Use flex for internal alignment */
-        flex-direction: column; /* Stack content vertically */
-        scroll-snap-align: start; /* Snap alignment (optional) */
-        margin-bottom: 0; /* Remove margin if set before */
-    }
-    .product-item img {
-        /* Styles for image within card - width: 100% should work correctly now */
-        width: 100%;
-        aspect-ratio: 1 / 1;
-        object-fit: cover;
-        margin-bottom: var(--space-sm); /* Adjust margin */
-    }
-     .product-item h3 {
-         font-size: 0.9em;
-         margin: var(--space-xs) 0;
-         flex-grow: 1; /* Allow title to take space if needed */
-     }
-     .product-item .price,
-     .product-item .original-price,
-     .product-item .discount {
-         font-size: 0.85em;
-     }
-     .product-item p {
-         margin: var(--space-xs) 0;
-     }
-}
-
-/* Ensure default products for wider screens is still grid */
-@media screen and (min-width: 769px) { /* Breakpoint slightly above 768 */
-    .products { /* Changed from .product-list */
-        display: grid;
-        grid-template-columns: repeat(4, 1fr); /* Default 4 columns */
-        gap: var(--space-lg);
-        /* Reset potentially conflicting flex properties */
-        overflow-x: visible;
-        justify-content: center; /* Revert to center */
-        align-items: stretch; /* Keep stretch */
-        padding-bottom: 0;
-        scroll-snap-type: none;
-    }
-    /* Reset product item flex properties */
-    .product-item {
-        width: auto; /* Allow grid to control width */
-        flex: none; /* Remove flex settings */
-        display: block; /* Revert to block display */
-        scroll-snap-align: none;
-        margin-bottom: 20px; /* Restore margin if needed */
-    }
-    /* Media queries for 3 and 2 columns on wider screens */
-    @media screen and (max-width: 992px) {
-        .products { /* Changed from .product-list */
-            grid-template-columns: repeat(3, 1fr);
-        }
-    }
-    /* No need for 768px grid rule here as it's handled by the <768px flex rule */
-}
+/* Removed the media query for max-width 768px that used flex */
+/* Removed the media query for min-width 769px that reset to grid */
 
 
 /* === Product Detail Page Specific Styles === */
@@ -1641,10 +1577,10 @@ footer {
     /* Add specific styles if needed, often inherits from .main-content */
 }
 
-/* New Layout Container (Desktop First) */
+/* Default Layout Container (2 columns) */
 .cart-layout-container {
     display: flex; /* Keep flex for desktop */
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Allow wrapping on very small screens if needed */
     gap: var(--space-lg);
     align-items: flex-start;
 }
@@ -1657,6 +1593,8 @@ footer {
 .cart-summary-column {
     flex: 1;
     min-width: 250px;
+    position: sticky; /* Make summary sticky by default */
+    top: calc(100px + 30px + var(--space-lg)); /* Adjust top position */
 }
 
 /* Cart items styling (adjust existing .cart-items if needed) */
@@ -1695,7 +1633,7 @@ footer {
     display: flex;
     align-items: center;
     gap: var(--space-sm);
-    margin-left: auto; /* 컨트롤을 오른쪽으로 밀기 */
+    margin-left: auto; /* 컨트롤��� 오른쪽으로 밀기 */
 }
 
 .item-quantity input {
@@ -1765,25 +1703,7 @@ footer {
     cursor: not-allowed;
 }
 
-/* 반응형 조정 (예: 768px 미만일 때 세로 정렬) */
-@media (max-width: 768px) {
-    .cart-layout-container {
-        flex-direction: column;
-    }
-    .cart-summary-column {
-        position: static; /* 스티키 해제 */
-        width: 100%;
-    }
-    .cart-item {
-        flex-wrap: wrap; /* 컨트롤 영역이 아래로 떨어지도록 */
-    }
-    .item-controls {
-        width: 100%;
-        justify-content: flex-end; /* 오른쪽 정렬 */
-        margin-left: 0;
-        margin-top: var(--space-sm);
-    }
-}
+/* Removed the media query (max-width: 768px) for cart layout */
 
 
 /* --- Form Group Styles (Apple Inspired) --- */
