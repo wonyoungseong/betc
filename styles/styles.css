@@ -1378,7 +1378,7 @@ footer {
     /* Optionally hide scrollbar visually */
      /* scrollbar-width: none; /* Firefox */ */
      /* &::-webkit-scrollbar { display: none; } /* Chrome, Safari, Opera */ */
-}
+/* Removed unnecessary closing brace formerly at Ln 1381 */
 
 /* More specific selector for thumbnails */
 .thumbnail-images .thumbnail {
@@ -1962,53 +1962,62 @@ footer {
     }
 }
 
-/* --- Form Group Styles (Refined) --- */
-/* Apply specifically to shipping info for now */
+/* --- Form Group Styles (Apple Inspired) --- */
+/* Apply specifically to shipping info */
 .checkout-page .shipping-info .form-group {
-    margin-bottom: var(--space-lg); /* Increase bottom margin */
+    margin-bottom: var(--space-lg); /* 그룹 간 간격 유지 */
+    position: relative; /* 포커스 효과 기준점 */
 }
 
 .checkout-page .shipping-info .form-group label {
     display: block;
-    margin-bottom: var(--space-sm); /* Space between label and input */
-    font-weight: 600; /* Slightly bolder label */
-    font-size: 0.95em;
-    color: #444; /* Slightly darker label color */
+    margin-bottom: var(--space-xs); /* 레이블과 입력 필드 간격 약간 줄임 */
+    font-weight: 500; /* 약간 얇은 레이블 */
+    font-size: 0.85em; /* 레이블 크기 줄임 */
+    color: #666; /* 부드러운 회색 레이블 */
+    padding-left: var(--space-sm); /* 레이블 왼쪽 패딩 추가 (선택적) */
 }
 
-/* Consistent Input/Textarea Styling */
+/* Consistent Input/Textarea Styling (Apple Inspired) */
 .checkout-page .shipping-info .form-group input[type="text"],
 .checkout-page .shipping-info .form-group input[type="email"],
 .checkout-page .shipping-info .form-group input[type="tel"],
 .checkout-page .shipping-info .form-group textarea {
     width: 100%;
-    padding: var(--space-md); /* Consistent padding (e.g., 16px) */
-    border: 1px solid #ccc; /* Standard border */
-    border-radius: 4px; /* Slightly rounded corners */
+    padding: var(--space-sm) var(--space-sm); /* 패딩 조정 (상하: 8px, 좌우: 8px) */
+    border: none; /* 모든 테두리 제거 */
+    border-bottom: 1px solid #ccc; /* 하단 테두리만 추가 */
+    border-radius: 0; /* 각진 모서리 */
     font-size: 1em;
-    line-height: 1.4; /* Improve text readability */
-    background-color: #fff; /* Ensure white background */
-    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition for focus */
-    box-sizing: border-box; /* Ensure padding is included in width */
+    line-height: 1.5; /* 줄 간격 조정 */
+    background-color: transparent; /* 배경 투명하게 */
+    transition: border-color 0.2s ease-in-out, border-bottom-width 0.2s ease-in-out; /* 부드러운 전환 효과 */
+    box-sizing: border-box;
+    -webkit-appearance: none; /* iOS 기본 스타일 제거 */
+    -moz-appearance: none;
+    appearance: none;
 }
 
-/* Focus State */
+/* Focus State (Apple Inspired) */
 .checkout-page .shipping-info .form-group input[type="text"]:focus,
 .checkout-page .shipping-info .form-group input[type="email"]:focus,
 .checkout-page .shipping-info .form-group input[type="tel"]:focus,
 .checkout-page .shipping-info .form-group textarea:focus {
-    outline: none; /* Remove default outline */
-    border-color: #4a4a7d; /* Highlight border with theme color */
-    box-shadow: 0 0 0 2px rgba(74, 74, 125, 0.2); /* Add subtle glow */
+    outline: none; /* 기본 아웃라인 제거 */
+    border-color: #007aff; /* Apple 파란색으로 하단 테두리 색상 변경 */
+    border-bottom-width: 2px; /* 포커스 시 하단 테두리 두껍게 */
+    /* box-shadow: none; /* 그림자 제거 (선택적) */
 }
 
 .checkout-page .shipping-info .form-group textarea {
-    min-height: 100px; /* Increase min-height */
+    min-height: 100px;
     resize: vertical;
-} /* <<< Correct closing brace for textarea rule */
+}
 
-/* Remove old general form styles if they conflict */
-/* Example: Check for existing .form-group input rules outside checkout */
+/* 기존 스타일 덮어쓰기 (필요시 !important 사용 고려) */
+/* 예: .checkout-page .shipping-info .form-group input */
+
+/* Removed the previous refined form group styles */
 
 /* === 리뷰 섹션 스타일 === */
 .reviews {
@@ -2081,4 +2090,4 @@ footer {
     }
 } /* <<< Correct closing brace for media query */
 
-/* ... rest of styles ... */
+/* Removed trailing comment */
