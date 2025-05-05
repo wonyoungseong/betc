@@ -159,199 +159,168 @@ function cancelPurchase(index) {
 function updateMainContentMargin() {
     const header = document.querySelector('header.gnb');
     const mainContent = document.querySelector('main.main-content'); // Ensure selector matches your main content area
+    const mainNav = document.getElementById('mainNav'); // 네비게이션 요소 선택
 
     if (header && mainContent) {
-        const headerHeight = header.offsetHeight;
-        mainContent.style.marginTop = `${headerHeight}px`;
-        // console.log(`Header height: ${headerHeight}px, Main margin-top set.`);
+        // Start with the visible header's height
+        let headerHeight = header.offsetHeight;
+
+        // Check if the mobile nav is active AND displayed (important for CSS transitions/visibility)
+        if (mainNav && mainNav.classList.contains('active') && window.getComputedStyle(mainNav).display !== 'none') {
+             // Use getBoundingClientRect().height which includes padding and border
+             headerHeight = header.getBoundingClientRect().bottom + mainNav.getBoundingClientRect().height;
+             // Or, if nav slides under the header, just add its height:
+             // headerHeight += mainNav.getBoundingClientRect().height;
+        } else {
+            // If nav is not active or not displayed, just use header's bottom position relative to viewport
+            headerHeight = header.getBoundingClientRect().bottom;
+            // Or simply use offsetHeight if nav is guaranteed to be display: none
+            // headerHeight = header.offsetHeight;
+        }
+
+
+        // Ensure a minimum margin if needed, or handle headerHeight being 0
+        mainContent.style.marginTop = `${Math.max(0, headerHeight)}px`;
+        // console.log('Updated main margin-top:', headerHeight); // Debugging log
     } else {
-        console.warn('Header or main content element not found for margin adjustment.');
+         // console.warn('Header or Main Content not found for margin update.'); // Debugging log
     }
 }
 
-// Debounce function for resize events
-function debounce(func, wait, immediate) {
-    var timeout;
-    return function() {
-        var context = this, args = arguments;
-        var later = function() {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
+// Debounce function
+const debounce = (func, wait) => {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
         };
-        var callNow = immediate && !timeout;
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
     };
 };
 
-// 이벤트 리스너 설정 함수
-window.addEventListeners = function() {
-    var loginLink = document.getElementById('loginLink');
-    var signupLink = document.getElementById('signupLink');
-    var logoutLink = document.getElementById('logoutLink');
-    var searchButton = document.getElementById('searchButton');
+// --- Named Event Handlers ---
+// Use named functions to allow easy removal of listeners
 
-    var closeLoginModalBtn = document.getElementById('closeLoginModal');
-    var closeSignupModalBtn = document.getElementById('closeSignupModal');
-    var loginSubmitBtn = document.getElementById('loginSubmit');
-    var signupSubmitBtn = document.getElementById('signupSubmit');
-    var searchInput = document.getElementById('searchInput');
+const handleHamburgerClick = () => {
+    const mainNav = document.getElementById('mainNav');
+    if (mainNav) {
+        mainNav.classList.toggle('active');
+        // Update margin AFTER style change has likely rendered
+        requestAnimationFrame(updateMainContentMargin);
+    }
+};
 
-    if (searchInput) {
-        searchInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                window.searchProduct();
-            }
-        });
+const handleMainSearch = () => {
+    if (typeof window.searchProduct === 'function') {
+        window.searchProduct(); // Assumes main search uses #searchInput value internally
+    } else {
+        console.error('searchProduct function is not defined.');
+    }
+};
+
+const handleMobileSearch = () => {
+    const mobileSearchInput = document.getElementById('mobileSearchInput');
+    const mainNav = document.getElementById('mainNav');
+     if (typeof window.searchProduct === 'function' && mobileSearchInput) {
+        window.searchProduct(mobileSearchInput.value); // Pass mobile input value
+        if (mainNav) mainNav.classList.remove('active'); // Close nav after search
+        requestAnimationFrame(updateMainContentMargin); // Update margin after closing nav
+    } else {
+        console.error('searchProduct function or mobileSearchInput not defined.');
+    }
+};
+
+const handleSearchInputKeypress = (event) => {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        handleMainSearch();
+    }
+};
+
+const handleMobileSearchInputKeypress = (event) => {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        handleMobileSearch();
+    }
+};
+
+const handleLogout = (e) => {
+    e.preventDefault();
+    window.logout(); // Assuming logout function exists globally
+};
+
+// Debounced version of the margin update function for resize
+const debouncedUpdateMargin = debounce(updateMainContentMargin, 100);
+
+
+// Event listeners setup function
+function addEventListeners() {
+    // --- Hamburger Menu ---
+    const hamburgerMenu = document.getElementById('hamburgerMenu');
+    if (hamburgerMenu) {
+        // Remove first to prevent duplicates if this runs multiple times
+        hamburgerMenu.removeEventListener('click', handleHamburgerClick);
+        hamburgerMenu.addEventListener('click', handleHamburgerClick);
+    } else {
+        // console.warn('Hamburger menu button not found.');
     }
 
-    if (loginLink) {
-        loginLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            window.showLoginModal();
-        });
-    }
-
-    if (signupLink) {
-        signupLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            window.showSignupModal();
-        });
-    }
-
-    if (closeLoginModalBtn) {
-        closeLoginModalBtn.addEventListener('click', window.closeLoginModal);
-    }
-
-    if (closeSignupModalBtn) {
-        closeSignupModalBtn.addEventListener('click', window.closeSignupModal);
-    }
-
-    if (loginSubmitBtn) {
-        loginSubmitBtn.addEventListener('click', window.login);
-    }
-
-    if (signupSubmitBtn) {
-        signupSubmitBtn.addEventListener('click', window.signup);
-    }
-
-    if (logoutLink) {
-        logoutLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            window.logout();
-        });
-    }
+    // --- Search ---
+    const searchButton = document.getElementById('searchButton');
+    const searchInput = document.getElementById('searchInput');
+    const mobileSearchButton = document.getElementById('mobileSearchButton');
+    const mobileSearchInput = document.getElementById('mobileSearchInput');
 
     if (searchButton) {
-        searchButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            window.searchProduct();
-        });
+        searchButton.removeEventListener('click', handleMainSearch);
+        searchButton.addEventListener('click', handleMainSearch);
     }
+    if (searchInput) {
+        searchInput.removeEventListener('keypress', handleSearchInputKeypress);
+        searchInput.addEventListener('keypress', handleSearchInputKeypress);
+    }
+     if (mobileSearchButton) {
+        mobileSearchButton.removeEventListener('click', handleMobileSearch);
+        mobileSearchButton.addEventListener('click', handleMobileSearch);
+     }
+     if (mobileSearchInput) {
+         mobileSearchInput.removeEventListener('keypress', handleMobileSearchInputKeypress);
+         mobileSearchInput.addEventListener('keypress', handleMobileSearchInputKeypress);
+     }
 
-    // 로그인 모달 엔터 키 이벤트 리스너 추가
-    const loginUsernameInput = document.getElementById('loginUsername');
-    if (loginUsernameInput) {
-        loginUsernameInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                document.getElementById('loginSubmit').click(); // 엔터 키로 로그인 버튼 클릭
-            }
-        });
+    // --- Logout ---
+    const logoutLink = document.getElementById('logoutLink');
+    if (logoutLink) {
+        logoutLink.removeEventListener('click', handleLogout);
+        logoutLink.addEventListener('click', handleLogout);
     } else {
-        console.warn("Element with ID 'loginUsername' not found when adding keypress listener.");
+         // console.warn('Logout link not found.');
     }
 
-    // --- Mobile Search Event Listeners --- ADDED
-    const mobileSearchInput = document.getElementById('mobileSearchInput');
-    const mobileSearchButton = document.getElementById('mobileSearchButton');
-
-    if (mobileSearchInput) {
-        mobileSearchInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                if (typeof window.searchProduct === 'function') {
-                    window.searchProduct(mobileSearchInput.value);
-                    // Optionally close the nav menu after search
-                    document.getElementById('mainNav').classList.remove('active');
-                } else {
-                    console.error('searchProduct function is not defined.');
-                }
-            }
-        });
-    }
-
-    if (mobileSearchButton) {
-        mobileSearchButton.addEventListener('click', function() {
-            if (typeof window.searchProduct === 'function') {
-                 window.searchProduct(mobileSearchInput.value);
-                 // Optionally close the nav menu after search
-                 document.getElementById('mainNav').classList.remove('active');
-            } else {
-                console.error('searchProduct function is not defined.');
-            }
-        });
-    }
-    // --- End Mobile Search ---
-
-    // --- Hamburger Menu Listener (Modify if exists, or add) ---
-    const hamburgerMenu = document.getElementById('hamburgerMenu');
-    const mainNav = document.getElementById('mainNav');
-
-    if (hamburgerMenu && mainNav) {
-        hamburgerMenu.addEventListener('click', function() {
-            mainNav.classList.toggle('active');
-            // Update margin AFTER the nav state changes and renders
-            // Use requestAnimationFrame or setTimeout for better accuracy
-            requestAnimationFrame(updateMainContentMargin);
-            // Or: setTimeout(updateMainContentMargin, 0);
-        });
-    } else {
-        console.warn('Hamburger menu or main nav not found for click listener.');
-    }
-
-    // --- Initial and Resize Listener for Margin Update --- ADDED
-    // Initial call
-    updateMainContentMargin();
-    // Call on resize (debounced)
-    window.addEventListener('resize', debounce(updateMainContentMargin, 100));
+    // --- Resize Listener ---
+    // Ensure only one resize listener for margin updates exists
+    window.removeEventListener('resize', debouncedUpdateMargin);
+    window.addEventListener('resize', debouncedUpdateMargin);
 }
 
-function updateOrderCompleteCount() {
-    const purchaseList = document.getElementById('purchaseList');
-    const orderCompleteCount = document.getElementById('orderCompleteCount');
-    if (purchaseList && orderCompleteCount) {
-        const count = purchaseList.children.length;
-        orderCompleteCount.textContent = count;
-    }
-}
+// Make functions globally accessible if needed
+window.updateMainContentMargin = updateMainContentMargin;
+window.addEventListeners = addEventListeners;
 
-function showLoginModal() {
-    document.getElementById('loginModal').style.display = 'block';
-}
 
-function showSignupModal() {
-    document.getElementById('signupModal').style.display = 'block';
-}
+// Simplified DOMContentLoaded - relies on initializePage in each HTML file
+document.addEventListener('DOMContentLoaded', () => {
+    // The initial call to updateMainContentMargin is crucial here,
+    // possibly after a slight delay or using requestAnimationFrame
+    // to ensure the header (potentially included) is rendered.
+    requestAnimationFrame(() => {
+        updateMainContentMargin();
+    });
 
-function closeModals() {
-    document.getElementById('loginModal').style.display = 'none';
-    document.getElementById('signupModal').style.display = 'none';
-}
-
-// 이벤트 리스너 추가
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize margin first
-    updateMainContentMargin();
-
-    // Attach main event listeners (which includes hamburger toggle)
-    addEventListeners();
-
-    // Remove adjustLayout call from here, rely on resize listener in addEventListeners
-    // window.addEventListener('resize', adjustLayout);
-    // adjustLayout(); // Remove initial call from here too
+    // Note: checkAuthStatus, updateCartCount etc. should be called within
+    // the initializePage function specific to each HTML file, *after* includeHTML.
 });
 
 // --- NEW FUNCTION: Update Cart Count in Header ---
@@ -391,6 +360,3 @@ window.checkAuthStatus = function() {
 
 // Option 3: Call on DOMContentLoaded (might be too early if cart depends on other async ops)
 // document.addEventListener('DOMContentLoaded', window.updateCartCount);
-
-// Make sure the update function is globally accessible if needed elsewhere
-window.updateMainContentMargin = updateMainContentMargin;
