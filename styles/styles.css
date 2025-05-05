@@ -194,8 +194,28 @@ header {
     display: flex; /* Align icon and text */
     align-items: center;
     gap: var(--space-xs); /* Space between icon and text */
+    position: relative; /* For icon positioning if needed */
 }
 
+/* Specific styles for icons within user menu links */
+.user-menu .login-icon,
+.user-menu .signup-icon,
+.user-menu .logout-icon {
+    width: 20px; /* Adjust icon size */
+    height: 20px;
+    vertical-align: middle;
+    display: none; /* Hide icons by default */
+}
+
+/* Style for text spans */
+.user-menu .login-text,
+.user-menu .signup-text,
+.user-menu .logout-text {
+    display: inline; /* Show text by default */
+    vertical-align: middle;
+}
+
+/* Cart icon and count specifics */
 .icon-link img {
     width: 24px; /* Icon size */
     height: 24px;
@@ -576,7 +596,6 @@ button:hover {
     background-size: cover;
     background-position: center;
     padding: var(--space-xxl) var(--space-lg);
-    text-align: center;
     color: white;
     position: relative; /* For pseudo-element overlay */
     border-radius: 0 0 var(--border-radius-md) var(--border-radius-md); /* Rounded bottom */
@@ -597,6 +616,7 @@ button:hover {
     z-index: 2;
     max-width: 700px; /* Limit content width */
     margin: 0 auto; /* Center content */
+    text-align: left; /* Align text to the left */
 }
 
 .hero h1 {
@@ -669,6 +689,7 @@ button:hover {
 /* Use .products style by default */
 .featured-products .products { /* Target #mainProductList - Increased Specificity */
     display: flex !important; /* Override default grid with flex */
+    flex-direction: row; /* Ensure row direction */
     flex-wrap: wrap; /* Allow wrapping */
     justify-content: space-around; /* Distribute items */
     gap: var(--space-lg); /* Consistent gap */
@@ -677,7 +698,7 @@ button:hover {
 }
 
 .featured-products .product-item { /* Keep responsive sizing */
-    flex-basis: calc(25% - var(--space-lg) * 3 / 4);
+    flex-basis: calc(25% - var(--space-lg) * 3 / 4); /* Adjust basis for gap */
     min-width: 200px;
 }
 
@@ -1082,8 +1103,9 @@ footer {
     .header-top {
         padding: var(--space-sm); /* Reduce padding */
     }
+    /* Adjust logo size to prevent wrapping */
     .logo a {
-        font-size: 1.2em; /* Smaller logo text */
+        font-size: 1.1em; /* Smaller logo text */
     }
 
     /* Hide top search bar */
@@ -1131,44 +1153,52 @@ footer {
     .user-menu {
         gap: var(--space-sm);
     }
-    /* Hide text links, show icons for login/signup/logout */
-    #loginLink,
-    #signupLink,
-    #logoutLink .logout-text { /* Target logout text specifically */
+
+    /* Hide text spans for login/signup/logout */
+    .user-menu .login-text,
+    .user-menu .signup-text,
+    .user-menu .logout-text {
         display: none; /* Hide text */
     }
 
-    /* Style the icons (assuming they exist in HTML) */
-    #loginLink .login-icon, /* Hypothetical class for login icon */
-    #signupLink .signup-icon, /* Hypothetical class for signup icon */
-    #logoutLink .logout-icon {
+    /* Show icons for login/signup/logout */
+    .user-menu .login-icon,
+    .user-menu .signup-icon,
+    .user-menu .logout-icon {
         display: inline; /* Show icons */
         width: 20px; /* Ensure consistent icon size */
         height: 20px;
         vertical-align: middle;
-        margin-left: 0; /* Remove left margin when only icon is shown */
+        margin: 0; /* Remove any default margins */
     }
 
-    #logoutLink .logout-icon {
-         filter: brightness(0) invert(1); /* Ensure logout icon is white */
+    /* Ensure logout icon is white */
+    .user-menu .logout-icon {
+         filter: brightness(0) invert(1);
     }
-
 }
 
-/* Default Logout Icon Style */
-#logoutLink .logout-icon {
-    display: none; /* Hide icon by default */
+/* Default icon styles (hidden by default) */
+.user-menu .login-icon,
+.user-menu .signup-icon,
+.user-menu .logout-icon {
+    display: none;
     width: 20px;
     height: 20px;
     vertical-align: middle;
-    filter: brightness(0) invert(1); /* Make icon white like other icons */
+    filter: brightness(0) invert(1); /* Make icons white like other icons */
 }
 
-#logoutLink .logout-text {
-    display: inline; /* Show text by default */
+/* Default text styles (visible by default) */
+.user-menu .login-text,
+.user-menu .signup-text,
+.user-menu .logout-text {
+    display: inline;
     vertical-align: middle;
     margin-left: var(--space-xs); /* Space next to icon if it were shown */
 }
+/* Special case for logout text to be hidden at 480px (already handled above) */
+
 
 /* Hero Section Responsive */
 @media (max-width: 768px) {
@@ -1178,6 +1208,10 @@ footer {
     }
     .hero h1 { font-size: 2.2em; }
     .hero p { font-size: 1.1em; }
+    /* Adjust hero text alignment for smaller screens if needed */
+    .hero-content {
+        text-align: center; /* Revert to center for tablets? Or keep left? Let's keep left */
+    }
 }
 
 @media (max-width: 480px) {
@@ -1188,6 +1222,9 @@ footer {
     .hero h1 { font-size: 1.8em; }
     .hero p { font-size: 1em; }
     .cta-button { font-size: 1em; padding: var(--space-sm) var(--space-md); }
+    .hero-content {
+        text-align: center; /* Center align on smallest screens */
+    }
 }
 
 /* Category Nav Responsive */
@@ -1209,11 +1246,17 @@ footer {
 
 /* Featured Products Responsive */
 @media (max-width: 992px) {
+    .featured-products .products {
+        justify-content: space-evenly; /* Adjust justification */
+    }
     .featured-products .product-item {
-        flex-basis: calc(50% - var(--space-lg) / 2); /* 2 items per row */
+        flex-basis: calc(50% - var(--space-lg)); /* 2 items per row, adjust gap calc */
     }
 }
 @media (max-width: 576px) {
+    .featured-products .products {
+        justify-content: center; /* Center single item */
+    }
     /* Ensure product items are usable on small screens */
     .product-item {
          padding: var(--space-sm);
@@ -1222,7 +1265,8 @@ footer {
     .product-item .price { font-size: 1.1em; }
 
     .featured-products .product-item {
-        flex-basis: 100%; /* 1 item per row */
+        flex-basis: 80%; /* Make single item slightly narrower than full width */
+        max-width: 300px; /* Add max width for single item */
     }
 }
 
@@ -1383,7 +1427,7 @@ footer {
 }
 
 /* Styles specific to larger screens for Apple forms */
-@media (min-width: 992px) { 
+@media (min-width: 992px) {
     .checkout-layout-container {
         flex-wrap: nowrap;
     }
