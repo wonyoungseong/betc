@@ -1241,18 +1241,34 @@ footer {
     font-size: 1.8em;
 }
 
-.checkout-container {
+/* New Layout Container (Applies only on wider screens) */
+.checkout-layout-container {
     display: flex;
     flex-direction: column; /* Mobile first: stack */
     gap: var(--space-xl);
 }
 
-.checkout-section { /* Common class for summary, shipping, payment */
-    background-color: #fff; /* White background */
+.checkout-form-column {
+    order: 1; /* Ensure form comes first on mobile if needed */
+}
+
+.checkout-summary-column {
+    order: 2; /* Ensure summary comes second on mobile */
+}
+
+/* Styles common to sections within columns */
+.checkout-section {
+    background-color: #fff;
     padding: var(--space-lg);
     border: 1px solid #eee;
     border-radius: 4px;
+    margin-bottom: var(--space-xl); /* Space between sections in mobile */
 }
+.checkout-form-column .checkout-section:last-child,
+.checkout-summary-column .checkout-section:last-child {
+     margin-bottom: 0; /* Remove bottom margin for last item in column */
+}
+
 
 .checkout-section h3 {
     font-size: 1.4em;
@@ -1261,141 +1277,50 @@ footer {
     border-bottom: 1px solid #eee;
 }
 
-/* --- Order Summary Specifics --- */
-.order-summary .order-item {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-    padding: var(--space-sm) 0;
-    border-bottom: 1px solid #f0f0f0;
-}
-.order-summary .order-item:last-child {
-    border-bottom: none;
-}
-.summary-item-image { /* Already styled, check consistency */
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 4px;
-    flex-shrink: 0;
-}
-.summary-item-details {
-    flex-grow: 1;
-}
-.summary-item-name {
-    font-weight: bold;
-    display: block; /* Ensure it takes block space */
-}
-.summary-item-price,
-.summary-item-quantity {
-    color: #555;
-    font-size: 0.9em;
-}
-.summary-item-total {
-    font-weight: bold;
-    text-align: right;
-    min-width: 70px; /* Ensure space */
+/* Ensure button inside summary column has bottom margin */
+.checkout-summary-column .checkout-button {
+    margin-top: var(--space-lg); /* Space above button */
 }
 
-
-/* --- Form Group Styles --- */
-.form-group {
-    margin-bottom: var(--space-md);
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: var(--space-sm);
-    font-weight: bold;
-    font-size: 0.95em;
-}
-
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="tel"],
-.form-group textarea,
-.form-group select {
-    width: 100%;
-    padding: var(--space-md);
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1em;
-}
-
-.form-group textarea {
-    min-height: 80px; /* Adjust height */
-    resize: vertical; /* Allow vertical resize */
-}
-
-/* --- Order Total Section --- */
-.order-total-details {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-}
-
-.order-total-row {
-    display: flex;
-    justify-content: space-between;
-    padding: var(--space-xs) 0;
-}
-
-.order-total-row.final-total {
-    font-weight: bold;
-    font-size: 1.2em;
-    margin-top: var(--space-sm);
-    padding-top: var(--space-md);
-    border-top: 1px solid #eee;
-}
 
 /* --- Media Query for Checkout Desktop Layout --- */
-@media (min-width: 992px) { /* Wider breakpoint for two columns */
-    .checkout-container {
-        flex-direction: row;
+@media (min-width: 992px) { /* Use desired breakpoint */
+    .checkout-layout-container {
+        flex-direction: row; /* Side-by-side layout */
         align-items: flex-start; /* Align columns to top */
-        flex-wrap: wrap; /* Added for fallback */
     }
 
-    .checkout-form-sections { /* Wrapper for shipping/payment */
-        flex: 2; /* Take more space */
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-xl);
-        order: 1; /* Ensure form is first visually if needed */
-        flex-basis: 60%; /* Fallback basis */
+    .checkout-form-column {
+        flex: 2; /* Form takes more space */
+        order: 1; /* Form on the left */
     }
+    /* Remove bottom margin rules from inside media query if applied outside */
+    .checkout-form-column .checkout-section { margin-bottom: var(--space-xl); }
+    .checkout-form-column .checkout-section:last-child { margin-bottom: 0; }
 
-    .order-summary-section { /* Wrapper for summary/total */
-        flex: 1; /* Take less space */
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-xl);
-        /* Optional: Sticky summary */
-        /* position: sticky; */
-        /* top: 100px; */
-        order: 2; /* Ensure summary is second visually */
-        flex-basis: 35%; /* Fallback basis */
-    }
 
-    /* Adjustments for potentially missing wrapper divs */
-    /* If wrappers .checkout-form-sections & .order-summary-section don't exist: */
-    .shipping-info {
-        order: 1;
-        flex-basis: 60%; /* Adjust percentage as needed */
+    .checkout-summary-column {
+        flex: 1; /* Summary takes less space */
+        order: 2; /* Summary on the right */
+        position: sticky; /* Make summary sticky */
+        /* Calculate top based on fixed header height + buffer + initial padding */
+        top: calc(100px + 30px + var(--space-lg)); /* Adjust 100px if header height differs */
     }
-     .payment-info {
-        order: 2;
-        flex-basis: 60%; /* Adjust percentage as needed */
-    }
-    .order-summary {
-         order: 3;
-         flex-basis: 35%; /* Adjust percentage as needed */
-    }
-    .order-total {
-         order: 4;
-         flex-basis: 35%; /* Adjust percentage as needed */
-    }
+    /* Remove bottom margin rules from inside media query if applied outside */
+    .checkout-summary-column .checkout-section { margin-bottom: var(--space-xl); }
+    .checkout-summary-column .checkout-section:last-child { margin-bottom: 0; }
+
+
+    /* REMOVE or comment out the old complex responsive rule for .checkout-container children */
+    /*
+    .checkout-container > .shipping-info { order: 1; flex-basis: 60%; }
+    .checkout-container > .payment-info { order: 2; flex-basis: 60%; }
+    .checkout-container > .order-summary { order: 3; flex-basis: 35%; }
+    .checkout-container > .order-total { order: 4; flex-basis: 35%; }
+    */
 }
+
+/* ... (Ensure other checkout-related styles like forms, summary items, total details are present/correct) ... */
 
 /* === Header Responsive Refinements (Check/Modify Hamburger) === */
 
