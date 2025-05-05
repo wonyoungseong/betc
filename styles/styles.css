@@ -17,7 +17,7 @@ body {
     line-height: 1.6;
     color: #333;
     background-color: #f8f9fa; /* Light background */
-    padding-top: calc(80px + 30px); /* Default header height + buffer */
+    padding-top: calc(80px + 50px + 30px); /* Default: Header + Nav + Buffer */
     transition: padding-top 0.3s ease-in-out; /* Smooth transition for padding */
 }
 
@@ -74,7 +74,6 @@ ol {
     margin: 0 auto;    /* Center content */
     padding: var(--space-lg);
     min-height: calc(100vh - 150px); /* Ensure content fills space above footer */
-    /* margin-top is removed, use body padding-top instead */
 }
 
 @media (min-width: 768px) {
@@ -82,16 +81,6 @@ ol {
         padding: var(--space-xl);
     }
 }
-
-/* Removed empty .gnb ruleset */
-
-/* Removed empty body ruleset */
-
-body.mobile-nav-active {
-    /* Padding adjusted by JS if needed, or set fixed if nav height is fixed */
-     padding-top: calc(80px + 70px + 30px); /* Example: header + nav + buffer */
-}
-
 
 /* Header & Footer Containers */
 .header-container, .footer-container, main {
@@ -104,7 +93,6 @@ body.mobile-nav-active {
     color: white;
     padding: var(--space-sm) 0; /* Reduced vertical padding */
 }
-
 
 /* Header Styles */
 header {
@@ -132,7 +120,6 @@ header {
     box-sizing: border-box;
 }
 
-
 /* Logo Styles */
 .logo a {
     font-size: 1.5em;
@@ -148,7 +135,7 @@ header {
 
 /* Search Bar Styles */
 .search-bar {
-    display: flex;
+    display: flex; /* Default display */
     align-items: center;
     background-color: white;
     border-radius: var(--border-radius-md);
@@ -156,7 +143,6 @@ header {
     flex-grow: 0.5; /* Allow search bar to grow but not too much */
     max-width: 400px; /* Limit max width */
 }
-
 
 .search-bar input {
     border: none;
@@ -201,8 +187,6 @@ header {
     filter: brightness(0) invert(1); /* Make icons white */
 }
 
-/* Removed empty #logoutLink img ruleset */
-
 .cart-count {
     background-color: var(--color-accent);
     color: var(--color-primary);
@@ -217,6 +201,17 @@ header {
     text-align: center;
 }
 
+/* Hamburger Menu Button */
+.hamburger-menu {
+    display: none; /* Hidden by default on larger screens */
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.8em; /* Adjust size */
+    cursor: pointer;
+    padding: 0 var(--space-sm);
+    margin-left: var(--space-sm); /* Add some space */
+}
 
 /* Main Navigation Styles */
 nav#mainNav { /* More specific selector */
@@ -224,7 +219,7 @@ nav#mainNav { /* More specific selector */
     width: 100%; /* Full width */
     box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow */
     height: 50px; /* Fixed nav height */
-    display: flex; /* Use flex for alignment */
+    display: flex; /* Default display */
     justify-content: center; /* Center the nav items container */
 }
 
@@ -234,7 +229,6 @@ nav#mainNav ul {
     margin: 0;
     display: flex; /* Horizontal layout */
     height: 100%; /* Match nav height */
-    /* Removed justify-content: center; center in parent */
 }
 
 nav#mainNav li {
@@ -293,8 +287,10 @@ nav#mainNav ul.submenu li a:hover {
     color: var(--color-secondary);
 }
 
-/* Removed empty main ruleset */
-
+/* Mobile Search Item (within Nav) */
+nav#mainNav .mobile-search-item {
+    display: none; /* Hidden by default */
+}
 
 /* Product List Styles */
 .products {
@@ -305,10 +301,6 @@ nav#mainNav ul.submenu li a:hover {
     margin-top: var(--space-lg); /* Add space above product list */
     width: 100%; /* Ensure it takes full width */
 }
-
-/* No media queries needed if default is grid */
-
-/* Removed empty div#productList ruleset */
 
 .product-item {
     background-color: var(--color-background);
@@ -377,7 +369,6 @@ nav#mainNav ul.submenu li a:hover {
     text-decoration: line-through;
     margin-left: var(--space-xs);
 }
-
 
 .product-item a {
     text-decoration: none;
@@ -493,7 +484,6 @@ button:hover {
     gap: var(--space-lg);
 }
 
-
 /* Product List Page Specific Layout */
 .product-list-container {
     display: flex;
@@ -558,11 +548,7 @@ button:hover {
     border: 1px solid var(--color-border);
 }
 
-/* Media Query for Desktop Layout (Product List Page) */
-/* No longer needed if sidebar is always present */
-
-.product-grid-section .products { /* Ensure products grid within section uses correct styles */
-    /* Inherits from global .products style */
+.product-grid-section .products {
     margin-top: 0; /* Remove top margin if sort options provide spacing */
 }
 
@@ -665,7 +651,21 @@ button:hover {
 
 
 /* Featured Sections (Best Seller, New Arrivals) */
-/* REMOVED empty .best-seller, .new-arrivals ruleset */
+/* Use .products style by default */
+.featured-products .products { /* Target #mainProductList */
+    display: flex; /* Use flexbox for horizontal layout */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    justify-content: space-around; /* Distribute items evenly */
+    gap: var(--space-lg); /* Consistent gap */
+    grid-template-columns: none; /* Disable grid */
+    margin-top: var(--space-lg); /* Space below "추천 제품" title */
+}
+
+.featured-products .product-item {
+    flex-basis: calc(25% - var(--space-lg) * 3 / 4); /* 4 items per row on large screens, accounting for gap */
+    min-width: 200px; /* Prevent items from becoming too small */
+    /* Height is handled by existing .product-item styles */
+}
 
 .best-seller h2, .new-arrivals h2 {
     text-align: center;
@@ -818,8 +818,6 @@ footer {
     text-align: center;
 }
 
-/* Removed empty .status-item ruleset */
-
 .status-item a { /* Make status items clickable */
     text-decoration: none;
     color: inherit;
@@ -845,8 +843,6 @@ footer {
     margin-bottom: var(--space-md);
 }
 
-/* Removed empty #purchaseList ruleset */
-
 .purchase-item { /* Assuming this class or similar structure exists */
     background-color: var(--color-background-alt);
     border: 1px solid var(--color-border-light);
@@ -870,14 +866,10 @@ footer {
     color: var(--color-text-light);
 }
 
-/* Removed empty .purchase-header .order-date ruleset */
-
 .purchase-header .order-number {
     font-weight: 500;
     color: var(--color-text);
 }
-
-/* Removed empty .purchase-details ruleset */
 
 .purchase-product { /* Assuming a structure for each product */
     display: flex;
@@ -944,11 +936,10 @@ footer {
         width: 80px; /* Slightly larger image on small screens */
         height: 80px;
      }
-} /* This closes the @media (max-width: 480px) block */
+}
 
 /* === Order Summary Component (Used in Cart & Checkout) === */
 
-/* Assuming .summary-item structure within an order summary container */
 .summary-item-image {
     width: 50px; /* Small image for summary */
     height: 50px;
@@ -964,7 +955,6 @@ footer {
     margin-right: var(--space-md); /* Space before price */
 }
 
-/* Styles for order items (e.g., Subtotal, Shipping, Total) */
 .order-item {
     display: flex;
     justify-content: space-between;
@@ -972,16 +962,12 @@ footer {
     font-size: 0.95em;
 }
 
-/* Removed empty .order-item span ruleset */
-
 .order-item span:last-child {
     font-weight: 500; /* Make value slightly bolder */
 }
 
 
 /* === Search Results Page (search-results.html) === */
-
-/* Removed empty .search-results-section, .recommendations-section ruleset */
 
 #searchResults > div:first-child { /* Target the 'Results for...' div */
     margin-bottom: var(--space-md); /* Add space below the heading */
@@ -1011,13 +997,139 @@ footer {
     padding: var(--space-md) 0; /* Less padding than no results */
 }
 
-/* Use existing .products grid for results and recommendations */
-/* Removed empty .search-results-items, .recommendation-items ruleset */
-
 
 /* === Responsive Design Adjustments === */
 
-/* Example: Adjust Hero section on smaller screens */
+/* Body padding adjustment for mobile nav */
+body.mobile-nav-active {
+    /* Adjust padding based on dynamic header height calculation in JS if needed */
+    /* Or set a fixed increased padding if nav height is fixed */
+     padding-top: calc(80px + 200px + 30px); /* Example: Header + Estimated Nav Height + Buffer */
+}
+
+/* Header Responsive */
+@media (max-width: 768px) {
+    .hamburger-menu {
+        display: block; /* Show hamburger */
+    }
+
+    nav#mainNav {
+        display: none; /* Hide nav by default */
+        position: absolute;
+        top: 100%; /* Position below header-top */
+        left: 0;
+        width: 100%;
+        background-color: var(--color-primary);
+        flex-direction: column;
+        padding: var(--space-md) 0;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        z-index: 999;
+        height: auto; /* Adjust height based on content */
+        max-height: calc(100vh - 80px); /* Limit height */
+        overflow-y: auto; /* Allow scroll if content exceeds height */
+    }
+
+    nav#mainNav ul {
+        flex-direction: column; /* Stack items vertically */
+        height: auto;
+        width: 100%;
+    }
+
+    nav#mainNav li {
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Separator */
+    }
+    nav#mainNav li:last-child {
+        border-bottom: none;
+    }
+
+    nav#mainNav a {
+        padding: var(--space-md) var(--space-lg);
+        line-height: normal; /* Reset line height */
+        color: white; /* Text color in mobile nav */
+        text-align: center;
+    }
+    nav#mainNav a:hover {
+        background-color: var(--color-secondary); /* Hover effect */
+    }
+
+    /* Show nav when body has the class */
+    body.mobile-nav-active nav#mainNav {
+        display: flex;
+    }
+
+    /* Hide mobile search above 480px */
+    nav#mainNav .mobile-search-item {
+        display: none;
+    }
+
+    /* Keep top search bar visible */
+    .search-bar {
+        display: flex;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-top {
+        padding: var(--space-sm); /* Reduce padding */
+    }
+    .logo a {
+        font-size: 1.2em; /* Smaller logo text */
+    }
+
+    /* Hide top search bar */
+    .search-bar {
+        display: none;
+    }
+
+    /* Show mobile search bar within nav */
+    nav#mainNav .mobile-search-item {
+        display: block; /* Show mobile search */
+        order: -1; /* Move to the top */
+        padding: var(--space-md) var(--space-lg);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .mobile-search-form {
+        display: flex;
+        width: 100%;
+    }
+
+    #mobileSearchInput {
+        flex-grow: 1;
+        padding: var(--space-sm);
+        border: 1px solid var(--color-border);
+        border-radius: var(--border-radius-sm) 0 0 var(--border-radius-sm);
+        border-right: none;
+        font-size: 0.9em;
+    }
+
+    #mobileSearchButton {
+        padding: var(--space-sm);
+        background-color: var(--color-secondary);
+        border: 1px solid var(--color-secondary);
+        border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+        cursor: pointer;
+    }
+
+    #mobileSearchButton img {
+        filter: brightness(0) invert(1); /* White icon */
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Adjust user menu spacing or content */
+    .user-menu {
+        gap: var(--space-sm);
+    }
+    .user-menu a {
+        font-size: 0.8em; /* Smaller text links */
+        /* Icons can remain the same size or adjust slightly */
+    }
+}
+
+
+/* Hero Section Responsive */
 @media (max-width: 768px) {
     .hero {
         padding: var(--space-xl) var(--space-md);
@@ -1037,15 +1149,12 @@ footer {
     .cta-button { font-size: 1em; padding: var(--space-sm) var(--space-md); }
 }
 
-
-/* Adjust category nav on smaller screens */
+/* Category Nav Responsive */
 .category-nav ul {
-     /* flex-wrap: wrap; already set */
      gap: var(--space-xs); /* Reduce gap */
      justify-content: center;
 }
 
-/* Make category nav links smaller on mobile */
 @media (max-width: 768px) {
     .category-nav {
         margin: var(--space-lg) 0;
@@ -1054,33 +1163,34 @@ footer {
         padding: var(--space-xs) var(--space-sm);
         font-size: 0.9em;
     }
-    /* Reduce gap further? */
     .category-nav ul { gap: 2px; }
 }
 
-/* Adjust product grid on very small screens if needed (already handled by auto-fill) */
-/* @media (max-width: 576px) { */
-    /* Styles for very small screens */
-    /* Example: adjust minmax width */
-    /* .products { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); } */
-/* } */
-
+/* Featured Products Responsive */
+@media (max-width: 992px) {
+    .featured-products .product-item {
+        flex-basis: calc(50% - var(--space-lg) / 2); /* 2 items per row */
+    }
+}
 @media (max-width: 576px) {
     /* Ensure product items are usable on small screens */
-    /* Removed empty .products ruleset */
     .product-item {
          padding: var(--space-sm);
     }
     .product-item h3 { font-size: 1em; }
     .product-item .price { font-size: 1.1em; }
-}
 
+    .featured-products .product-item {
+        flex-basis: 100%; /* 1 item per row */
+    }
+}
 
 /* Adjust Beauty Lab on smaller screens */
 @media (max-width: 768px) {
     .beauty-lab {
         padding: var(--space-xl) var(--space-md);
         margin: var(--space-lg) calc(-1 * var(--space-md));
+        background-attachment: scroll; /* Disable parallax on mobile if causing issues */
     }
     .beauty-lab h2 { font-size: 1.8em; }
     .beauty-lab p { font-size: 1em; }
@@ -1301,8 +1411,6 @@ footer {
     gap: var(--space-md);
 }
 
-/* Removed empty .review-input label ruleset */
-
 .review-input select#ratingInput {
     padding: var(--space-sm) var(--space-md);
     border: 1px solid var(--color-border);
@@ -1355,4 +1463,4 @@ footer {
         margin-left: 0;
         flex-basis: auto;
     }
-} 
+}

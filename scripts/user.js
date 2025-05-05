@@ -4,20 +4,17 @@ window.currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
 
 window.checkAuthStatus = function() {
     const user = JSON.parse(localStorage.getItem('currentUser'));
-    // const welcomeMessage = document.getElementById('welcomeMessage'); // 제거된 요소 참조 제거
     const loginLink = document.getElementById('loginLink');
     const signupLink = document.getElementById('signupLink');
     const logoutLink = document.getElementById('logoutLink');
 
     if (user) {
         window.currentUser = user;
-        // welcomeMessage.textContent = `${user.username}님 환영합니다. |`; // 제거된 요소 참조 제거
         if(loginLink) loginLink.style.display = 'none';
         if(signupLink) signupLink.style.display = 'none';
         if(logoutLink) logoutLink.style.display = 'inline'; // Use 'inline' or 'inline-block'
     } else {
         window.currentUser = null;
-        // welcomeMessage.textContent = ''; // 제거된 요소 참조 제거
         if(loginLink) loginLink.style.display = 'inline';
         if(signupLink) signupLink.style.display = 'inline';
         if(logoutLink) logoutLink.style.display = 'none';
@@ -202,12 +199,13 @@ function cancelPurchase(index) {
 
 // --- Named Event Handlers ---
 
-// Modify handleHamburgerClick to toggle body class instead of calling margin update
-const handleHamburgerClick = () => {
-    const mainNav = document.getElementById('mainNav');
-    if (mainNav) {
-        mainNav.classList.toggle('active');
-        document.body.classList.toggle('mobile-nav-active'); // Toggle class on body
+// NEW: Toggle mobile navigation
+const toggleMobileNav = () => {
+    document.body.classList.toggle('mobile-nav-active');
+    const isNavActive = document.body.classList.contains('mobile-nav-active');
+    const hamburgerButton = document.getElementById('hamburgerMenu');
+    if (hamburgerButton) {
+        hamburgerButton.setAttribute('aria-expanded', isNavActive.toString());
     }
 };
 
@@ -219,16 +217,20 @@ const handleMainSearch = () => {
     }
 };
 
+// NEW: Handle mobile search submission
 const handleMobileSearch = () => {
     const mobileSearchInput = document.getElementById('mobileSearchInput');
-    const mainNav = document.getElementById('mainNav');
-     if (typeof window.searchProduct === 'function' && mobileSearchInput) {
-        window.searchProduct(mobileSearchInput.value);
-        if (mainNav) mainNav.classList.remove('active'); // Close nav after search
-        // No need to update margin here anymore
-        document.body.classList.remove('mobile-nav-active'); // Also remove body class
+    const query = mobileSearchInput ? mobileSearchInput.value : null;
+    if (typeof window.searchProduct === 'function') {
+        window.searchProduct(query); // Call existing search function
+        // Close the nav after search
+        document.body.classList.remove('mobile-nav-active');
+        const hamburgerButton = document.getElementById('hamburgerMenu');
+        if (hamburgerButton) {
+            hamburgerButton.setAttribute('aria-expanded', 'false');
+        }
     } else {
-        console.error('searchProduct function or mobileSearchInput not defined.');
+        console.error('searchProduct function not found.');
     }
 };
 
@@ -239,7 +241,8 @@ const handleSearchInputKeypress = (event) => {
     }
 };
 
-const handleMobileSearchInputKeypress = (event) => {
+// NEW: Handle mobile search enter key
+const handleMobileSearchEnter = (event) => {
     if (event.key === 'Enter') {
         event.preventDefault();
         handleMobileSearch();
@@ -248,14 +251,14 @@ const handleMobileSearchInputKeypress = (event) => {
 
 // Event listeners setup function
 function addEventListeners() {
-    // --- Hamburger Menu ---
+    // --- Hamburger Menu --- MODIFIED
     const hamburgerMenu = document.getElementById('hamburgerMenu');
     if (hamburgerMenu) {
-        hamburgerMenu.removeEventListener('click', handleHamburgerClick);
-        hamburgerMenu.addEventListener('click', handleHamburgerClick);
+        hamburgerMenu.removeEventListener('click', toggleMobileNav); // Use new handler
+        hamburgerMenu.addEventListener('click', toggleMobileNav); // Use new handler
     }
 
-    // --- Search ---
+    // --- Search --- MODIFIED
     const searchButton = document.getElementById('searchButton');
     const searchInput = document.getElementById('searchInput');
     const mobileSearchButton = document.getElementById('mobileSearchButton');
@@ -269,46 +272,42 @@ function addEventListeners() {
         searchInput.removeEventListener('keypress', handleSearchInputKeypress);
         searchInput.addEventListener('keypress', handleSearchInputKeypress);
     }
+    // Add listeners for mobile search - NEW
      if (mobileSearchButton) {
         mobileSearchButton.removeEventListener('click', handleMobileSearch);
         mobileSearchButton.addEventListener('click', handleMobileSearch);
      }
      if (mobileSearchInput) {
-         mobileSearchInput.removeEventListener('keypress', handleMobileSearchInputKeypress);
-         mobileSearchInput.addEventListener('keypress', handleMobileSearchInputKeypress);
+         mobileSearchInput.removeEventListener('keypress', handleMobileSearchEnter);
+         mobileSearchInput.addEventListener('keypress', handleMobileSearchEnter);
      }
 
-    // --- Login/Signup Links --- ADDED console.log
+    // --- Login/Signup Links --- (No changes needed here)
     const loginLink = document.getElementById('loginLink');
     const signupLink = document.getElementById('signupLink');
 
     if (loginLink) {
-        // Define handler locally for removal/addition clarity - REMOVED
-        // Use the same function reference for remove and add
-        loginLink.removeEventListener('click', handleLoginLinkClick); // Use named handler
-        loginLink.addEventListener('click', handleLoginLinkClick);  // Use named handler
+        loginLink.removeEventListener('click', handleLoginLinkClick);
+        loginLink.addEventListener('click', handleLoginLinkClick);
     } else {
         // console.warn("Login link not found");
     }
 
     if (signupLink) {
-        // Define handler locally for removal/addition clarity - REMOVED
-        // Use the same function reference for remove and add
-        signupLink.removeEventListener('click', handleSignupLinkClick); // Use named handler
-        signupLink.addEventListener('click', handleSignupLinkClick);  // Use named handler
+        signupLink.removeEventListener('click', handleSignupLinkClick);
+        signupLink.addEventListener('click', handleSignupLinkClick);
     } else {
         // console.warn("Signup link not found");
     }
 
-     // --- Logout --- Ensure handleLogout is defined before this call
+     // --- Logout --- (No changes needed here)
      const logoutLink = document.getElementById('logoutLink');
      if (logoutLink) {
-         // handleLogout must be defined in a scope accessible here
-         logoutLink.removeEventListener('click', globalHandleLogout); // Assumes handleLogout is accessible
+         logoutLink.removeEventListener('click', globalHandleLogout);
          logoutLink.addEventListener('click', globalHandleLogout);
      }
 
-    // --- Modal Close Buttons --- ADDED/VERIFIED
+    // --- Modal Close Buttons --- (No changes needed here)
     const closeLoginModalBtn = document.getElementById('closeLoginModal');
     const closeSignupModalBtn = document.getElementById('closeSignupModal');
 
@@ -321,14 +320,12 @@ function addEventListeners() {
         closeSignupModalBtn.addEventListener('click', window.closeSignupModal);
     }
 
-    // --- Modal Submit Buttons --- ADDED/VERIFIED (though login has inline onclick)
+    // --- Modal Submit Buttons --- (No changes needed here)
     const loginSubmitBtn = document.getElementById('loginSubmit');
     const signupSubmitBtn = document.getElementById('signupSubmit');
 
     if(loginSubmitBtn){
-        // Remove existing inline listener if migrating fully to JS listeners
         if (loginSubmitBtn.hasAttribute('onclick')) {
-             console.log("Removing inline onclick from login submit");
              loginSubmitBtn.removeAttribute('onclick');
         }
         loginSubmitBtn.removeEventListener('click', window.login);
@@ -339,7 +336,7 @@ function addEventListeners() {
         signupSubmitBtn.addEventListener('click', window.signup);
     }
 
-     // --- Modal Enter Key Listeners --- ADDED/VERIFIED
+     // --- Modal Enter Key Listeners --- (No changes needed here)
      const loginUsernameInput = document.getElementById('loginUsername');
      const signupUsernameInput = document.getElementById('signupUsername');
 
@@ -355,11 +352,7 @@ function addEventListeners() {
      }
 }
 
-// Make functions globally accessible if needed (Remove updateMainContentMargin)
-// window.addEventListeners = addEventListeners; // No longer need to make global if called from DOMContentLoaded
-
-
-// Simplified DOMContentLoaded - Remove initial margin update call
+// Updated DOMContentLoaded - removed obsolete parts
 document.addEventListener('DOMContentLoaded', () => {
     // Call checkAuthStatus to set initial button visibility and cart count
     if (typeof window.checkAuthStatus === 'function') {
@@ -371,21 +364,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add all event listeners after DOM is ready
     addEventListeners(); // Call the setup function here
 
-    // Removed requestAnimationFrame for margin update
-
-    // Ensure body class is reset on load (moved from previous location)
+    // Ensure body class is reset on load
     document.body.classList.remove('mobile-nav-active');
-
-    // Option 3: Call updateCartCount here if needed independently,
-    // but checkAuthStatus already calls it.
-    // if (typeof window.updateCartCount === 'function') {
-    //     window.updateCartCount();
-    // }
 });
 
 // --- NEW FUNCTION: Update Cart Count in Header ---
 window.updateCartCount = function() {
-    const cartCountElement = document.getElementById('cartCount'); // 헤더의 카트 수량 표시 요소 ID
+    const cartCountElement = document.getElementById('cartCount');
     if (!cartCountElement) {
         // console.warn("Cart count element (#cartCount) not found in header.");
         return; // 요소가 없으면 중단
@@ -407,16 +392,3 @@ window.updateCartCount = function() {
         cartCountElement.style.display = 'none'; // Hide count if cart is empty
     }
 };
-
-// --- Consider calling updateCartCount on initial page load ---
-// Option 1: Add window.updateCartCount(); to each page's initializePage function (Recommended)
-// Option 2: Modify checkAuthStatus (Less direct)
-/*
-window.checkAuthStatus = function() {
-    // ... (existing login/logout link logic) ...
-    window.updateCartCount(); // Call cart count update here as well
-};
-*/
-
-// Option 3: Call on DOMContentLoaded (might be too early if cart depends on other async ops)
-// document.addEventListener('DOMContentLoaded', window.updateCartCount);
