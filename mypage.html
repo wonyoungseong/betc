@@ -79,9 +79,9 @@
                 window.updateCartCount();
                 console.log("updateCartCount() finished.");
 
-                console.log("Calling loadPurchaseHistory() now...");
-                loadPurchaseHistory();
-                console.log("loadPurchaseHistory() finished (or at least called)."); // 호출 완료 로그
+                console.log("Calling loadMyPagePurchaseHistory() now...");
+                window.loadMyPagePurchaseHistory();
+                console.log("loadMyPagePurchaseHistory() finished (or at least called).");
 
             } catch (error) {
                 console.error("Error during initializePage:", error);

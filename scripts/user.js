@@ -153,8 +153,8 @@ function savePurchaseHistory(purchase) {
 }
 
 // 구매 내역 로드
-function loadPurchaseHistory() {
-    console.log("--- loadPurchaseHistory started ---"); // 함수 시작 로그
+window.loadMyPagePurchaseHistory = function() {
+    console.log("--- loadMyPagePurchaseHistory started ---"); // 이름 변경 반영
     const purchaseList = document.getElementById('purchaseList');
     const totalAmountSpan = document.getElementById('totalAmount');
     const orderCompleteCountSpan = document.getElementById('orderCompleteCount');
@@ -261,26 +261,26 @@ function loadPurchaseHistory() {
     console.log("Assigned historyHTML to purchaseList.innerHTML"); // 할당 확인 로그
     if(totalAmountSpan) totalAmountSpan.textContent = `₩${totalPurchaseAmount.toLocaleString()}`;
     if(orderCompleteCountSpan) orderCompleteCountSpan.textContent = orderCompleteCount;
-    console.log("--- loadPurchaseHistory finished ---"); // 함수 종료 로그
+    console.log("--- loadMyPagePurchaseHistory finished ---"); // 이름 변경 반영
 }
 
-// 구매 취소 함수는 이전과 동일하게 유지 (index 기반)
-function cancelPurchase(index) { 
+// 구매 취소 함수도 window에 할당 (onclick에서 호출되므로)
+window.cancelPurchase = function(index) {
     let purchaseHistory = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
     purchaseHistory.sort((a, b) => new Date(b.date) - new Date(a.date)); 
 
     if (index >= 0 && index < purchaseHistory.length) {
         const itemToCancel = purchaseHistory.splice(index, 1)[0]; 
         localStorage.setItem('purchaseHistory', JSON.stringify(purchaseHistory));
-        loadPurchaseHistory();
+        window.loadMyPagePurchaseHistory();
         alert('구매가 취소되었습니다.'); 
     } else {
         alert('구매 내역을 찾을 수 없습니다.');
     }
 }
 
-// *** 함수 정의 확인 로그 추가 ***
-console.log("loadPurchaseHistory function DEFINED.");
+// *** 함수 정의 확인 로그 수정 ***
+console.log("loadMyPagePurchaseHistory function DEFINED."); // 이름 변경 반영
 
 // --- Named Event Handlers ---
 
