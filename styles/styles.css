@@ -148,6 +148,25 @@ header {
     width: auto;
 }
 
+/* Hub Link Style */
+.hub-link {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1em; /* Slightly smaller than logo */
+    font-weight: 500;
+    margin-left: var(--space-md); /* Space after logo */
+    margin-right: auto; /* Push search bar and user menu to the right */
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid white;
+    border-radius: var(--border-radius-sm);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.hub-link:hover {
+    background-color: white;
+    color: var(--color-primary);
+}
+
 /* Search Bar Styles */
 .search-bar {
     display: flex; /* Default display */
@@ -1360,6 +1379,38 @@ footer {
         display: block; /* Show hamburger */
     }
 
+    /* --- User Menu: Icon display logic moved here --- */
+    .user-menu {
+        gap: var(--space-sm); /* Reduce gap earlier */
+    }
+    .user-menu .login-text,
+    .user-menu .signup-text,
+    .user-menu .logout-text {
+        display: none !important; /* Hide text at 768px and below */
+    }
+
+    .user-menu .login-icon,
+    .user-menu .signup-icon,
+    .user-menu .logout-icon {
+        display: inline !important; /* Show icon at 768px and below */
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+        margin: 0;
+    }
+    .user-menu a .icon-link img { /* Ensure cart icon is also visible */
+         display: inline !important;
+         width: 20px;
+         height: 20px;
+         vertical-align: middle;
+         margin: 0;
+    }
+     /* Specific icon styling if needed */
+    .user-menu .logout-icon {
+         filter: brightness(0) invert(1);
+    }
+    /* --- End User Menu Icon Logic --- */
+
     nav#mainNav {
         display: none; /* Hide main nav by default */
         /* Styles for when it's shown via JS */
@@ -1475,36 +1526,6 @@ footer {
 
     .user-menu {
         gap: var(--space-sm);
-    }
-
-    /* Hide text, show icons for user menu */
-    .user-menu .login-text,
-    .user-menu .signup-text,
-    .user-menu .logout-text {
-        display: none !important; /* Force hide text */
-    }
-
-    .user-menu .login-icon,
-    .user-menu .signup-icon,
-    .user-menu .logout-icon {
-        display: inline !important; /* Force show icon */
-        width: 20px;
-        height: 20px;
-        vertical-align: middle;
-        margin: 0; /* Reset margin if any */
-    }
-
-    .user-menu a .icon-link img { /* Ensure cart icon is also visible */
-         display: inline !important;
-         width: 20px;
-         height: 20px;
-         vertical-align: middle;
-         margin: 0;
-    }
-
-    /* Specific icon styling if needed */
-    .user-menu .logout-icon {
-         filter: brightness(0) invert(1);
     }
 
     /* Adjust body padding for smaller header */
