@@ -61,24 +61,34 @@
     <script src="scripts/review.js"></script>
     <script>
         async function initializePage() {
-            await window.loadProductData();
-            checkAuthStatus();
-            window.addEventListeners();
-            window.updateCartCount();
-            loadPurchaseHistory();
+            console.log("initializePage started.");
+            try {
+                console.log("Calling loadProductData()...");
+                await window.loadProductData();
+                console.log("loadProductData() finished.");
+
+                console.log("Calling checkAuthStatus()...");
+                checkAuthStatus();
+                console.log("checkAuthStatus() finished.");
+
+                console.log("Calling addEventListeners()...");
+                window.addEventListeners();
+                console.log("addEventListeners() finished.");
+
+                console.log("Calling updateCartCount()...");
+                window.updateCartCount();
+                console.log("updateCartCount() finished.");
+
+                console.log("Calling loadPurchaseHistory() now...");
+                loadPurchaseHistory();
+                console.log("loadPurchaseHistory() finished (or at least called)."); // 호출 완료 로그
+
+            } catch (error) {
+                console.error("Error during initializePage:", error);
+            }
+            console.log("initializePage finished.");
         }
         includeHTML(initializePage);
-    </script>
-    <script>
-            async function initializePage() {
-                await window.loadProductData();
-                checkAuthStatus();
-                window.addEventListeners();
-                window.updateCartCount();
-                console.log("Calling loadPurchaseHistory() now..."); // 호출 직전 로그
-                loadPurchaseHistory();
-            }
-            includeHTML(initializePage);
     </script>
 </body>
 </html>
