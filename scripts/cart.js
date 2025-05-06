@@ -444,7 +444,6 @@ window.addToCartWithQuantity = function(productId) {
             affiliation: product.affiliation || '뷰티 코스메틱 쇼핑몰',
             coupon: product.coupon || undefined,
             discount: product.originalPrice ? (product.originalPrice - product.price) : undefined, // Per item discount
-            // index: ???, // Should probably get index if available in context
             item_brand: product.brand || undefined,
             item_category: product.category || undefined,
             price: product.price,
