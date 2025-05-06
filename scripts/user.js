@@ -274,6 +274,19 @@ window.cancelPurchase = function(index) {
         localStorage.setItem('purchaseHistory', JSON.stringify(purchaseHistory));
         window.loadMyPagePurchaseHistory();
         alert('구매가 취소되었습니다.'); 
+        
+        // --- GA4 cancel_order 이벤트 푸시 추가 ---
+        if (typeof pushGeneralEvent === 'function') {
+            console.log('Pushing cancel_order event for transaction:', itemToCancel?.transactionId);
+            pushGeneralEvent('cancel_order', {
+                transaction_id: itemToCancel?.transactionId || 'N/A' // 취소된 주문의 ID 전달
+                // 필요시 다른 정보 추가 (예: value, currency)
+            });
+        } else {
+            console.warn('pushGeneralEvent function is not defined. Cannot push cancel_order event.');
+        }
+        // --- 이벤트 푸시 끝 ---
+
     } else {
         alert('구매 내역을 찾을 수 없습니다.');
     }
