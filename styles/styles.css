@@ -155,7 +155,7 @@ header {
     font-size: 1.1em; /* Slightly smaller than logo */
     font-weight: 500;
     margin-left: var(--space-md); /* Space after logo */
-    margin-right: auto; /* Push search bar and user menu to the right */
+    /* margin-right: auto; */ /* 제거: Push search bar and user menu to the right */
     padding: var(--space-xs) var(--space-sm);
     border: 1px solid white;
     border-radius: var(--border-radius-sm);

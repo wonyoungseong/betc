@@ -100,13 +100,20 @@
 
                 // 검색 결과 아이템 표시 (createProductItem 사용)
                 const resultsContainer = document.createElement('div');
-                resultsContainer.className = 'products search-results-items'; // 상품 목록 컨테이너
+                // 클래스명을 'product-list'로 변경하여 그리드 스타일 적용
+                resultsContainer.className = 'product-list search-results-items'; 
                 results.forEach((product, index) => {
-                    const itemElement = window.createProductItem(product, listName, index); 
+                    const itemElement = window.createProductItem(product, listName, index, listId); 
                     resultsContainer.appendChild(itemElement);
                 });
                 resultsSection.appendChild(resultsContainer); // 섹션에 상품 목록 추가
                 searchResultsDiv.appendChild(resultsSection); // 최종 부모에 섹션 추가
+
+                // 이벤트 리스너 추가 (수정: resultsContainer에 추가)
+                addProductListClickListener(resultsContainer.id || 'searchResultsItems'); // ID가 없다면 임의 ID 사용 또는 ID 부여 필요
+                // ID 부여 예시:
+                // resultsContainer.id = 'searchResultsItemsContainer';
+                // addProductListClickListener(resultsContainer.id);
 
             } else {
                 // 검색 결과가 없을 경우
