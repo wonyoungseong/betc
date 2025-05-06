@@ -546,26 +546,27 @@ button:hover {
 
 /* Featured Sections (Best Seller, New Arrivals) */
 /* Ensure flex behavior for product listing within featured section */
+/* Re-apply !important to flex properties for higher priority */
 .featured-products .products {
-    display: flex; /* Use Flexbox */
-    flex-direction: row; /* Horizontal layout */
-    flex-wrap: wrap; /* Allow items to wrap */
-    justify-content: space-around; /* Distribute space */
-    gap: var(--space-lg); /* Space between items */
-    grid-template-columns: none; /* Override potential grid styles */
-    padding: 0; /* Ensure no extra padding */
+    display: flex !important;         /* Force flex display */
+    flex-direction: row !important;   /* Force horizontal layout */
+    flex-wrap: wrap !important;       /* Allow items to wrap */
+    justify-content: space-around;  /* Distribute space */
+    gap: var(--space-lg);
+    grid-template-columns: none;    /* Override grid if necessary */
+    padding: 0;
     margin-top: var(--space-lg);
     width: 100%;
 }
 
+
 /* Style individual product items within the featured section */
 .featured-products .product-item {
-    flex: 0 1 calc(25% - var(--space-lg) * 3 / 4); /* Adjust basis for 4 columns with gap */
-    min-width: 200px; /* Minimum width before wrapping */
-    max-width: calc(25% - var(--space-lg) * 3 / 4); /* Ensure it doesn't exceed column width */
-    box-sizing: border-box; /* Include padding/border in width */
-    /* Ensure item itself doesn't prevent flex row behavior */
-    display: flex; 
+    flex: 0 1 calc(25% - var(--space-lg) * 3 / 4);
+    min-width: 200px;
+    max-width: calc(25% - var(--space-lg) * 3 / 4);
+    box-sizing: border-box;
+    display: flex;
     flex-direction: column;
 }
 
