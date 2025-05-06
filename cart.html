@@ -22,7 +22,7 @@
             <div class="cart-summary-column">
                 <div class="cart-summary">
                     <p>총 금액: <span id="totalPrice">0원</span></p>
-                    <a href="checkout.html" class="checkout-button" onclick="event.preventDefault(); window.beginCheckout();">0원 주문하기</a>
+                    <a href="checkout.html" id="checkoutButton" class="checkout-button">0원 주문하기</a>
                 </div>
             </div>
         </div>
@@ -38,6 +38,46 @@
             window.addEventListeners();
             window.updateCartCount();
             window.loadCartItems();
+
+            const cartItemsContainer = document.getElementById('cartItems');
+            if (cartItemsContainer) {
+                if (!cartItemsContainer.dataset.removeListenerAdded) {
+                    cartItemsContainer.addEventListener('click', function(event) {
+                        if (event.target.classList.contains('remove-button')) {
+                            const productId = event.target.dataset.productId;
+                            if (productId) {
+                                console.log(`Remove button clicked for product ID: ${productId}`);
+                                window.removeFromCart(parseInt(productId));
+                            } else {
+                                console.error('Product ID not found on remove button.');
+                            }
+                        }
+                    });
+                    cartItemsContainer.dataset.removeListenerAdded = 'true'; 
+                    console.log('Remove item click listener added to #cartItems');
+                } 
+            } else {
+                console.error('#cartItems container not found for adding listener.');
+            }
+            
+            const checkoutButton = document.getElementById('checkoutButton');
+            if (checkoutButton) {
+                if (!checkoutButton.dataset.checkoutListenerAdded) {
+                    checkoutButton.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        console.log('Checkout button clicked.');
+                        if (typeof window.beginCheckout === 'function') {
+                            window.beginCheckout();
+                        } else {
+                            console.error('beginCheckout function is not defined on window.');
+                        }
+                    });
+                    checkoutButton.dataset.checkoutListenerAdded = 'true';
+                    console.log('Checkout button click listener added to #checkoutButton');
+                }
+            } else {
+                 console.error('#checkoutButton not found for adding listener.');
+            }
         }
         includeHTML(initializePage);
     </script>

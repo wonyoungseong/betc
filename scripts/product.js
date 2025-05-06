@@ -33,6 +33,41 @@ window.loadProductData = async function() {
         window.products = [];
     }
 }
+
+// 공통 이벤트 리스너 설정 함수 (중복 방지 포함)
+function addProductListClickListener(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    // 이미 리스너가 추가되었는지 확인 (플래그 사용)
+    if (container.dataset.clickListenerAdded === 'true') {
+        return;
+    }
+
+    container.addEventListener('click', function(event) {
+        // 클릭된 요소 또는 가장 가까운 .product-item 조상 찾기
+        const productItem = event.target.closest('.product-item');
+        
+        if (productItem) {
+            const productId = parseInt(productItem.dataset.productId);
+            const listName = productItem.dataset.listName;
+            const listIndex = parseInt(productItem.dataset.listIndex);
+            
+            // 유효한 데이터가 있는지 확인
+            if (!isNaN(productId) && listName !== undefined && !isNaN(listIndex)) {
+                console.log(`Product item clicked: ID=${productId}, List=${listName}, Index=${listIndex}`);
+                window.viewProduct(productId, listName, listIndex);
+            } else {
+                console.warn('Missing data attributes on clicked product item.', productItem.dataset);
+            }
+        }
+    });
+
+    // 리스너 추가 플래그 설정
+    container.dataset.clickListenerAdded = 'true';
+    console.log(`Click listener added to #${containerId}`);
+}
+
 window.loadMainProducts = function(category = 'all') {
     console.log('loadMainProducts called with category:', category); // 로그 추가
     var productList = document.getElementById('mainProductList');
@@ -83,6 +118,9 @@ window.loadMainProducts = function(category = 'all') {
         var item = window.createProductItem(product, listName, index);
         productList.appendChild(item);
     });
+
+    // 이벤트 리스너 추가 (함수 호출)
+    addProductListClickListener('mainProductList'); 
 }
 
 // --- NEW FUNCTION ---
@@ -189,8 +227,8 @@ async function loadProductDetail() {
         // --- Populate Product Info ---
          // (Assuming you have elements inside .product-info or create them here)
          productInfoDiv.innerHTML = `
-            <h2>${product.name}</h2>
-            <div class="price">
+            <h1>${product.name}</h1>
+            <div class="price-section">
                 ${product.discountRate ? `<span class="discount">${product.discountRate}%</span>` : ''}
                 <span class="current-price">${product.price.toLocaleString()}원</span>
                 ${product.originalPrice ? `<span class="original-price">${product.originalPrice.toLocaleString()}원</span>` : ''}
@@ -199,11 +237,44 @@ async function loadProductDetail() {
                 <label for="quantityInput">수량:</label>
                 <input type="number" id="quantityInput" value="1" min="1">
             </div>
-            <button onclick="window.addToCartWithQuantity(${product.id})">장바구니 담기</button>
-            <button onclick="window.buyNowWithQuantity(${product.id})">바로 구매</button>
+            <div class="action-buttons">
+                <button id="addToCartButton" class="add-to-cart-btn" data-product-id="${product.id}">장바구니 담기</button>
+                <button id="buyNowButton" class="buy-now" data-product-id="${product.id}">바로 구매</button>
+            </div>
             <!-- Add other info like description summary if needed -->
         `;
 
+        // --- 이벤트 리스너 추가 --- 
+        const addToCartButton = document.getElementById('addToCartButton');
+        if (addToCartButton) {
+            addToCartButton.addEventListener('click', function() {
+                const productId = this.dataset.productId;
+                console.log(`Add to Cart button clicked for product ID: ${productId}`);
+                if (productId) {
+                    window.addToCartWithQuantity(parseInt(productId)); // cart.js 함수 호출
+                } else {
+                    console.error('Product ID not found on Add to Cart button.');
+                }
+            });
+        } else {
+            console.error('Add to Cart button not found after rendering.');
+        }
+        
+        const buyNowButton = document.getElementById('buyNowButton');
+        if (buyNowButton) {
+            buyNowButton.addEventListener('click', function() {
+                 const productId = this.dataset.productId;
+                 console.log(`Buy Now button clicked for product ID: ${productId}`);
+                if (productId) {
+                    window.buyNowWithQuantity(parseInt(productId)); // cart.js 함수 호출
+                } else {
+                    console.error('Product ID not found on Buy Now button.');
+                }
+            });
+        } else {
+             console.error('Buy Now button not found after rendering.');
+        }
+        // --- 이벤트 리스너 추가 끝 --- 
 
         // --- Populate Image Gallery ---
         const mainImage = document.getElementById('mainProductImage');
@@ -339,22 +410,30 @@ window.addEventListener('resize', () => {
 window.createProductItem = function(product, listName, index) {
     var item = document.createElement('div');
     item.className = 'product-item';
-    item.onclick = function() {
-        window.viewProduct(product.id, listName, index);
-    };
-    
+    // onclick 제거
+    // item.onclick = function() {
+    //     window.viewProduct(product.id, listName, index);
+    // };
+
+    // 데이터 속성 추가
+    item.dataset.productId = product.id;
+    item.dataset.listName = listName;
+    item.dataset.listIndex = index; // 인덱스 저장 (0부터 시작)
+
     var discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
-    
+
     item.innerHTML = `
-        <img src="${product.image}" alt="${product.name}" class="product-image">
-        <h3>${product.name}</h3>
-        <p>
-            ${discount > 0 ? `<span class="discount">${discount}%</span>` : ''}
-            <span class="price">${product.price.toLocaleString()}원</span>
-            ${product.originalPrice ? `<span class="original-price">${product.originalPrice.toLocaleString()}원</span>` : ''}
-        </p>
+        <a href="#" class="product-item-link" onclick="event.preventDefault();"> <!-- 링크로 감싸되, 기본 동작 방지 -->
+            <img src="${product.image}" alt="${product.name}" class="product-image">
+            <h3>${product.name}</h3>
+            <p>
+                ${discount > 0 ? `<span class="discount">${discount}%</span>` : ''}
+                <span class="price">${product.price.toLocaleString()}원</span>
+                ${product.originalPrice ? `<span class="original-price">${product.originalPrice.toLocaleString()}원</span>` : ''}
+            </p>
+        </a>
     `;
-    
+
     return item;
 }
 
@@ -422,17 +501,26 @@ window.loadSearchResults = function() {
     if (!resultsDiv) return;
     resultsDiv.innerHTML = '';
     if (results.length > 0) {
-        results.forEach(function(product) {
-            var item = window.createProductItem(product);
+        // listName과 listId 정의 (view_item_list 와 일관성 있게)
+        const listName = `검색 결과: ${query}`;
+        const listId = 'search_results';
+        
+        // view_item_list 이벤트 로직 (기존 코드 유지 또는 필요시 여기에 추가)
+        // ...
+
+        results.forEach(function(product, index) {
+            // createProductItem 호출 시 listName, index 전달
+            var item = window.createProductItem(product, listName, index); 
             resultsDiv.appendChild(item);
         });
+        
+        // 이벤트 리스너 추가
+        addProductListClickListener('searchResults');
+
     } else {
         resultsDiv.innerHTML = '<p>검색 결과가 없습니다.</p>';
     }
-
-    // Display products
-    displayProducts(results, resultsDiv, 'Search Results');
-
+    
     // --- GA4 Event: view_search_results ---
     if (query) {
         pushGeneralEvent('view_search_results', {
@@ -495,6 +583,9 @@ window.loadProductList = function(category = 'all', sortBy = 'lowprice') {
         var item = window.createProductItem(product, listName, index);
         productList.appendChild(item);
     });
+
+    // 이벤트 리스너 추가
+    addProductListClickListener('productList');
 }
 
 window.addToCartWithQuantity = function(productId) {

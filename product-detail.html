@@ -70,7 +70,7 @@
                     <option value="1">1점</option>
                 </select>
                 <textarea id="reviewInput" placeholder="리뷰를 작성하세요." onkeydown="handleReviewKeydown(event)"></textarea>
-                <button onclick="submitReview()">리뷰 작성</button>
+                <button id="submitReviewButton">리뷰 작성</button>
             </div>
         </section>
     </main>
@@ -87,6 +87,28 @@
             window.addEventListeners();
             window.updateCartCount();
             window.loadProductDetail();
+
+            // --- write_review 이벤트 리스너 추가 ---
+            const submitReviewButton = document.getElementById('submitReviewButton');
+            if (submitReviewButton) {
+                // 중복 방지 (선택적)
+                if (!submitReviewButton.dataset.listenerAdded) {
+                    submitReviewButton.addEventListener('click', function() {
+                        console.log('Submit review button clicked.');
+                        // review.js에 정의된 submitReview 함수 호출
+                        if (typeof window.submitReview === 'function') {
+                            window.submitReview(); 
+                        } else {
+                            console.error('submitReview function is not defined on window.');
+                        }
+                    });
+                    submitReviewButton.dataset.listenerAdded = 'true';
+                    console.log('Submit review click listener added to #submitReviewButton');
+                 }
+            } else {
+                console.error('#submitReviewButton not found for adding listener.');
+            }
+            // --- write_review 이벤트 리스너 끝 ---
         }
         includeHTML(initializePage);
 

@@ -122,7 +122,7 @@ function loadCartItems() {
                     <input type="number" id="qty-${item.productId}" value="${item.quantity}" min="1" onchange="updateCartItemQuantity(${item.productId}, this.value)">
                 </div>
                 <div class="item-total">₩${(item.price * item.quantity).toLocaleString()}</div>
-                <button class="remove-button" onclick="window.removeFromCart(${item.productId})">삭제</button>
+                <button class="remove-button" data-product-id="${item.productId}">삭제</button>
             </div>
         `;
         // --- End Updated innerHTML structure ---
@@ -145,6 +145,35 @@ window.beginCheckout = function() {
         alert('장바구니가 비어 있습니다.');
         return;
     }
+
+    // --- GA4 begin_checkout 이벤트 푸시 시작 ---
+    if (typeof pushEcommerceEvent === 'function') {
+        const ecommerceData = {
+            currency: 'KRW',
+            value: userCart.reduce((sum, item) => sum + (item.price * item.quantity), 0), // 장바구니 총액
+            coupon: undefined, // 전체 쿠폰 (있다면)
+            items: userCart.map((item, index) => {
+                const itemDetails = window.products.find(p => p.id === item.productId);
+                return {
+                    item_id: item.productId.toString(),
+                    item_name: item.productName,
+                    affiliation: itemDetails?.affiliation || '뷰티 코스메틱 쇼핑몰',
+                    coupon: itemDetails?.coupon || undefined,
+                    discount: itemDetails?.originalPrice ? (itemDetails.originalPrice - item.price) : undefined,
+                    index: index + 1, // 1부터 시작
+                    item_brand: itemDetails?.brand || undefined,
+                    item_category: itemDetails?.category || undefined,
+                    price: item.price,
+                    quantity: item.quantity
+                };
+            })
+        };
+        pushEcommerceEvent('begin_checkout', ecommerceData);
+        console.log('Pushed begin_checkout event');
+    } else {
+        console.warn('pushEcommerceEvent function is not defined. Cannot push begin_checkout.');
+    }
+    // --- GA4 begin_checkout 이벤트 푸시 끝 ---
 
     // 페이지 이동만 수행
     window.location.href = 'checkout.html';
