@@ -194,7 +194,7 @@ function loadPurchaseHistory() {
         const statusClass = `status-${status.toLowerCase().replace(' ', '-')}`;
         const totalOrderAmount = (purchase.totalAmount || 0).toLocaleString();
 
-        // --- Card Structure Start ---
+        // --- Card Structure Start --- (이 구조가 적용되어야 함)
         historyHTML += `
             <li class="purchase-item">
                 <div class="purchase-item-header">
@@ -236,7 +236,7 @@ function loadPurchaseHistory() {
         // --- Card Structure End ---
     });
 
-    // Debugging log (Keep this!)
+    // Debugging log (이 로그가 콘솔에 보여야 함)
     console.log("Generated historyHTML:", historyHTML);
 
     purchaseList.innerHTML = historyHTML;
