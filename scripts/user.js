@@ -275,15 +275,41 @@ window.cancelPurchase = function(index) {
         window.loadMyPagePurchaseHistory();
         alert('구매가 취소되었습니다.'); 
         
-        // --- GA4 cancel_order 이벤트 푸시 추가 ---
-        if (typeof pushGeneralEvent === 'function') {
-            console.log('Pushing cancel_order event for transaction:', itemToCancel?.transactionId);
-            pushGeneralEvent('cancel_order', {
-                transaction_id: itemToCancel?.transactionId || 'N/A' // 취소된 주문의 ID 전달
-                // 필요시 다른 정보 추가 (예: value, currency)
-            });
+        // --- GA4 refund 이벤트 푸시 (표준 방식 사용) ---
+        if (typeof pushEcommerceEvent === 'function' && itemToCancel) {
+            console.log('Preparing refund event for transaction:', itemToCancel.transactionId);
+            
+            const refundEcommerceData = {
+                currency: 'KRW', 
+                transaction_id: itemToCancel.transactionId, // ** 필수: 원본 거래 ID **
+                value: itemToCancel.totalAmount || 0, // 환불 금액
+                // affiliation: '뷰티 코스메틱 쇼핑몰', // 필요시 추가
+                // coupon: undefined, // 필요시 추가
+                // shipping: 0, // 필요시 추가 (환불된 배송비)
+                // tax: 0, // 필요시 추가 (환불된 세금)
+                items: (itemToCancel.items || []).map((item, itemIndex) => {
+                    // 환불되는 아이템 정보 매핑
+                    const itemDetails = window.products.find(p => p.id === item.productId);
+                    return {
+                        item_id: item.productId.toString(),
+                        item_name: item.productName || 'Unknown Product',
+                        affiliation: itemDetails?.affiliation || '뷰티 코스메틱 쇼핑몰',
+                        coupon: itemDetails?.coupon || undefined,
+                        discount: itemDetails?.originalPrice ? (itemDetails.originalPrice - item.price) : undefined,
+                        index: itemIndex + 1, // 목록 내 순서 (필수는 아님)
+                        item_brand: itemDetails?.brand || undefined,
+                        item_category: itemDetails?.category || undefined,
+                        price: item.price, // 환불된 개당 가격
+                        quantity: item.quantity // 환불된 수량
+                    };
+                })
+            };
+
+            pushEcommerceEvent('refund', refundEcommerceData);
+            console.log('Pushed refund event:', refundEcommerceData);
+
         } else {
-            console.warn('pushGeneralEvent function is not defined. Cannot push cancel_order event.');
+            console.warn('pushEcommerceEvent function is not defined or itemToCancel data is missing. Cannot push refund event.');
         }
         // --- 이벤트 푸시 끝 ---
 
