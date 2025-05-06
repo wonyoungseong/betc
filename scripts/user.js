@@ -154,46 +154,94 @@ function savePurchaseHistory(purchase) {
 // 구매 내역 로드
 function loadPurchaseHistory() {
     const purchaseList = document.getElementById('purchaseList');
-    if (!purchaseList) return;
+    const totalAmountSpan = document.getElementById('totalAmount'); // 전체 구매 금액 표시 span
+    const orderCompleteCountSpan = document.getElementById('orderCompleteCount'); // 주문완료 건수 표시 span
+
+    if (!purchaseList || !totalAmountSpan || !orderCompleteCountSpan) {
+        console.error('Purchase history elements not found.');
+        return;
+    }
 
     const purchaseHistory = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
-    
+    let totalPurchaseAmount = 0;
+    let orderCompleteCount = 0;
+
     if (purchaseHistory.length === 0) {
         purchaseList.innerHTML = '<li>구매 내역이 없습니다.</li>';
+        totalAmountSpan.textContent = '₩0';
+        orderCompleteCountSpan.textContent = '0';
         return;
     }
 
     let historyHTML = '';
+    purchaseHistory.sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신순 정렬
+
     purchaseHistory.forEach((purchase, index) => {
+        totalPurchaseAmount += purchase.totalAmount;
+        if (purchase.status === '주문완료') { // 주문완료 상태 카운트 (상태 필드가 있다고 가정)
+            orderCompleteCount++;
+        }
+
+        // 각 주문 항목을 카드 형태로 구성
         historyHTML += `
             <li class="purchase-item">
-                <p>구매일자: ${purchase.date}</p>
-                <p>총 금액: ₩${purchase.totalAmount}</p>
-                <p>거래 ID: ${purchase.transactionId}</p>
-                <ul>
-                    ${purchase.items.map(item => `
-                        <li>${item.productName} - ${item.quantity}개</li>
-                    `).join('')}
-                </ul>
-                <button onclick="cancelPurchase(${index})">구매 취소</button>
+                <div class="purchase-item-header">
+                    <div class="order-info">
+                        <span class="order-number">주문 번호: ${purchase.transactionId || 'N/A'}</span>
+                        <span class="order-date">주문 일자: ${new Date(purchase.date).toLocaleString('ko-KR')}</span>
+                    </div>
+                    <span class="order-status status-${purchase.status || 'completed'}">${purchase.status || '주문완료'}</span>
+                </div>
+                <div class="purchase-item-products">
+                    ${purchase.items.map(item => {
+                        const productInfo = window.products.find(p => p.id === item.productId);
+                        const imageUrl = productInfo?.image || 'images/placeholder.png'; // 상품 이미지 가져오기
+                        return `
+                        <div class="product-entry">
+                            <img src="${imageUrl}" alt="${item.productName}" class="product-thumbnail">
+                            <div class="product-details">
+                                <span class="product-name">${item.productName}</span>
+                                <span class="product-quantity-price">수량: ${item.quantity} / 개당 ₩${item.price.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    `}).join('')}
+                </div>
+                <div class="purchase-item-summary">
+                    <span class="total-order-amount">총 금액: ₩${purchase.totalAmount.toLocaleString()}</span>
+                    <div class="purchase-item-actions">
+                        ${purchase.status !== '취소됨' ? `<button class="btn-cancel-order" onclick="cancelPurchase(${index})">주문 취소</button>` : ''}
+                        <!-- <button>배송 조회</button> -->
+                        <!-- <button>리뷰 작성</button> -->
+                    </div>
+                </div>
             </li>
         `;
     });
 
     purchaseList.innerHTML = historyHTML;
-
-    // 주문 목록을 로드한 후
-    updateOrderCompleteCount();
+    totalAmountSpan.textContent = `₩${totalPurchaseAmount.toLocaleString()}`;
+    orderCompleteCountSpan.textContent = orderCompleteCount;
 }
 
-// 구매 취소
-function cancelPurchase(index) {
+// 구매 취소 (index 대신 transactionId를 사용하는 것이 더 안전할 수 있음)
+function cancelPurchase(index) { // 현재는 index 기반
     let purchaseHistory = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
+    purchaseHistory.sort((a, b) => new Date(b.date) - new Date(a.date)); // 로드 순서와 동일하게 정렬
+
     if (index >= 0 && index < purchaseHistory.length) {
-        purchaseHistory.splice(index, 1);
+        // 실제로는 purchaseHistory[index].status = '취소됨'; 와 같이 상태를 변경하고 저장해야 함
+        // 여기서는 데모를 위해 간단히 제거
+        // purchaseHistory[index].status = '취소됨';
+        // localStorage.setItem('purchaseHistory', JSON.stringify(purchaseHistory));
+        
+        // 데모용 제거 로직:
+        const itemToCancel = purchaseHistory.splice(index, 1)[0]; 
         localStorage.setItem('purchaseHistory', JSON.stringify(purchaseHistory));
+        
         loadPurchaseHistory();
-        alert('구매가 취소되었습니다.');
+        alert('구매가 취소되었습니다.'); // 실제로는 상태 변경 알림이 더 적절
+    } else {
+        alert('구매 내역을 찾을 수 없습니다.');
     }
 }
 
