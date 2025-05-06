@@ -69,5 +69,16 @@
         }
         includeHTML(initializePage);
     </script>
+    <script>
+            async function initializePage() {
+                await window.loadProductData();
+                checkAuthStatus();
+                window.addEventListeners();
+                window.updateCartCount();
+                console.log("Calling loadPurchaseHistory() now..."); // 호출 직전 로그
+                loadPurchaseHistory();
+            }
+            includeHTML(initializePage);
+    </script>
 </body>
 </html>

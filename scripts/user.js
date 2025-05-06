@@ -1,3 +1,4 @@
+console.log("scripts/user.js --- File execution started ---");
 // 사용자 인증 및 마이페이지 기능
 
 window.currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
