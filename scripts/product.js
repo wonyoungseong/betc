@@ -55,11 +55,13 @@ function addProductListClickListener(containerId) {
             const productId = parseInt(productItem.dataset.productId);
             const listName = productItem.dataset.listName;
             const listIndex = parseInt(productItem.dataset.listIndex);
+            const listId = productItem.dataset.listId; // listId 읽어오기
             
-            // 유효한 데이터가 있는지 확인
-            if (!isNaN(productId) && listName !== undefined && listName !== 'undefined' && !isNaN(listIndex)) { // listName 'undefined' 문자열 체크 추가
-                console.log(`Product item clicked: ID=${productId}, List=${listName}, Index=${listIndex}`);
-                window.viewProduct(productId, listName, listIndex);
+            // 유효한 데이터가 있는지 확인 (listId 포함)
+            if (!isNaN(productId) && listName !== undefined && listName !== 'undefined' && !isNaN(listIndex) && listId !== undefined) { 
+                console.log(`Product item clicked: ID=${productId}, List=${listName}, Index=${listIndex}, ListID=${listId}`);
+                // viewProduct 호출 시 listId 전달
+                window.viewProduct(productId, listName, listIndex, listId); 
             } else {
                 console.warn('Missing or invalid data attributes on clicked product item:', productItem.dataset);
             }
@@ -119,8 +121,8 @@ window.loadMainProducts = function(category = 'all') {
     // --- GA4 view_item_list 이벤트 푸시 끝 ---
 
     displayProducts.forEach(function(product, index) {
-        // createProductItem 호출 시 목록 정보 전달 (select_item을 위해)
-        var item = window.createProductItem(product, listName, index);
+        // createProductItem 호출 시 listId 전달
+        var item = window.createProductItem(product, listName, index, listId); 
         productList.appendChild(item);
     });
 
@@ -412,7 +414,7 @@ window.addEventListener('resize', () => {
     }
 });
 
-window.createProductItem = function(product, listName, index) {
+window.createProductItem = function(product, listName, index, listId) {
     var item = document.createElement('div');
     item.className = 'product-item';
     // onclick 제거됨
@@ -420,7 +422,8 @@ window.createProductItem = function(product, listName, index) {
     // 데이터 속성 추가
     item.dataset.productId = product.id;
     item.dataset.listName = listName;
-    item.dataset.listIndex = index; // 인덱스 저장 (0부터 시작)
+    item.dataset.listIndex = index;
+    item.dataset.listId = listId; // listId 데이터 속성 추가
 
     var discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
 
@@ -440,12 +443,12 @@ window.createProductItem = function(product, listName, index) {
     return item;
 }
 
-window.viewProduct = function(id, listName, index) {
+window.viewProduct = function(id, listName, index, listId) {
     const product = window.products.find(p => p.id === id);
     if (product && typeof pushEcommerceEvent === 'function') {
         const ecommerceData = {
             item_list_name: listName,
-            item_list_id: product.category, // 목록 ID로 상품 카테고리 사용 (또는 listName과 동일하게 사용)
+            item_list_id: listId, // 전달받은 listId 사용
             items: [{
                 item_id: product.id.toString(),
                 item_name: product.name,
@@ -455,10 +458,10 @@ window.viewProduct = function(id, listName, index) {
                 index: index + 1,
                 item_brand: product.brand || undefined,
                 item_category: product.category || undefined,
-                item_list_id: product.category, // 아이템에도 목록 ID
-                item_list_name: listName,       // 아이템에도 목록 이름
+                item_list_id: listId, // 전달받은 listId 사용
+                item_list_name: listName,
                 price: product.price,
-                quantity: 1 // 선택 시 수량은 1
+                quantity: 1
             }]
         };
         pushEcommerceEvent('select_item', ecommerceData);
@@ -468,10 +471,9 @@ window.viewProduct = function(id, listName, index) {
         console.warn('pushEcommerceEvent function is not defined. Cannot push select_item.');
     }
 
-    // 페이지 이동 로직 수정: list_name과 list_id(category) 추가
-    const listId = product ? product.category : 'unknown'; // 상품 정보가 있을 경우 카테고리 사용
+    // 페이지 이동 로직 수정: listId 파라미터 사용
     const encodedListName = encodeURIComponent(listName || 'unknown');
-    const encodedListId = encodeURIComponent(listId);
+    const encodedListId = encodeURIComponent(listId || 'unknown'); // listId 사용
     window.location.href = `product-detail.html?id=${id}&list_name=${encodedListName}&list_id=${encodedListId}`;
 }
 
@@ -504,16 +506,12 @@ window.loadSearchResults = function() {
     if (!resultsDiv) return;
     resultsDiv.innerHTML = '';
     if (results.length > 0) {
-        // listName과 listId 정의 (view_item_list 와 일관성 있게)
         const listName = `검색 결과: ${query}`;
         const listId = 'search_results';
         
-        // view_item_list 이벤트 로직 (기존 코드 유지 또는 필요시 여기에 추가)
-        // ...
-
         results.forEach(function(product, index) {
-            // createProductItem 호출 시 listName, index 전달
-            var item = window.createProductItem(product, listName, index); 
+            // createProductItem 호출 시 listId 전달
+            var item = window.createProductItem(product, listName, index, listId); 
             resultsDiv.appendChild(item);
         });
         
@@ -558,9 +556,10 @@ window.loadProductList = function(category = 'all', sortBy = 'lowprice') {
     });
 
     const listName = category === 'all' ? '전체 제품' : category;
+    const listId = category; // listId를 category 값으로 사용 (view_item_list와 동일)
     const ecommerceData = {
         item_list_name: listName,
-        item_list_id: category,
+        item_list_id: listId,
         items: filteredProducts.map((product, index) => ({
             item_id: product.id.toString(),
             item_name: product.name,
@@ -570,7 +569,7 @@ window.loadProductList = function(category = 'all', sortBy = 'lowprice') {
             index: index + 1,
             item_brand: product.brand || undefined,
             item_category: product.category || undefined,
-            item_list_id: category,
+            item_list_id: listId,
             item_list_name: listName,
             price: product.price,
             quantity: 1
@@ -583,7 +582,8 @@ window.loadProductList = function(category = 'all', sortBy = 'lowprice') {
     }
 
     filteredProducts.forEach(function(product, index) {
-        var item = window.createProductItem(product, listName, index);
+        // createProductItem 호출 시 listId 전달
+        var item = window.createProductItem(product, listName, index, listId); 
         productList.appendChild(item);
     });
 
