@@ -286,7 +286,7 @@ window.completePurchase = function(event) {
 
     // 주문 완료 페이지로 리디렉션 등
     alert('주문이 완료되었습니다!');
-    window.location.href = 'purchase-complete.html'; // 가상의 완료 페이지
+    window.location.href = 'purchase.html'; // URL 수정: purchase-complete.html -> purchase.html
 }
 
 // 장바구니에서 제품 제거
