@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>뷰티 코스메틱 쇼핑몰</title>
+    <title>Study Hub</title>
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="icon" href="data:,">
     <script src="scripts/global.js"></script>
@@ -15,128 +15,56 @@
     var BETC_DATA_ENV ="STG"
     </script>
     <!-- <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="85be34eb-e45a-4f84-8c82-62f3e3578f89" data-blockingmode="auto" data-consentmode="disabled" type="text/javascript"></script> -->
+    <style>
+        /* Hub 페이지 전용 간단한 스타일 */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 0; /* 허브 페이지는 헤더가 없으므로 패딩 제거 */
+            background-color: #f0f2f5;
+        }
+        .hub-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .hub-container h1 {
+            color: var(--color-primary);
+            margin-bottom: 30px;
+        }
+        .hub-links a {
+            display: inline-block; /* 버튼처럼 보이도록 */
+            background-color: var(--color-primary);
+            color: white;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .hub-links a:hover {
+            background-color: var(--color-secondary);
+            transform: translateY(-2px);
+        }
+        /* Ensure styles apply correctly without header/footer padding */
+        body > .main-content { padding: 0; max-width: none; } /* Reset main-content padding for this page */
+    </style>
 </head>
 <body>
-    <div include-html="components/header.html"></div>
-    <main class="main-content">
-        <section class="hero" style="background-image: url('images/promotions/lipstick/promotion-hero1.jpg');">
-            <div class="hero-content">
-                <h1><br>립스틱 25% 할인!</h1>
-                <p>가장 사랑받는 립스틱을<br>지금 바로 뷰티 코스메틱에서 <br>더욱 특별한 가격에 만나보세요!</p>
-                <a href="promotion-detail.html" class="cta-button" id="heroPromoLink">자세히 보기</a>
-            </div>
-        </section>
-        
-        <section class="featured-products">
-            <h2>추천 제품</h2>
-            <div id="mainProductList" class="product-list">
-                <!-- 추천 제품이 여기에 동적으로 로드됩니다 (최대 4개) -->
-            </div>
-        </section>
-        
-        <section class="beauty-lab" style="background-image: url('images/campaign/sustainability/campaign.jpg');">
-            <div class="beauty-lab-content">
-                <h2></h2>
-                <p>다양한 피부 고민을 위한 맞춤형 솔루션을 제공하는<br>뷰티 앤 라이프 랩을 만나보세요.</p>
-                <a href="campaign-detail.html" class="cta-button" id="beautyLabPromoLink">자세히 보기</a>
-            </div>
-        </section>
-    </main>
-    <div include-html="components/footer.html"></div>
-
-    <script src="scripts/user.js"></script>
-    <script src="scripts/product.js"></script>
-    <script src="scripts/cart.js"></script>
-    <script>
-        // Function to initialize page-specific scripts after includes are done
-        async function initializePage() {
-            // It's generally safer to ensure data is loaded before using it
-            // Consider if loadProductData needs to be awaited depending on other functions
-            await window.loadProductData(); 
-            window.checkAuthStatus();
-            window.addEventListeners();
-            window.updateCartCount();
-            window.loadMainProducts();
-            window.initializeCategoryNav();
-
-            // --- GA4 Event: view_promotion ---
-            const promotions = [
-                {
-                    item_id: 'promo_lipstick25', // 프로모션 관련 대표 상품 ID 또는 프로모션 코드
-                    item_name: '립스틱 25% 할인 프로모션', // 또는 상품명
-                    promotion_id: 'lipstick_promo_hero',
-                    promotion_name: '립스틱 25% 할인',
-                    creative_name: 'hero_banner_lipstick',
-                    creative_slot: 'slot1_hero',
-                    location_id: 'index_page_hero' // 프로모션 위치 식별자
-                },
-                {
-                    item_id: 'promo_beautylab',
-                    item_name: '뷰티 앤 라이프 랩 캠페인',
-                    promotion_id: 'beauty_lab_campaign',
-                    promotion_name: '뷰티 앤 라이프 랩',
-                    creative_name: 'beauty_lab_banner',
-                    creative_slot: 'slot2_beautylab',
-                    location_id: 'index_page_beautylab'
-                }
-            ];
-            if (typeof pushEcommerceEvent === 'function') {
-                 pushEcommerceEvent('view_promotion', { items: promotions });
-            } else {
-                console.warn('pushEcommerceEvent is not defined. Cannot push view_promotion.');
-            }
-            // --- End GA4 Event ---
-
-            // --- Add Event Listeners for select_promotion ---
-            const heroPromoLink = document.getElementById('heroPromoLink');
-            if (heroPromoLink) {
-                heroPromoLink.addEventListener('click', function(e) {
-                    e.preventDefault(); // 기본 링크 동작 방지
-                    const promotionData = {
-                        item_id: 'promo_lipstick25',
-                        item_name: '립스틱 25% 할인 프로모션',
-                        promotion_id: 'lipstick_promo_hero',
-                        promotion_name: '립스틱 25% 할인',
-                        creative_name: 'hero_banner_lipstick',
-                        creative_slot: 'slot1_hero',
-                        location_id: 'index_page_hero'
-                    };
-                    if (typeof pushEcommerceEvent === 'function') {
-                         pushEcommerceEvent('select_promotion', { items: [promotionData] });
-                    } else {
-                        console.warn('pushEcommerceEvent is not defined. Cannot push select_promotion.');
-                    }
-                    window.location.href = this.href; // 페이지 이동
-                });
-            }
-
-            const beautyLabPromoLink = document.getElementById('beautyLabPromoLink');
-            if (beautyLabPromoLink) {
-                beautyLabPromoLink.addEventListener('click', function(e) {
-                    e.preventDefault(); // 기본 링크 동작 방지
-                    const promotionData = {
-                        item_id: 'promo_beautylab',
-                        item_name: '뷰티 앤 라이프 랩 캠페인',
-                        promotion_id: 'beauty_lab_campaign',
-                        promotion_name: '뷰티 앤 라이프 랩',
-                        creative_name: 'beauty_lab_banner',
-                        creative_slot: 'slot2_beautylab',
-                        location_id: 'index_page_beautylab'
-                    };
-                    if (typeof pushEcommerceEvent === 'function') {
-                         pushEcommerceEvent('select_promotion', { items: [promotionData] });
-                    } else {
-                        console.warn('pushEcommerceEvent is not defined. Cannot push select_promotion.');
-                    }
-                    window.location.href = this.href; // 페이지 이동
-                });
-            }
-            // --- End Event Listeners ---
-        }
-
-        // Call includeHTML, which now also inserts GTM.
-        // Pass initializePage as the callback function.
-        includeHTML(initializePage);
-    </script>
+    <div class="hub-container">
+        <h1>Study Hub</h1>
+        <p>이동할 학습 페이지를 선택하세요.</p>
+        <div class="hub-links">
+            <a href="ecommerceMpaIndex.html">Ecommerce Site Study</a>
+            <a href="dl-playground.html">DataLayer Playground</a>
+        </div>
+    </div>
+    <!-- 허브 페이지에는 header/footer include 및 관련 스크립트 불필요 -->
 </body>
 </html>
