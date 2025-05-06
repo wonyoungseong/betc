@@ -171,6 +171,7 @@ function loadPurchaseHistory() {
         console.error("Element with ID 'purchaseList' not found.");
         return;
     }
+    
     purchaseList.innerHTML = ''; // Clear previous items before checking length
 
     if (purchaseHistory.length === 0) {
@@ -231,6 +232,7 @@ function loadPurchaseHistory() {
     purchaseList.innerHTML = historyHTML;
     if(totalAmountSpan) totalAmountSpan.textContent = `₩${totalPurchaseAmount.toLocaleString()}`;
     if(orderCompleteCountSpan) orderCompleteCountSpan.textContent = orderCompleteCount;
+    console.log("Generated historyHTML:", historyHTML);
 }
 
 // 구매 취소 함수는 이전과 동일하게 유지 (index 기반)
