@@ -27,6 +27,53 @@
     <script>
         function initializePage() {
             checkAuthStatus();
+
+            // --- GA4 purchase 이벤트 전송 로직 시작 ---
+            try {
+                const isPurchaseComplete = sessionStorage.getItem('isPurchaseComplete');
+                
+                if (isPurchaseComplete === 'true') {
+                    console.log('Purchase complete flag found in sessionStorage.');
+                    const purchaseDataString = sessionStorage.getItem('pendingPurchaseEventData');
+                    
+                    if (purchaseDataString) {
+                        const purchaseEcommerceData = JSON.parse(purchaseDataString);
+                        console.log('Retrieved purchase data from sessionStorage:', purchaseEcommerceData);
+
+                        // dataLayer.push 실행
+                        if (window.dataLayer) {
+                             console.log('Pushing purchase event to dataLayer...');
+                             window.dataLayer.push({
+                                 'event': 'purchase', // GTM 트리거와 일치
+                                 'event_category': 'ecommerce',
+                                 'event_action': 'purchase',
+                                 'event_label': undefined,
+                                 'ecommerce': purchaseEcommerceData 
+                             });
+                             console.log('Purchase event pushed to dataLayer.');
+                        } else {
+                             console.error('window.dataLayer is not available.');
+                        }
+
+                        // ** 중요: 플래그 및 데이터 즉시 제거 (중복 방지) **
+                        sessionStorage.removeItem('isPurchaseComplete');
+                        sessionStorage.removeItem('pendingPurchaseEventData');
+                        console.log('Removed purchase flag and data from sessionStorage.');
+
+                    } else {
+                        console.warn('Purchase complete flag was true, but purchase data was not found in sessionStorage.');
+                        sessionStorage.removeItem('isPurchaseComplete'); // 플래그만 제거
+                    }
+                } else {
+                     console.log('No purchase complete flag found, or not the first load after purchase.');
+                }
+            } catch (e) {
+                console.error('Error processing purchase event from sessionStorage:', e);
+                // 오류 발생 시에도 플래그는 제거 시도
+                 try { sessionStorage.removeItem('isPurchaseComplete'); } catch (removeError) {} 
+                 try { sessionStorage.removeItem('pendingPurchaseEventData'); } catch (removeError) {}
+            }
+            // --- GA4 purchase 이벤트 전송 로직 끝 ---
         }
         includeHTML(initializePage);
     </script>
