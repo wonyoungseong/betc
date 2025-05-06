@@ -1106,9 +1106,8 @@ button:hover,
     padding-bottom: var(--space-md);
 }
 
-.checkout-container {
+.checkout-layout-container {
     display: flex;
-    flex-wrap: wrap;
     gap: var(--space-xl);
     align-items: flex-start;
 }
@@ -1549,7 +1548,7 @@ footer {
 
 /* Checkout Page Responsive */
 @media (max-width: 992px) { /* Tablet and below */
-    .checkout-container {
+    .checkout-layout-container {
         flex-direction: column; /* Stack columns */
     }
     .checkout-summary-column {
