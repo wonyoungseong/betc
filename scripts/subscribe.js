@@ -13,16 +13,13 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.style.display = 'block';
         emailInput.focus();
         if (!beginSubscriptionFired) {
-            const eventData = {
-                event: 'begin_subscription',
-                event_category: 'subscription',
-                event_action: 'begin_subscription',
-                event_label: undefined
-            };
-            window.dataLayer = window.dataLayer || [];
-            window.dataLayer.push(eventData);
+            if (typeof pushGeneralEvent === 'function') {
+                pushGeneralEvent('begin_subscription');
+                console.log('begin_subscription event pushed using pushGeneralEvent.');
+            } else {
+                console.warn('pushGeneralEvent is not defined. Cannot push begin_subscription.');
+            }
             beginSubscriptionFired = true;
-            console.log('begin_subscription event pushed (category: subscription).');
         }
     }
 
@@ -37,17 +34,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (validateEmail(email)) {
             console.log('구독 이메일:', email);
 
-            const eventData = {
-                event: 'complete_subscription',
-                event_category: 'subscription',
-                event_action: 'complete_subscription',
-                event_label: undefined
-            };
-            window.dataLayer = window.dataLayer || [];
-            window.dataLayer.push(eventData);
-            console.log('complete_subscription event pushed (category: subscription).');
-
             subscriptionComplete = true;
+            console.log('Subscription marked as complete.');
+
+            if (typeof pushGeneralEvent === 'function') {
+                pushGeneralEvent('complete_subscription');
+                console.log('complete_subscription event pushed using pushGeneralEvent.');
+            } else {
+                console.warn('pushGeneralEvent is not defined. Cannot push complete_subscription.');
+            }
+
             subscriptionMessage.textContent = '구독이 완료되었습니다!';
             subscriptionMessage.style.display = 'block';
             emailInput.disabled = true;
