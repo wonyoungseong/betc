@@ -484,36 +484,11 @@ function updateTotalPrice(total) {
     }
 }
 
+/* 아래 함수는 user.js에 정의된 것이 올바른 버전이므로 삭제합니다.
 function loadPurchaseHistory() {
-    const purchaseList = document.getElementById('purchaseList');
-    if (!purchaseList) return;
-
-    const currentUserId = window.currentUser ? window.currentUser.username : 'guest';
-    const purchaseHistory = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
-    const userPurchases = purchaseHistory.filter(purchase => purchase.userId === currentUserId);
-
-    purchaseList.innerHTML = '';
-    let totalAmount = 0;
-    userPurchases.forEach(purchase => {
-        totalAmount += purchase.totalAmount;
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <p>주문 번호: ${purchase.id}</p>
-            <p>주문 일자: ${new Date(purchase.date).toLocaleString()}</p>
-            <p>상태: 주문완료</p>
-            <ul>
-                ${purchase.items.map(item => `
-                    <li>${item.productName} - ${item.quantity}개, ₩${(item.price * item.quantity).toLocaleString()}</li>
-                `).join('')}
-            </ul>
-            <p>총 금액: ₩${purchase.totalAmount.toLocaleString()}</p>
-            <button onclick="cancelOrder(${purchase.id})">주문 취소</button>
-        `;
-        purchaseList.appendChild(li);
-    });
-
-    updateOrderStatus(userPurchases.length, totalAmount);
+    // ... (cart.js에 있던 예전 함수 내용 전체) ...
 }
+*/
 
 function cancelOrder(orderId) {
     if (!confirm('정말로 이 주문을 취소하시겠습니까?')) {
