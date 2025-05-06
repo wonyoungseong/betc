@@ -166,10 +166,17 @@ function loadPurchaseHistory() {
     let totalPurchaseAmount = 0;
     let orderCompleteCount = 0;
 
+    // purchaseList 초기화 전에 확인
+    if (!purchaseList) {
+        console.error("Element with ID 'purchaseList' not found.");
+        return;
+    }
+    purchaseList.innerHTML = ''; // Clear previous items before checking length
+
     if (purchaseHistory.length === 0) {
-        purchaseList.innerHTML = '<li>구매 내역이 없습니다.</li>';
-        totalAmountSpan.textContent = '₩0';
-        orderCompleteCountSpan.textContent = '0';
+        purchaseList.innerHTML = '<li>구매 내역이 없습니다.</li>'; // Display message inside the list
+        if (totalAmountSpan) totalAmountSpan.textContent = '₩0';
+        if (orderCompleteCountSpan) orderCompleteCountSpan.textContent = '0';
         return;
     }
 
@@ -178,40 +185,43 @@ function loadPurchaseHistory() {
 
     purchaseHistory.forEach((purchase, index) => {
         totalPurchaseAmount += purchase.totalAmount;
-        if (purchase.status === '주문완료') { // 주문완료 상태 카운트 (상태 필드가 있다고 가정)
+        // 상태 정보가 없으면 기본값 '주문완료' 사용
+        const status = purchase.status || '주문완료'; 
+        if (status === '주문완료') {
             orderCompleteCount++;
         }
 
-        // 각 주문 항목을 카드 형태로 구성
+        // 각 주문 항목을 카드 형태로 구성 (클래스명 정확히 적용)
         historyHTML += `
-            <li class="purchase-item">
+            <li class="purchase-item"> 
                 <div class="purchase-item-header">
                     <div class="order-info">
                         <span class="order-number">주문 번호: ${purchase.transactionId || 'N/A'}</span>
                         <span class="order-date">주문 일자: ${new Date(purchase.date).toLocaleString('ko-KR')}</span>
                     </div>
-                    <span class="order-status status-${purchase.status || 'completed'}">${purchase.status || '주문완료'}</span>
+                    <span class="order-status status-${status.toLowerCase().replace(' ', '-')}">${status}</span>
                 </div>
                 <div class="purchase-item-products">
                     ${purchase.items.map(item => {
-                        const productInfo = window.products.find(p => p.id === item.productId);
-                        const imageUrl = productInfo?.image || 'images/placeholder.png'; // 상품 이미지 가져오기
+                        // window.products가 로드되었는지 확인 후 사용
+                        const productInfo = window.products ? window.products.find(p => p.id === item.productId) : null;
+                        const imageUrl = productInfo?.image || 'images/placeholder.png';
+                        const price = item.price || 0;
                         return `
                         <div class="product-entry">
-                            <img src="${imageUrl}" alt="${item.productName}" class="product-thumbnail">
+                            <img src="${imageUrl}" alt="${item.productName || '상품 정보 없음'}" class="product-thumbnail">
                             <div class="product-details">
-                                <span class="product-name">${item.productName}</span>
-                                <span class="product-quantity-price">수량: ${item.quantity} / 개당 ₩${item.price.toLocaleString()}</span>
+                                <span class="product-name">${item.productName || '상품 정보 없음'}</span>
+                                <span class="product-quantity-price">수량: ${item.quantity || 0} / 개당 ₩${price.toLocaleString()}</span>
                             </div>
                         </div>
                     `}).join('')}
                 </div>
                 <div class="purchase-item-summary">
-                    <span class="total-order-amount">총 금액: ₩${purchase.totalAmount.toLocaleString()}</span>
+                    <span class="total-order-amount">총 금액: ₩${(purchase.totalAmount || 0).toLocaleString()}</span>
                     <div class="purchase-item-actions">
-                        ${purchase.status !== '취소됨' ? `<button class="btn-cancel-order" onclick="cancelPurchase(${index})">주문 취소</button>` : ''}
-                        <!-- <button>배송 조회</button> -->
-                        <!-- <button>리뷰 작성</button> -->
+                        ${status !== '취소됨' ? `<button class="btn-cancel-order" onclick="cancelPurchase(${index})">주문 취소</button>` : ''}
+                        <!-- Add other buttons like 'Track Shipment' or 'Write Review' here -->
                     </div>
                 </div>
             </li>
@@ -219,27 +229,20 @@ function loadPurchaseHistory() {
     });
 
     purchaseList.innerHTML = historyHTML;
-    totalAmountSpan.textContent = `₩${totalPurchaseAmount.toLocaleString()}`;
-    orderCompleteCountSpan.textContent = orderCompleteCount;
+    if(totalAmountSpan) totalAmountSpan.textContent = `₩${totalPurchaseAmount.toLocaleString()}`;
+    if(orderCompleteCountSpan) orderCompleteCountSpan.textContent = orderCompleteCount;
 }
 
-// 구매 취소 (index 대신 transactionId를 사용하는 것이 더 안전할 수 있음)
-function cancelPurchase(index) { // 현재는 index 기반
+// 구매 취소 함수는 이전과 동일하게 유지 (index 기반)
+function cancelPurchase(index) { 
     let purchaseHistory = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
-    purchaseHistory.sort((a, b) => new Date(b.date) - new Date(a.date)); // 로드 순서와 동일하게 정렬
+    purchaseHistory.sort((a, b) => new Date(b.date) - new Date(a.date)); 
 
     if (index >= 0 && index < purchaseHistory.length) {
-        // 실제로는 purchaseHistory[index].status = '취소됨'; 와 같이 상태를 변경하고 저장해야 함
-        // 여기서는 데모를 위해 간단히 제거
-        // purchaseHistory[index].status = '취소됨';
-        // localStorage.setItem('purchaseHistory', JSON.stringify(purchaseHistory));
-        
-        // 데모용 제거 로직:
         const itemToCancel = purchaseHistory.splice(index, 1)[0]; 
         localStorage.setItem('purchaseHistory', JSON.stringify(purchaseHistory));
-        
         loadPurchaseHistory();
-        alert('구매가 취소되었습니다.'); // 실제로는 상태 변경 알림이 더 적절
+        alert('구매가 취소되었습니다.'); 
     } else {
         alert('구매 내역을 찾을 수 없습니다.');
     }
