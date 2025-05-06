@@ -41,12 +41,15 @@ function addProductListClickListener(containerId) {
 
     // 이미 리스너가 추가되었는지 확인 (플래그 사용)
     if (container.dataset.clickListenerAdded === 'true') {
+        // console.log(`Listener already added to #${containerId}`); // 디버깅 시 주석 해제
         return;
     }
 
     container.addEventListener('click', function(event) {
         // 클릭된 요소 또는 가장 가까운 .product-item 조상 찾기
+        console.log('List item clicked. Event target:', event.target); // 클릭된 타겟 로깅
         const productItem = event.target.closest('.product-item');
+        console.log('Closest .product-item found:', productItem); // 찾은 productItem 로깅
         
         if (productItem) {
             const productId = parseInt(productItem.dataset.productId);
@@ -54,12 +57,14 @@ function addProductListClickListener(containerId) {
             const listIndex = parseInt(productItem.dataset.listIndex);
             
             // 유효한 데이터가 있는지 확인
-            if (!isNaN(productId) && listName !== undefined && !isNaN(listIndex)) {
+            if (!isNaN(productId) && listName !== undefined && listName !== 'undefined' && !isNaN(listIndex)) { // listName 'undefined' 문자열 체크 추가
                 console.log(`Product item clicked: ID=${productId}, List=${listName}, Index=${listIndex}`);
                 window.viewProduct(productId, listName, listIndex);
             } else {
-                console.warn('Missing data attributes on clicked product item.', productItem.dataset);
+                console.warn('Missing or invalid data attributes on clicked product item:', productItem.dataset);
             }
+        } else {
+             console.log('No .product-item ancestor found for the clicked element.');
         }
     });
 
@@ -410,10 +415,7 @@ window.addEventListener('resize', () => {
 window.createProductItem = function(product, listName, index) {
     var item = document.createElement('div');
     item.className = 'product-item';
-    // onclick 제거
-    // item.onclick = function() {
-    //     window.viewProduct(product.id, listName, index);
-    // };
+    // onclick 제거됨
 
     // 데이터 속성 추가
     item.dataset.productId = product.id;
@@ -422,8 +424,9 @@ window.createProductItem = function(product, listName, index) {
 
     var discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
 
+    // a 태그에서 onclick 제거
     item.innerHTML = `
-        <a href="#" class="product-item-link" onclick="event.preventDefault();"> <!-- 링크로 감싸되, 기본 동작 방지 -->
+        <a href="#" class="product-item-link"> 
             <img src="${product.image}" alt="${product.name}" class="product-image">
             <h3>${product.name}</h3>
             <p>
