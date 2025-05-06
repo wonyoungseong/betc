@@ -194,17 +194,14 @@ function checkDataLayerPush() {
     console.log('Current stage:', currentStage);
     console.log('User input:', codeInput);
 
-    // 세션 스토리지에 사용자 입력 저장
     sessionStorage.setItem(`stage${currentStage}Input`, codeInput);
 
     try {
-        // 사용자 입력 실행
         eval(codeInput);
         const lastPush = window.dataLayer[window.dataLayer.length - 1];
         console.log('Evaluated dataLayer:', window.dataLayer);
         console.log('Last push:', lastPush);
 
-        // 기능적 검증
         if (currentStage === 1) {
             isCorrect = lastPush && lastPush.event === 'login';
         } else if (currentStage === 2) {
@@ -236,6 +233,15 @@ function checkDataLayerPush() {
 
     const resultElement = document.getElementById('result');
     if (isCorrect) {
+        if (currentStage === 4) {
+            const stage4CompletedThisSession = sessionStorage.getItem('stage4SessionComplete');
+            if (stage4CompletedThisSession !== 'true') {
+                console.log("Stage 4 completed for the first time this session. Triggering confetti!");
+                triggerConfettiAnimation(7000);
+                sessionStorage.setItem('stage4SessionComplete', 'true');
+            }
+        }
+
         if (currentStage > completedStages) {
             completedStages = currentStage;
             sessionStorage.setItem('completedStages', completedStages);
@@ -250,19 +256,52 @@ function checkDataLayerPush() {
             sessionStorage.setItem('attemptedStages', attemptedStages);
             setTimeout(() => {
                 updateAllStageElements();
+                resultElement.innerHTML = '';
             }, 1500);
         } else {
             resultElement.innerHTML = '<span style="color: green;">Congratulations! 모든 단계를 완료했습니다!</span>';
         }
+        updateNavigator();
+
     } else {
         resultElement.innerHTML = `<span style="color: red;">${errorMessage || `${currentStage}단계가 완료되지 않았습니다. 다시 시도해주세요.`}</span>`;
-        // 오답이어도 시도한 것으로 간주
         attemptedStages = Math.max(attemptedStages, currentStage);
         sessionStorage.setItem('attemptedStages', attemptedStages);
+        updateNavigator();
     }
 
     console.log('Current stage after check:', currentStage);
     console.log('Completed stages:', completedStages);
+}
+
+function triggerConfettiAnimation(duration) {
+    if (typeof confetti !== 'function') {
+        console.error("Confetti library is not loaded.");
+        return;
+    }
+
+    const endTime = Date.now() + duration;
+
+    confetti({
+        particleCount: 150,
+        spread: 90,
+        origin: { y: 0.6 }
+    });
+
+    const interval = setInterval(function() {
+        if (Date.now() > endTime) {
+            return clearInterval(interval);
+        }
+
+        confetti({
+            particleCount: Math.random() * 50 + 50,
+            spread: Math.random() * 60 + 60,
+            origin: { x: Math.random(), y: Math.random() - 0.2 },
+            angle: Math.random() * 360,
+            startVelocity: 25 + Math.random() * 10,
+            ticks: 200 + Math.random() * 100
+        });
+    }, 300);
 }
 
 function showSolution() {
@@ -279,10 +318,8 @@ function showSolution() {
     `;
     document.body.appendChild(modal);
 
-    // ESC 키 이벤트 리스너 추가
     document.addEventListener('keydown', handleEscKey);
 
-    // 모달 외부 클릭 이벤트 리스너 추가
     modal.addEventListener('click', handleOutsideClick);
 }
 
@@ -318,7 +355,6 @@ function closeModal() {
     const modal = document.querySelector('.modal');
     if (modal) {
         document.body.removeChild(modal);
-        // 이벤트 리스너 제거
         document.removeEventListener('keydown', handleEscKey);
     }
 }
