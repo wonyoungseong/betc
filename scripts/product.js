@@ -52,6 +52,7 @@ function addProductListClickListener(containerId) {
         console.log('Closest .product-item found:', productItem); // 찾은 productItem 로깅
         
         if (productItem) {
+            event.preventDefault(); // a 태그의 기본 동작 방지
             const productId = parseInt(productItem.dataset.productId);
             const listName = productItem.dataset.listName;
             const listIndex = parseInt(productItem.dataset.listIndex);

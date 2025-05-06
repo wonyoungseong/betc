@@ -102,6 +102,7 @@
                 const resultsContainer = document.createElement('div');
                 // 클래스명을 'product-list'로 변경하여 그리드 스타일 적용
                 resultsContainer.className = 'product-list search-results-items'; 
+                resultsContainer.id = 'searchResultsItemsContainer'; // ID 명시적 부여
                 results.forEach((product, index) => {
                     const itemElement = window.createProductItem(product, listName, index, listId); 
                     resultsContainer.appendChild(itemElement);
@@ -110,10 +111,7 @@
                 searchResultsDiv.appendChild(resultsSection); // 최종 부모에 섹션 추가
 
                 // 이벤트 리스너 추가 (수정: resultsContainer에 추가)
-                addProductListClickListener(resultsContainer.id || 'searchResultsItems'); // ID가 없다면 임의 ID 사용 또는 ID 부여 필요
-                // ID 부여 예시:
-                // resultsContainer.id = 'searchResultsItemsContainer';
-                // addProductListClickListener(resultsContainer.id);
+                addProductListClickListener(resultsContainer.id); // 부여된 ID 사용
 
             } else {
                 // 검색 결과가 없을 경우
@@ -157,12 +155,16 @@
                     // 추천 상품 아이템 표시 (createProductItem 사용)
                     const recommendationsContainer = document.createElement('div');
                     recommendationsContainer.className = 'products recommendations-items'; // 상품 목록 컨테이너
+                    recommendationsContainer.id = 'recommendationsItemsContainer'; // 추천 상품 컨테이너에도 ID 부여
                     recommendedProducts.forEach((product, index) => {
-                        const itemElement = window.createProductItem(product, listName, index); 
+                        const itemElement = window.createProductItem(product, listName, index, listId); // listId 추가
                         recommendationsContainer.appendChild(itemElement);
                     });
                     recommendationsSection.appendChild(recommendationsContainer); // 섹션에 상품 목록 추가
                     searchResultsDiv.appendChild(recommendationsSection); // 최종 부모에 섹션 추가
+
+                    // 추천 상품 목록에도 이벤트 리스너 추가
+                    addProductListClickListener(recommendationsContainer.id);
                 } else {
                     searchResultsDiv.innerHTML += '<p class="no-recommendations-message">추천 상품을 불러올 수 없습니다.</p>'; // 추천 상품도 없을 경우
                 }
