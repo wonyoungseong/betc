@@ -930,10 +930,6 @@ button:hover,
 }
 
 
-/* Existing review list styles */
-#reviewList {
-    /* Styles for the list container if needed */
-}
 
 .review {
     border: 1px solid var(--color-border-light);
@@ -1062,8 +1058,6 @@ button:hover,
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-sm);
     text-align: center;
-    /* Remove default spinner arrows (optional) */
-    -moz-appearance: textfield;
 }
 .cart-item-quantity input[type="number"]::-webkit-outer-spin-button,
 .cart-item-quantity input[type="number"]::-webkit-inner-spin-button {
@@ -1796,219 +1790,38 @@ footer {
     margin-left: var(--space-sm);
 }
 
-/* Order History List Refined */
-#orderHistoryContainer {
-    margin-top: var(--space-lg);
+/* Order History List Refined - Increased Specificity */
+#orderHistoryContainer #purchaseList li.purchase-item {
+    background-color: var(--color-background) !important; /* Ensure background is applied */
+    border: 1px solid var(--color-border-light) !important; /* Ensure border is applied */
+    border-radius: var(--border-radius-md) !important;
+    padding: var(--space-lg) !important;
+    margin-bottom: var(--space-lg) !important;
+    display: flex !important; /* Ensure flex is applied */
+    flex-direction: column !important;
+    gap: var(--space-md) !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important; /* Ensure shadow is applied */
+    list-style-type: none !important; /* Remove list bullet */
 }
 
-#purchaseList li.purchase-item { /* More specific class */
-    background-color: var(--color-background);
-    border: 1px solid var(--color-border-light);
-    border-radius: var(--border-radius-md);
-    padding: var(--space-lg);
-    margin-bottom: var(--space-lg);
-    display: flex;
-    flex-direction: column; /* Stack sections vertically */
-    gap: var(--space-md);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    /* Remove previous list item styles */
-    /* flex-wrap: wrap; */
-    /* align-items: center; */
-    /* border-bottom: none; */
+/* Ensure nested list items inside purchase items don't inherit card style */
+#orderHistoryContainer #purchaseList li.purchase-item ul {
+    list-style: disc; /* Or other desired style */
+    margin-left: var(--space-lg);
+    padding: 0;
 }
 
-.purchase-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start; /* Align items to top */
-    flex-wrap: wrap; /* Allow wrapping for status */
-    gap: var(--space-sm);
-    padding-bottom: var(--space-md);
-    border-bottom: 1px solid var(--color-border-light);
+#orderHistoryContainer #purchaseList li.purchase-item ul li {
+    /* Reset styles that might be inherited */
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: var(--space-xs) 0 !important; /* Adjust padding */
+    margin-bottom: 0 !important;
+    display: list-item !important; /* Ensure it behaves like a list item */
+    box-shadow: none !important;
+    border-bottom: 1px dashed var(--color-border-light) !important; /* Light separator */
 }
-
-.order-info {
-    display: flex;
-    flex-direction: column; /* Stack date and number */
-    gap: var(--space-xs);
+#orderHistoryContainer #purchaseList li.purchase-item ul li:last-child {
+    border-bottom: none !important;
 }
-
-.order-date,
-.order-number {
-    font-size: 0.9em;
-    color: var(--color-text-light);
-}
-
-.order-number {
-    font-weight: 500;
-    color: var(--color-text);
-}
-
-.order-status {
-    font-size: 0.9em;
-    font-weight: bold;
-    padding: var(--space-xs) var(--space-md);
-    border-radius: var(--border-radius-sm);
-    color: white;
-    background-color: var(--color-text-light); /* Default background */
-    white-space: nowrap;
-    margin-left: auto; /* Push to the right */
-}
-
-/* Status-specific colors (add more as needed) */
-.order-status.status-completed {
-    background-color: var(--color-secondary); /* Blue/Purple for completed */
-}
-.order-status.status-shipped {
-    background-color: #2ecc71; /* Green for shipped */
-}
-.order-status.status-cancelled {
-    background-color: #95a5a6; /* Grey for cancelled */
-}
-
-.purchase-item-products {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-}
-
-.product-entry {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-    padding: var(--space-sm) 0;
-    border-bottom: 1px dashed var(--color-border-light);
-}
-.product-entry:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-}
-
-.product-thumbnail {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
-    border-radius: var(--border-radius-sm);
-    border: 1px solid var(--color-border-light);
-    flex-shrink: 0;
-}
-
-.product-details {
-    flex-grow: 1;
-    min-width: 0; /* Allow shrinking */
-}
-
-.product-name {
-    font-weight: 500;
-    display: block;
-    margin-bottom: var(--space-xs);
-    font-size: 0.95em;
-}
-
-.product-quantity-price {
-    font-size: 0.85em;
-    color: var(--color-text-light);
-}
-
-.purchase-item-summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap; /* Allow wrapping */
-    gap: var(--space-md);
-    margin-top: var(--space-md);
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--color-border-light);
-}
-
-.total-order-amount {
-    font-size: 1.1em;
-    font-weight: bold;
-    color: var(--color-primary);
-    white-space: nowrap;
-}
-
-.purchase-item-actions {
-    display: flex;
-    gap: var(--space-sm);
-    flex-wrap: wrap; /* Allow buttons to wrap */
-}
-
-.purchase-item-actions button {
-    padding: var(--space-sm) var(--space-md);
-    font-size: 0.9em;
-    /* Use general button styles, override if needed */
-}
-
-.purchase-item-actions .btn-cancel-order {
-    background-color: #e74c3c; /* Red for cancel */
-}
-.purchase-item-actions .btn-cancel-order:hover {
-    background-color: #c0392b;
-}
-
-/* Remove old list item styles */
-#purchaseList li:not(.purchase-item) {
-    /* Hide or remove if old styles conflict */
-    /* display: none; */
-}
-/* Remove old image/details/status styles if they exist outside the new structure */
-.purchase-item-image,
-.purchase-item-details,
-.purchase-item-status {
-    /* display: none; */ /* If they were separate top-level elements */
-}
-
-/* Responsive adjustments for purchase history items */
-@media (max-width: 768px) {
-    #purchaseList li.purchase-item {
-        padding: var(--space-md);
-    }
-    .total-order-amount {
-        font-size: 1em;
-    }
-}
-
-@media (max-width: 576px) {
-    .purchase-item-header {
-        flex-direction: column; /* Stack header items */
-        align-items: flex-start;
-    }
-    .order-status {
-        margin-left: 0;
-        margin-top: var(--space-sm);
-        align-self: flex-start; /* Align status badge left */
-    }
-    .purchase-item-summary {
-        flex-direction: column; /* Stack summary items */
-        align-items: flex-start;
-    }
-    .purchase-item-actions {
-        width: 100%; /* Make actions full width */
-    }
-    .purchase-item-actions button {
-        flex-grow: 1; /* Allow buttons to grow */
-        text-align: center;
-    }
-    .product-entry {
-        flex-direction: column; /* Stack image and details */
-        align-items: flex-start;
-    }
-    .product-thumbnail {
-        align-self: center;
-        margin-bottom: var(--space-sm);
-    }
-}
-
-/* Cleanup potentially conflicting old responsive rules for #purchaseList li */
-@media (max-width: 576px) {
-    #purchaseList li:not(.purchase-item) {
-        /* Rules for old structure - potentially remove */
-        /* flex-direction: column; */
-        /* align-items: flex-start; */
-        /* gap: var(--space-sm); */
-    }
-    /* Selectors like .purchase-item-status, .purchase-item-actions if outside .purchase-item */
-}
-
-/* ... rest of the css ... */
