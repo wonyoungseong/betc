@@ -279,6 +279,9 @@ function cancelPurchase(index) {
     }
 }
 
+// *** 함수 정의 확인 로그 추가 ***
+console.log("loadPurchaseHistory function DEFINED.");
+
 // --- Named Event Handlers ---
 
 // NEW: Toggle mobile navigation
