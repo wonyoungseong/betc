@@ -965,7 +965,7 @@ button:hover,
 
 .cart-layout-container {
     display: flex;
-    /* flex-wrap: wrap; NO WRAP */
+    /* flex-wrap: wrap; /* No wrap by default */
     gap: var(--space-xl);
     align-items: flex-start; /* Align columns at the top */
 }
@@ -1030,11 +1030,16 @@ button:hover,
     flex-grow: 1; /* Take available space */
     display: flex;
     flex-direction: column; /* Stack name and price */
+    /* Ensure info section can shrink if needed, prevent pushing out quantity */
+    min-width: 0; /* Allow flex item to shrink below content size */
 }
 
 .cart-item-info h3 { /* Product name */
     font-size: 1.1em;
     margin-bottom: var(--space-xs);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .cart-item-info .item-price {
@@ -1047,7 +1052,23 @@ button:hover,
     display: flex;
     align-items: center;
     gap: var(--space-sm);
-    margin: 0 var(--space-md); /* Add horizontal margin */
+    margin: 0 var(--space-sm); /* Reduce horizontal margin slightly */
+    flex-shrink: 1; /* Allow quantity section to shrink if needed */
+}
+
+.cart-item-quantity input[type="number"] {
+    width: 45px; /* Reduce input width */
+    padding: var(--space-xs);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    text-align: center;
+    /* Remove default spinner arrows (optional) */
+    -moz-appearance: textfield;
+}
+.cart-item-quantity input[type="number"]::-webkit-outer-spin-button,
+.cart-item-quantity input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .cart-item-quantity button {
@@ -1068,6 +1089,7 @@ button:hover,
     color: var(--color-primary);
     min-width: 80px; /* Ensure space for price */
     text-align: right;
+    flex-shrink: 0; /* Prevent price from shrinking */
 }
 
 .remove-item-button {
@@ -1077,7 +1099,8 @@ button:hover,
     font-size: 1.2em;
     cursor: pointer;
     padding: var(--space-xs);
-    margin-left: var(--space-md);
+    margin-left: var(--space-sm); /* Reduce margin */
+    flex-shrink: 0;
 }
 
 .remove-item-button:hover {
@@ -1650,4 +1673,48 @@ footer {
     font-size: 0.95em;
     min-width: 70px; /* 가격 표시 공간 확보 */
     text-align: right;
+}
+
+/* Responsive Cart Layout */
+@media (max-width: 992px) {
+    .cart-layout-container {
+        flex-direction: column;
+    }
+    .cart-summary-column {
+        position: static; /* Remove sticky */
+        width: 100%; /* Full width */
+        margin-top: var(--space-lg);
+    }
+}
+
+@media (max-width: 576px) {
+    .cart-item {
+        flex-wrap: wrap; /* Allow wrapping within cart item */
+        gap: var(--space-sm); /* Adjust gap for wrapped items */
+    }
+    .cart-item-info {
+        /* Take full width when wrapped */
+        flex-basis: 100%;
+        order: 1; /* Order below image */
+        text-align: center;
+        min-width: unset; /* Reset min-width */
+    }
+    .cart-item-quantity {
+        order: 2; /* Position quantity controls */
+        margin: var(--space-sm) auto; /* Center quantity controls */
+    }
+    .cart-item-total-price {
+        order: 3; /* Position total price */
+        flex-basis: 50%; /* Take half width */
+        text-align: left;
+    }
+    .remove-item-button {
+        order: 4; /* Position remove button */
+        flex-basis: 50%; /* Take half width */
+        text-align: right;
+        margin-left: 0;
+    }
+    .cart-item img {
+        margin: 0 auto; /* Center image when wrapped */
+    }
 }
