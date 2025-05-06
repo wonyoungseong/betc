@@ -994,13 +994,37 @@ button:hover,
     color: var(--color-primary);
 }
 
+/* Styling for the checkout button in the cart summary */
 .cart-summary .checkout-button {
+    /* Inherit general button styles */
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    padding: var(--space-md); /* Increased padding */
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-size: 1.1em; /* Slightly larger font */
+    font-weight: 500;
+    text-decoration: none;
+    display: block; /* Make it block for width */
     width: 100%; /* Full width button */
     text-align: center;
-    padding: var(--space-md);
-    font-size: 1.1em;
     box-sizing: border-box;
-    display: block; /* Make it block for width */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: var(--space-md); /* Add some space above the button */
+}
+
+.cart-summary .checkout-button:hover {
+    background-color: var(--color-secondary);
+    transform: scale(1.02); /* Subtle scale on hover */
+}
+
+/* Disabled state for the button */
+.cart-summary .checkout-button:disabled {
+    background-color: #cccccc; /* Grey background */
+    color: #666666; /* Darker grey text */
+    cursor: not-allowed;
+    transform: none; /* No scale effect */
 }
 
 .cart-item { /* Individual item in the cart list */
