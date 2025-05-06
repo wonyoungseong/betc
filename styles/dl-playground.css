@@ -24,7 +24,7 @@ h3 {
     background-color: #ecf0f1;
     padding: 2rem;
     border-radius: 8px;
-    margin-bottom: 2rem;
+    margin-bottom: 15px;
 }
 #codeInput {
     width: 100%;
@@ -186,4 +186,21 @@ code {
     border-radius: 3px;
     font-family: 'Courier New', Courier, monospace;
     font-size: 0.9em;
+}
+
+/* Style for the 'Back to Hub' button */
+.back-to-hub-button {
+    display: inline-block;
+    margin-bottom: 20px; /* Add space below the button */
+    padding: 10px 20px;
+    background-color: #007bff; /* Example primary color */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.back-to-hub-button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
 }
