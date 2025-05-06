@@ -13,37 +13,45 @@
 </head>
 <body>
     <div include-html="components/header.html"></div>
-    <main class="mypage-container, main-content">
-        <h2>주문/배송 조회</h2>
-        <div class="order-status">
-            <div class="status-item">
-                <span class="status-number" id="orderCompleteCount">0</span>
-                <span class="status-label">주문완료</span>
+    <main class="mypage-container main-content">
+        <h2>마이페이지</h2>
+
+        <section class="order-status-section">
+            <h3>주문/배송 현황</h3>
+            <div class="order-status">
+                <div class="status-item">
+                    <span class="status-number" id="orderCompleteCount">0</span>
+                    <span class="status-label">주문완료</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-number">0</span>
+                    <span class="status-label">상품준비중</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-number">0</span>
+                    <span class="status-label">배송중</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-number">0</span>
+                    <span class="status-label">배송완료</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-number">0</span>
+                    <span class="status-label">구매확정</span>
+                </div>
             </div>
-            <div class="status-item">
-                <span class="status-number">0</span>
-                <span class="status-label">상품준비중</span>
-            </div>
-            <div class="status-item">
-                <span class="status-number">0</span>
-                <span class="status-label">배송중</span>
-            </div>
-            <div class="status-item">
-                <span class="status-number">0</span>
-                <span class="status-label">배송완료</span>
-            </div>
-            <div class="status-item">
-                <span class="status-number">0</span>
-                <span class="status-label">구매확정</span>
-            </div>
-        </div>
-        <div class="total-amount">
-            <p>총 구매 금액: <span id="totalAmount">₩0</span></p>
-        </div>
-        <div id="orderHistory">
+        </section>
+
+        <section class="order-history-section">
             <h3>구매 내역</h3>
-            <ul id="purchaseList"></ul>
-        </div>
+            <div class="total-amount">
+                <p>총 구매 금액: <span id="totalAmount">₩0</span></p>
+            </div>
+            <div id="orderHistoryContainer">
+                <ul id="purchaseList"></ul>
+            </div>
+        </section>
+
     </main>
     <div include-html="components/footer.html"></div>
 

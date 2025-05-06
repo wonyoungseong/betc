@@ -1718,3 +1718,188 @@ footer {
         margin: 0 auto; /* Center image when wrapped */
     }
 }
+
+/* --- My Page (mypage.html) Specific Styles --- */
+.mypage-container h2 {
+    font-size: 1.8em;
+    color: var(--color-primary);
+    margin-bottom: var(--space-xl);
+    text-align: center;
+    border-bottom: 1px solid var(--color-border-light);
+    padding-bottom: var(--space-md);
+}
+
+.order-status-section,
+.order-history-section {
+    background-color: var(--color-background);
+    padding: var(--space-lg);
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--space-xl);
+    border: 1px solid var(--color-border-light);
+}
+
+.order-status-section h3,
+.order-history-section h3 {
+    font-size: 1.3em;
+    color: var(--color-primary);
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+/* Order Status */
+.order-status {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    justify-content: space-around; /* Distribute items evenly */
+    gap: var(--space-md);
+    text-align: center;
+}
+
+.status-item {
+    flex: 1; /* Allow items to grow */
+    min-width: 80px; /* Minimum width before wrapping */
+    padding: var(--space-sm);
+    /* Optional: add border or background for individual items */
+    /* border: 1px solid var(--color-border-light); */
+    /* border-radius: var(--border-radius-sm); */
+}
+
+.status-number {
+    display: block;
+    font-size: 2em; /* Make number prominent */
+    font-weight: bold;
+    color: var(--color-primary);
+    line-height: 1.2;
+}
+
+.status-label {
+    display: block;
+    font-size: 0.9em;
+    color: var(--color-text-light);
+    margin-top: var(--space-xs);
+}
+
+/* Total Amount (Moved inside history section) */
+.total-amount {
+    text-align: right;
+    font-size: 1.2em;
+    font-weight: 500;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.total-amount span {
+    font-weight: bold;
+    color: var(--color-primary);
+    margin-left: var(--space-sm);
+}
+
+/* Order History List */
+#orderHistoryContainer {
+    /* Container styles if needed */
+}
+
+#purchaseList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#purchaseList li {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping within list item on small screens */
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+#purchaseList li:last-child {
+    border-bottom: none;
+}
+
+.purchase-item-image img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--color-border-light);
+    flex-shrink: 0;
+}
+
+.purchase-item-details {
+    flex-grow: 1;
+    min-width: 0; /* Allow shrinking */
+}
+
+.purchase-item-details .item-name {
+    font-weight: 500;
+    display: block;
+    margin-bottom: var(--space-xs);
+}
+
+.purchase-item-details .item-date,
+.purchase-item-details .item-price {
+    font-size: 0.9em;
+    color: var(--color-text-light);
+    display: block; /* Separate lines */
+    margin-bottom: 2px;
+}
+
+.purchase-item-status {
+    font-weight: bold;
+    min-width: 80px; /* Ensure space for status */
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.purchase-item-actions {
+    /* Styles for action buttons like 'Write Review' if added */
+    margin-left: auto; /* Push actions to the right */
+    flex-shrink: 0;
+}
+
+/* Responsive adjustments for My Page */
+@media (max-width: 768px) {
+    .mypage-container h2 {
+        font-size: 1.6em;
+    }
+    .order-status-section,
+    .order-history-section {
+        padding: var(--space-md);
+    }
+    .status-number {
+        font-size: 1.8em;
+    }
+    .total-amount {
+        font-size: 1.1em;
+        text-align: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .status-item {
+        flex-basis: calc(50% - var(--space-md)); /* Two items per row */
+        min-width: unset;
+    }
+    #purchaseList li {
+        flex-direction: column; /* Stack item details vertically */
+        align-items: flex-start; /* Align left */
+        gap: var(--space-sm);
+    }
+    .purchase-item-image {
+        align-self: center; /* Center image */
+        margin-bottom: var(--space-sm);
+    }
+    .purchase-item-status,
+    .purchase-item-actions {
+        width: 100%;
+        text-align: left; /* Align left */
+        margin-left: 0;
+        margin-top: var(--space-sm);
+    }
+}
+
+/* ... rest of the css ... */
