@@ -327,16 +327,16 @@ nav#mainNav .mobile-search-item {
     display: none; /* Hidden by default */
 }
 
-/* General Product List Styles (applies to index.html, product-list.html, etc.) */
+/* General Product List Styles (applies to product-list.html, etc.) */
 /* This is the DEFAULT style, overridden for specific sections like featured-products */
 .product-list {
-    display: flex; /* 아이템들을 가로로 배열 */
-    flex-wrap: wrap; /* 아이템이 많을 경우 여러 줄로 표시 */
-    gap: 20px; /* 아이템 사이 간격 */
-    justify-content: center; /* 아이템들을 중앙 정렬 (선택 사항) */
-    padding: 20px 0; /* 위아래 패딩 추가 */
+    display: grid; /* 기본값을 그리드로 변경 */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* 반응형 그리드 */
+    gap: var(--space-lg); /* 아이템 간 간격 */
+    padding: 20px 0; /* 위아래 패딩 */
     margin-top: var(--space-lg);
     width: 100%;
+    /* justify-content: center; /* 그리드에는 필요하지 않을 수 있음 */
 }
 
 /* Product Item Styles (General) */
@@ -347,14 +347,13 @@ nav#mainNav .mobile-search-item {
     padding: var(--space-md);
     text-align: center;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
-    display: flex; /* Use flex for internal alignment */
+    display: flex;
     flex-direction: column;
     justify-content: space-between;
     overflow: hidden;
-    height: 100%; /* Ensure items have consistent height for alignment */
-    flex-basis: calc(25% - 20px); /* gap을 고려한 기본 너비 설정 (한 줄에 4개 기준) */
-    max-width: calc(25% - 20px); /* 최대 너비 설정 */
-    box-sizing: border-box; /* 패딩/보더를 너비에 포함 */
+    height: 100%;
+    /* flex-basis, max-width 제거 -> 그리드 아이템 크기는 grid-template-columns로 제어 */
+    box-sizing: border-box;
 }
 
 .product-item:hover {
@@ -584,9 +583,9 @@ button:hover,
 
 /* FIX: Target #mainProductList within .featured-products specifically */
 .featured-products #mainProductList {
-    display: flex !important;         /* Force flex display */
-    flex-direction: row !important;   /* Force horizontal layout */
-    flex-wrap: nowrap !important;     /* Prevent wrapping by default */
+    display: flex;         /* Flex display 유지 */
+    flex-direction: row;   /* 가로 정렬 유지 */
+    flex-wrap: nowrap;     /* 줄 바꿈 안 함 유지 */
     gap: var(--space-lg);             /* Keep gap between items */
     justify-content: flex-start;    /* Align items to the start */
     overflow-x: auto;               /* Enable horizontal scrolling */
@@ -595,16 +594,17 @@ button:hover,
     width: 100%;
     /* Remove grid properties that might conflict */
     grid-template-columns: none;
+    /* !important 제거 */
 }
 
 /* FIX: Adjust product items within the scrolling flex container */
 .featured-products #mainProductList .product-item {
-    flex: 0 0 auto; /* Don't grow, don't shrink, use auto basis (content width) */
+    flex: 0 0 auto; /* Don't grow, don't shrink, use auto basis */
     width: 250px;   /* Set a fixed width for items in the horizontal scroll */
     max-width: none; /* Remove max-width constraint */
     box-sizing: border-box;
     height: auto; /* Let height be determined by content */
-    /* Keep other .product-item styles */
+    /* 다른 .product-item 스타일은 상속받거나 유지 */
 }
 
 
@@ -664,11 +664,7 @@ button:hover,
 }
 
 
-/* --- product-detail.html Specific Styles --- */
-.product-detail-container {
-    /* Container styles if needed */
-}
-
+/* --- product-detail.html Specific Styles --- */   
 .product-detail {
     display: flex; /* Default layout: side-by-side */
     flex-direction: row;
@@ -746,9 +742,7 @@ button:hover,
     gap: var(--space-sm);
 }
 
-.product-info .price-section .current-price {
-    /* Style for current price if needed */
-}
+
 .product-info .price-section .discount {
     color: #e74c3c;
     font-size: 0.9em;
@@ -1227,9 +1221,7 @@ button:hover,
     border-bottom: none;
 }
 
-.summary-item-name {
-    /* Style for item name if needed */
-}
+
 .summary-item-price {
     font-weight: 500;
 }
