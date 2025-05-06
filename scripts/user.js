@@ -153,48 +153,84 @@ function savePurchaseHistory(purchase) {
 
 // 구매 내역 로드
 function loadPurchaseHistory() {
+    console.log("--- loadPurchaseHistory started ---"); // 함수 시작 로그
     const purchaseList = document.getElementById('purchaseList');
-    const totalAmountSpan = document.getElementById('totalAmount'); // 전체 구매 금액 표시 span
-    const orderCompleteCountSpan = document.getElementById('orderCompleteCount'); // 주문완료 건수 표시 span
+    const totalAmountSpan = document.getElementById('totalAmount');
+    const orderCompleteCountSpan = document.getElementById('orderCompleteCount');
 
     if (!purchaseList || !totalAmountSpan || !orderCompleteCountSpan) {
-        console.error('Purchase history elements not found.');
+        console.error('Purchase history elements not found. Exiting.'); // 종료 지점 명확화
         return;
     }
+    console.log("Required elements found.");
 
-    const purchaseHistory = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
+    const purchaseHistoryString = localStorage.getItem('purchaseHistory');
+    console.log("Raw purchaseHistory from localStorage:", purchaseHistoryString);
+    const purchaseHistory = JSON.parse(purchaseHistoryString) || [];
+    console.log("Parsed purchaseHistory:", purchaseHistory);
+
     let totalPurchaseAmount = 0;
     let orderCompleteCount = 0;
 
-    // purchaseList 초기화 전에 확인
     if (!purchaseList) {
-        console.error("Element with ID 'purchaseList' not found.");
+        console.error("Element with ID 'purchaseList' not found (redundant check). Exiting.");
         return;
     }
-    purchaseList.innerHTML = ''; // Clear previous items before checking length
+    purchaseList.innerHTML = '';
+
+    if (!Array.isArray(purchaseHistory)) {
+        console.error("Parsed purchaseHistory is not an array!", purchaseHistory);
+        purchaseList.innerHTML = '<li>구매 내역을 불러오는 중 오류가 발생했습니다.</li>';
+        return;
+    }
 
     if (purchaseHistory.length === 0) {
-        purchaseList.innerHTML = '<li>구매 내역이 없습니다.</li>'; // Display message inside the list
+        console.log("Purchase history is empty.");
+        purchaseList.innerHTML = '<li>구매 내역이 없습니다.</li>';
         if (totalAmountSpan) totalAmountSpan.textContent = '₩0';
         if (orderCompleteCountSpan) orderCompleteCountSpan.textContent = '0';
         return;
     }
+    console.log(`Processing ${purchaseHistory.length} purchase items.`);
 
     let historyHTML = '';
-    purchaseHistory.sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신순 정렬
+    purchaseHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
 
+    console.log("Starting purchaseHistory.forEach loop...");
     purchaseHistory.forEach((purchase, index) => {
-        totalPurchaseAmount += (purchase.totalAmount || 0); // Ensure totalAmount is a number
+        console.log(`Processing item ${index}:`, purchase);
+        totalPurchaseAmount += (purchase.totalAmount || 0);
         const status = purchase.status || '주문완료';
-        if (status === '주문완료') {
-            orderCompleteCount++;
-        }
+        if (status === '주문완료') { orderCompleteCount++; }
         const transactionId = purchase.transactionId || 'N/A';
         const purchaseDate = purchase.date ? new Date(purchase.date).toLocaleString('ko-KR') : '날짜 정보 없음';
         const statusClass = `status-${status.toLowerCase().replace(' ', '-')}`;
         const totalOrderAmount = (purchase.totalAmount || 0).toLocaleString();
 
-        // --- Card Structure Start --- (이 구조가 적용되어야 함)
+        let itemsHTML = '';
+        try {
+            itemsHTML = (purchase.items || []).map(item => {
+                const productId = item.productId;
+                const productName = item.productName || '상품 정보 없음';
+                const quantity = item.quantity || 0;
+                const price = item.price || 0;
+                const productInfo = window.products ? window.products.find(p => p.id === productId) : null;
+                const imageUrl = productInfo?.image || 'images/placeholder.png';
+                return `
+                <div class="product-entry">
+                    <img src="${imageUrl}" alt="${productName}" class="product-thumbnail">
+                    <div class="product-details">
+                        <span class="product-name">${productName}</span>
+                        <span class="product-quantity-price">수량: ${quantity} / 개당 ₩${price.toLocaleString()}</span>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        } catch (mapError) {
+            console.error(`Error processing items for purchase index ${index}:`, mapError);
+            itemsHTML = '<li>상품 정보를 불러오는 중 오류 발생</li>';
+        }
+
         historyHTML += `
             <li class="purchase-item">
                 <div class="purchase-item-header">
@@ -204,26 +240,7 @@ function loadPurchaseHistory() {
                     </div>
                     <span class="order-status ${statusClass}">${status}</span>
                 </div>
-                <div class="purchase-item-products">
-                    ${(purchase.items || []).map(item => { // Ensure items array exists
-                        const productId = item.productId;
-                        const productName = item.productName || '상품 정보 없음';
-                        const quantity = item.quantity || 0;
-                        const price = item.price || 0;
-                        const productInfo = window.products ? window.products.find(p => p.id === productId) : null;
-                        const imageUrl = productInfo?.image || 'images/placeholder.png';
-
-                        return `
-                        <div class="product-entry">
-                            <img src="${imageUrl}" alt="${productName}" class="product-thumbnail">
-                            <div class="product-details">
-                                <span class="product-name">${productName}</span>
-                                <span class="product-quantity-price">수량: ${quantity} / 개당 ₩${price.toLocaleString()}</span>
-                            </div>
-                        </div>
-                        `;
-                    }).join('')}
-                </div>
+                <div class="purchase-item-products">${itemsHTML}</div>
                 <div class="purchase-item-summary">
                     <span class="total-order-amount">총 금액: ₩${totalOrderAmount}</span>
                     <div class="purchase-item-actions">
@@ -233,15 +250,17 @@ function loadPurchaseHistory() {
                 </div>
             </li>
         `;
-        // --- Card Structure End ---
     });
+    console.log("Finished purchaseHistory.forEach loop.");
 
-    // Debugging log (이 로그가 콘솔에 보여야 함)
+    // 최종 HTML 생성 로그 (이전과 동일)
     console.log("Generated historyHTML:", historyHTML);
 
     purchaseList.innerHTML = historyHTML;
+    console.log("Assigned historyHTML to purchaseList.innerHTML"); // 할당 확인 로그
     if(totalAmountSpan) totalAmountSpan.textContent = `₩${totalPurchaseAmount.toLocaleString()}`;
     if(orderCompleteCountSpan) orderCompleteCountSpan.textContent = orderCompleteCount;
+    console.log("--- loadPurchaseHistory finished ---"); // 함수 종료 로그
 }
 
 // 구매 취소 함수는 이전과 동일하게 유지 (index 기반)
