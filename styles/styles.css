@@ -1790,38 +1790,172 @@ footer {
     margin-left: var(--space-sm);
 }
 
-/* Order History List Refined - Increased Specificity */
-#orderHistoryContainer #purchaseList li.purchase-item {
-    background-color: var(--color-background) !important; /* Ensure background is applied */
-    border: 1px solid var(--color-border-light) !important; /* Ensure border is applied */
-    border-radius: var(--border-radius-md) !important;
-    padding: var(--space-lg) !important;
-    margin-bottom: var(--space-lg) !important;
-    display: flex !important; /* Ensure flex is applied */
-    flex-direction: column !important;
-    gap: var(--space-md) !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important; /* Ensure shadow is applied */
-    list-style-type: none !important; /* Remove list bullet */
+/* Order History List - Re-attempting Styling */
+#orderHistoryContainer #purchaseList {
+    list-style: none; /* Ensure list bullets are off */
+    padding: 0;
+    margin: 0;
 }
 
-/* Ensure nested list items inside purchase items don't inherit card style */
+/* Target the purchase item list item directly */
+#orderHistoryContainer #purchaseList > li.purchase-item {
+    /* Card Styling */
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-md);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl); /* Increase margin between cards */
+    box-shadow: 0 3px 6px rgba(0,0,0,0.07); /* Slightly enhance shadow */
+
+    /* Layout */
+    display: flex; /* Use flex for internal structure */
+    flex-direction: column; /* Stack sections vertically */
+    gap: var(--space-md);
+}
+
+/* Reset any potentially conflicting generic li styles within this context */
+#orderHistoryContainer #purchaseList > li.purchase-item * {
+    margin: 0; /* Reset margins for internal elements */
+    padding: 0; /* Reset padding for internal elements */
+    /* Be cautious with broad resets, adjust if needed */
+}
+
+/* Apply padding/margin specifically where needed */
+.purchase-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border-light);
+    width: 100%; /* Ensure full width */
+}
+
+.order-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.order-date,
+.order-number {
+    font-size: 0.9em;
+    color: var(--color-text-light);
+    line-height: 1.4; /* Adjust line height */
+}
+.order-number { font-weight: 500; color: var(--color-text);}
+
+.order-status {
+    font-size: 0.9em;
+    font-weight: bold;
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--border-radius-sm);
+    color: white;
+    background-color: var(--color-text-light);
+    white-space: nowrap;
+    margin-left: auto;
+}
+/* Status-specific colors */
+.order-status.status-completed { background-color: var(--color-secondary); }
+.order-status.status-shipped { background-color: #2ecc71; }
+.order-status.status-cancelled { background-color: #95a5a6; }
+
+.purchase-item-products {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm); /* Reduce gap between products slightly */
+    width: 100%; /* Ensure full width */
+}
+
+.product-entry {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-sm) 0;
+    /* Use a lighter separator */
+    border-bottom: 1px dashed var(--color-border-light);
+}
+.product-entry:last-child { border-bottom: none; }
+
+.product-thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--color-border-light);
+    flex-shrink: 0;
+}
+
+.product-details {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.product-name {
+    font-weight: 500;
+    font-size: 0.95em;
+    margin-bottom: 2px; /* Adjust spacing */
+}
+
+.product-quantity-price {
+    font-size: 0.85em;
+    color: var(--color-text-light);
+}
+
+.purchase-item-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-border-light);
+    width: 100%; /* Ensure full width */
+}
+
+.total-order-amount {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--color-primary);
+    white-space: nowrap;
+}
+
+.purchase-item-actions {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.purchase-item-actions button {
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.9em;
+}
+.purchase-item-actions .btn-cancel-order { background-color: #e74c3c; }
+.purchase-item-actions .btn-cancel-order:hover { background-color: #c0392b; }
+
+
+/* Ensure nested lists are reset properly */
 #orderHistoryContainer #purchaseList li.purchase-item ul {
-    list-style: disc; /* Or other desired style */
-    margin-left: var(--space-lg);
+    list-style: none; /* Remove bullets from inner list */
     padding: 0;
+    margin: 0;
+    width: 100%; /* Ensure inner list takes width */
 }
 
 #orderHistoryContainer #purchaseList li.purchase-item ul li {
-    /* Reset styles that might be inherited */
-    background-color: transparent !important;
-    border: none !important;
-    border-radius: 0 !important;
-    padding: var(--space-xs) 0 !important; /* Adjust padding */
-    margin-bottom: 0 !important;
-    display: list-item !important; /* Ensure it behaves like a list item */
-    box-shadow: none !important;
-    border-bottom: 1px dashed var(--color-border-light) !important; /* Light separator */
+    background-color: transparent;
+    border: none;
+    padding: var(--space-xs) 0; /* Minimal padding */
+    display: block; /* Standard list item display */
+    box-shadow: none;
+    border-bottom: none; /* Remove separator here, handled by product-entry */
 }
-#orderHistoryContainer #purchaseList li.purchase-item ul li:last-child {
-    border-bottom: none !important;
-}
+
+/* Remove potentially conflicting old !important rules if they exist */
+/* ... Check previous !important rules and remove if this works ... */
+
+/* Responsive styles should target the new structure as well */
+/* ... Keep previous responsive rules, ensure selectors are correct ... */
+
+/* ... */
