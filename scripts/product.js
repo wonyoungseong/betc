@@ -143,15 +143,12 @@ function adjustThumbnailSizes() {
 
     const thumbnails = thumbnailContainer.querySelectorAll('.thumbnail');
     if (thumbnails.length === 0) {
-        // console.log("No thumbnails to adjust.");
         return;
     }
 
-    // Get the gap value dynamically from CSS (more robust)
+    const containerStyle = window.getComputedStyle(thumbnailContainer);
     let gap = 8; // Default value
-    try { // Use try-catch in case getComputedStyle fails
-        const containerStyle = window.getComputedStyle(thumbnailContainer);
-        // Check for gap property first, then fallback for older browsers if needed
+    try {
         const gapValue = containerStyle.getPropertyValue('gap') || containerStyle.getPropertyValue('column-gap');
         if (gapValue && gapValue.endsWith('px')) {
             gap = parseFloat(gapValue);
@@ -162,51 +159,47 @@ function adjustThumbnailSizes() {
          console.warn("Could not get computed style for gap, using default.", e);
     }
 
-
-    // Ensure main image has a width before calculating
-    // Use scrollWidth or offsetWidth - offsetWidth is usually better here
-    const mainWidth = mainImageElement.offsetWidth;
-    if (mainWidth <= 0) {
-        console.warn("Main image width is 0, trying again shortly...");
-        // Retry after a short delay to allow image rendering
-        setTimeout(adjustThumbnailSizes, 150); // Increased delay slightly
+    // 썸네일 컨테이너의 내부 가용 너비를 기준으로 계산
+    const containerPaddingLeft = parseFloat(containerStyle.paddingLeft) || 0;
+    const containerPaddingRight = parseFloat(containerStyle.paddingRight) || 0;
+    const containerClientWidth = thumbnailContainer.clientWidth;
+    const availableWidth = containerClientWidth - containerPaddingLeft - containerPaddingRight;
+    
+    if (availableWidth <= 0) {
+        console.warn("Thumbnail container available width is 0 or negative, trying again shortly...");
+        setTimeout(adjustThumbnailSizes, 150); 
         return;
     }
-
 
     const numThumbnails = thumbnails.length;
     const totalGapWidth = (numThumbnails > 1) ? (numThumbnails - 1) * gap : 0;
 
-    // Calculate available width, ensure it's not negative
-    let totalThumbnailWidth = mainWidth - totalGapWidth;
-    if (totalThumbnailWidth <= 0) {
-         // If total width is still negative, maybe container has padding?
-         // Let's try using clientWidth of the container as fallback
-         const containerWidth = thumbnailContainer.clientWidth;
-         totalThumbnailWidth = containerWidth - totalGapWidth;
-         if (totalThumbnailWidth < 0) totalThumbnailWidth = 0; // Prevent negative width
-         console.warn(`Main image width calculation resulted in non-positive thumbnail space (${mainWidth} - ${totalGapWidth}). Using container width ${containerWidth} as fallback.`);
+    let totalCalculatedThumbnailWidth = availableWidth - totalGapWidth;
+    
+    if (totalCalculatedThumbnailWidth <= 0 && numThumbnails > 0) {
+         console.warn(`Calculated total thumbnail width is non-positive (${availableWidth} - ${totalGapWidth}). Setting a minimum width per thumbnail.`);
+         // 각 썸네일이 최소한의 너비를 가지도록 처리 (예: 50px)
+         const minThumbnailWidth = 50;
+         if (numThumbnails * minThumbnailWidth + totalGapWidth > availableWidth) {
+            // 최소 너비로도 공간이 부족하면, 가능한 만큼만 할당하거나, nowrap을 믿고 스크롤되도록 함
+             totalCalculatedThumbnailWidth = availableWidth - totalGapWidth; // 다시 계산하여 가능한 공간 사용
+         } else {
+             totalCalculatedThumbnailWidth = numThumbnails * minThumbnailWidth;
+         }
+         if (totalCalculatedThumbnailWidth < 0) totalCalculatedThumbnailWidth = 0;
     }
 
-
-    const thumbnailWidth = (numThumbnails > 0) ? totalThumbnailWidth / numThumbnails : 0;
-
-    // console.log(`Adjusting thumbnails: MainWidth=${mainWidth}, Thumbnails=${numThumbnails}, Gap=${gap}, ThumbWidth=${thumbnailWidth}`);
+    const thumbnailWidth = (numThumbnails > 0 && totalCalculatedThumbnailWidth > 0) ? totalCalculatedThumbnailWidth / numThumbnails : 60; // fallback 너비
 
     thumbnails.forEach(thumb => {
-        // Apply width only if calculated width is positive
-        if (thumbnailWidth > 0) {
-             thumb.style.width = `${thumbnailWidth}px`;
-        } else {
-             // Fallback: let CSS handle it or set a default small size?
-             thumb.style.width = '60px'; // Example fallback width
-        }
-        // CSS handles height: auto
+        thumb.style.width = `${thumbnailWidth}px`;
     });
 
-     // After setting widths, allow wrapping if needed and make visible again
-     thumbnailContainer.style.flexWrap = 'wrap'; // Allow wrapping after calculation
-     thumbnailContainer.style.overflow = 'visible';
+     // 한 줄에 표시하고, 넘칠 경우 스크롤 (또는 wrap 유지하고 너비 계산만 정확히)
+     thumbnailContainer.style.flexWrap = 'nowrap'; 
+     thumbnailContainer.style.overflowX = 'auto'; // 가로 스크롤 허용
+     thumbnailContainer.style.overflowY = 'hidden'; // 세로 스크롤은 숨김
+     thumbnailContainer.style.paddingBottom = '5px'; // 스크롤바 공간 확보 (필요시)
 }
 
 // --- MODIFY loadProductDetail FUNCTION ---
