@@ -1,0 +1,107 @@
+/*
+ * 입력된 요청 데이터를 처리하여 날짜에 해당하는 요일 정보를 포함한 JSON 객체를 반환합니다.
+ * Python Flask 코드의 로직을 JavaScript로 구현한 것입니다.
+ * @param {object} requestBody - POST 요청의 본문(body)을 JSON.parse() 한 객체.
+ * 예상 구조: 
+ * {
+ * "action": {
+ * "params": {
+ * "sys_date_params": "{\"year\": \"YYYY\", \"month\": \"MM\", \"day\": \"DD\"}" 
+ * // sys_date_params는 실제로는 내부적으로 date, dateTag, year, month, day 등을 포함할 수 있는 복잡한 JSON 문자열입니다.
+ * // 예: "{\"date\":\"2022-03-01\",\"dateTag\":null,\"dateHeadword\":null,\"year\":null,\"month\":\"3\",\"day\":\"1\"}"
+ * }
+ * }
+ * }
+ * @returns {object} - 처리 결과를 담은 JSON 객체. Python의 jsonify(response)에 해당합니다.
+ * 오류 발생 시, { error: "메시지" } 형태의 객체를 반환할 수 있습니다.
+ */
+ <script>
+function processDateRequest(requestBody) {
+    const days_of_the_week_list = ['월', '화', '수', '목', '금', '토', '일'];
+    // JavaScript의 getDay() (일:0 ~ 토:6) 결과를 Python의 weekday() (월:0 ~ 일:6) 및
+    // days_of_the_week_list 배열 인덱스에 맞게 조정하는 맵
+    const jsDayToPyListIndex = [
+        6, // 일요일 (JS:0) -> '일' (days_of_the_week_list 인덱스 6)
+        0, // 월요일 (JS:1) -> '월' (days_of_the_week_list 인덱스 0)
+        1, // 화요일 (JS:2) -> '화' (days_of_the_week_list 인덱스 1)
+        2, // 수요일 (JS:3) -> '수' (days_of_the_week_list 인덱스 2)
+        3, // 목요일 (JS:4) -> '목' (days_of_the_week_list 인덱스 3)
+        4, // 금요일 (JS:5) -> '금' (days_of_the_week_list 인덱스 4)
+        5  // 토요일 (JS:6) -> '토' (days_of_the_week_list 인덱스 5)
+    ];
+
+    let paramDate; // 파싱된 sys_date_params 객체 (예: {"year": "2023", "month": "5", "day": "21"})
+    try {
+        if (!requestBody || !requestBody.action || !requestBody.action.params || typeof requestBody.action.params.sys_date_params !== 'string') {
+            console.error("Invalid requestBody structure or sys_date_params is not a string.");
+            return { 
+                error: "Invalid request structure. 'action.params.sys_date_params' (string) is required." 
+            };
+        }
+        // Python: param_date = json.loads(params['sys_date_params'])
+        paramDate = JSON.parse(requestBody.action.params.sys_date_params);
+    } catch (e) {
+        console.error("Error parsing sys_date_params:", e.message);
+        return { 
+            error: "Failed to parse 'sys_date_params': " + e.message 
+        };
+    }
+
+    const today = new Date();
+    let year, month, day;
+
+    // Python: year = int(param_date['year']) if param_date['year'] else datetime.date.today().year
+    // paramDate.year가 null, undefined, "" (빈 문자열)일 경우 오늘 연도 사용
+    year = (paramDate && paramDate.year && String(paramDate.year).trim() !== "" && paramDate.year !== null) 
+           ? parseInt(paramDate.year, 10) 
+           : today.getFullYear();
+    
+    month = (paramDate && paramDate.month && String(paramDate.month).trim() !== "" && paramDate.month !== null)
+            ? parseInt(paramDate.month, 10)
+            : today.getMonth() + 1; // JS month is 0-indexed
+
+    day = (paramDate && paramDate.day && String(paramDate.day).trim() !== "" && paramDate.day !== null)
+          ? parseInt(paramDate.day, 10)
+          : today.getDate();
+
+    if (isNaN(year) || isNaN(month) || isNaN(day)) {
+        return { 
+            error: "Date parameters (year, month, day) must resolve to valid numbers." 
+        };
+    }
+    
+    let dateObj;
+    try {
+        // Python: date_obj = datetime.date(year, month, day)
+        dateObj = new Date(year, month - 1, day); // JS month는 0부터 시작
+        if (dateObj.getFullYear() !== year || dateObj.getMonth() !== (month - 1) || dateObj.getDate() !== day) {
+            throw new Error("Invalid date values provided (e.g., February 30th results in a different date).");
+        }
+    } catch (e) {
+        console.error("Error creating Date object:", e.message);
+        return { 
+            error: "Error creating Date object: " + e.message 
+        };
+    }
+    
+    const jsDayIndex = dateObj.getDay(); // 0 (일요일) 부터 6 (토요일)
+    const dayOfWeekKorean = days_of_the_week_list[jsDayToPyListIndex[jsDayIndex]];
+
+    const response = {
+        "version": "2.0",
+        "template": {
+            "outputs": [
+                {
+                    "simpleText": {
+                        // Python 코드의 출력 형식: days_of_the_week_list[date_obj.weekday()] + "요일"
+                        // 이미지의 응답 텍스트에 맞춰서 약간 수정
+                        "text": `요청하신 ${year}년 ${month}월 ${day}일의 요일은 ${dayOfWeekKorean}요일입니다.`
+                    }
+                }
+            ]
+        }
+    };
+
+    return response; // JavaScript 객체 (JSON 구조) 반환
+}
+</script>
