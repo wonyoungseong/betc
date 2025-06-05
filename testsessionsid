@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test session id</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="icon" href="data:,">
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-WKRPLQFB');</script>
+    <!-- End Google Tag Manager -->
+
+    <style>
+        /* Hub 페이지 전용 간단한 스타일 */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 0; /* 허브 페이지는 헤더가 없으므로 패딩 제거 */
+            background-color: #f0f2f5;
+        }
+        .hub-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .hub-container h1 {
+            color: var(--color-primary);
+            margin-bottom: 30px;
+        }
+        .hub-links a {
+            display: inline-block; /* 버튼처럼 보이도록 */
+            background-color: var(--color-primary);
+            color: white;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .hub-links a:hover {
+            background-color: var(--color-secondary);
+            transform: translateY(-2px);
+        }
+        /* Ensure styles apply correctly without header/footer padding */
+        body > .main-content { padding: 0; max-width: none; } /* Reset main-content padding for this page */
+    </style>
+</head>
+<body>
+    <div class="hub-container">
+        <h1>Session Id Test</h1>
+</body>
+</html>
