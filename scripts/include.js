@@ -32,40 +32,44 @@ function insertGtmScript() {
     document.head.appendChild(gtmScript);
 }
 
-function insertCookiebotScript() {
-    // Cookiebot 스크립트가 이미 삽입되었는지 확인
-    if (document.getElementById('Cookiebot')) {
+// Cookiebot 삽입 함수를 Usercentrics 삽입 함수로 교체
+function insertUsercentricsScript() {
+    // Usercentrics 스크립트들이 이미 삽입되었는지 확인 (중복 삽입 방지)
+    if (document.getElementById('usercentrics-cmp')) {
         return;
     }
 
-    // Cookiebot 스크립트 태그 생성
-    var cookiebotScript = document.createElement('script');
-    cookiebotScript.id = 'Cookiebot';
-    cookiebotScript.src = 'https://consent.cookiebot.com/uc.js';
-    cookiebotScript.setAttribute('data-cbid', '85be34eb-e45a-4f84-8c82-62f3e3578f89');
-    cookiebotScript.setAttribute('data-blockingmode', 'auto');
-    cookiebotScript.setAttribute('data-consentmode', 'disabled');
-    cookiebotScript.type = 'text/javascript';
+    // 1. Usercentrics Autoblocker 스크립트 생성 및 추가
+    var autoblockerScript = document.createElement('script');
+    autoblockerScript.src = 'https://web.cmp.usercentrics.eu/modules/autoblocker.js';
+    // Autoblocker는 ID가 필수는 아니지만, 명시적으로 추가하여 관리 용이성 확보
+    autoblockerScript.id = 'usercentrics-autoblocker'; 
+    document.head.appendChild(autoblockerScript);
 
-    // head에 스크립트 추가
-    document.head.appendChild(cookiebotScript);
+    // 2. Usercentrics Loader 스크립트 생성 및 추가
+    var loaderScript = document.createElement('script');
+    loaderScript.id = 'usercentrics-cmp'; // 이 ID로 중복 삽입을 방지
+    loaderScript.src = 'https://web.cmp.usercentrics.eu/ui/loader.js';
+    loaderScript.setAttribute('data-settings-id', 'cevd2hyIHD93Mo');
+    loaderScript.async = true;
+    document.head.appendChild(loaderScript);
 }
 
 function includeHTML(callback) {
-    // GTM 및 Cookiebot 스크립트 삽입 함수 호출
+    // GTM 및 Usercentrics 스크립트 삽입 함수 호출
     insertGtmScript();
-    insertCookiebotScript();
+    insertUsercentricsScript(); // 기존 함수 호출을 새 함수로 변경
 
     var elements = document.querySelectorAll('[include-html]');
     var totalElements = elements.length;
     var loadedCount = 0;
 
     // 콜백이 제공되지 않았을 경우를 대비한 빈 함수 설정
-    callback = callback || function() {}; 
+    callback = callback || function() {};
 
     if (totalElements === 0) {
         // 즉시 콜백 호출 (HTML 조각이 없는 경우)
-        callback(); 
+        callback();
         return; // 함수 종료
     }
 
