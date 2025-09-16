@@ -26,7 +26,7 @@ function insertGtmScript() {
     var gtmScript = document.createElement('script');
     gtmScript.id = 'gtm-script'; // 중복 방지용 ID
     gtmScript.async = true;
-    gtmScript.src = 'https://data.betc.co.kr/gtm.js?id=GTM-56QPGJLB'; // 제공된 GTM ID 사용
+    gtmScript.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-56QPGJLB'; // 제공된 GTM ID 사용
 
     // head에 스크립트 추가
     document.head.appendChild(gtmScript);
@@ -96,3 +96,4 @@ function includeHTML(callback) {
         xhr.send();
     });
 }
+
