@@ -1,13 +1,11 @@
 FROM nginx:alpine
 
-# ì •ì  íŒŒì¼ ë³µì‚¬
+# Á¤Àû ÆÄÀÏ º¹»ç
 COPY . /usr/share/nginx/html/
 
-# nginx ì„¤ì • (ì„ íƒì‚¬í•­ - SPA ë¼ìš°íŒ…ì´ í•„ìš”í•œ ê²½ìš°)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Ä¿½ºÅÒ nginx ¼³Á¤ º¹»ç
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Cloud Runì€ PORT í™˜ê²½ë³€ìˆ˜ ì‚¬ìš©
 EXPOSE 8080
 
-# nginxê°€ PORT í™˜ê²½ë³€ìˆ˜ë¥¼ ì‚¬ìš©í•˜ë„ë¡ ì„¤ì •
-CMD sed -i -e 's/80;/'"$PORT"';/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'
+CMD ["nginx", "-g", "daemon off;"]
